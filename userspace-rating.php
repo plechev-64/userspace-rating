@@ -35,7 +35,7 @@ spl_autoload_register(function ($class_name) {
 
   if (in_array($class_name, $classes)) {
 
-	$path = USP_RATING_PATH . "classes/class-" . mb_strtolower(str_replace("_", "-", $class_name));
+	$path = USP_RATING_PATH . "classes/class-" . mb_strtolower(str_replace("_", "-", $class_name)) . ".php";
 
 	require_once $path;
   }
@@ -51,7 +51,6 @@ register_uninstall_hook(__FILE__, ['USP_Rating_Uninstall', 'uninstall']);
 if (in_array('userspace/userspace.php', apply_filters('active_plugins', get_option('active_plugins')))) {
 
   //load
-  
 } else {
   add_action('admin_notices', function () {
 	$url = '/wp-admin/plugin-install.php?s=UserSpace&tab=search&type=term';
