@@ -1,27 +1,22 @@
 <?php
 
-final class USP_Rating_Install {
-
-  /**
-   * @var string $charset_collate Charset / Collate 
-   */
-  private $charset_collate = '';
+final class USP_Rating_Activator {
 
   public function __construct() {
 	
   }
 
-  public static function install() {
+  public static function activate() {
 
 	if (!current_user_can('activate_plugins')) {
 	  return;
 	}
 
-	$this->charSetCollate();
+	$charset_collate = self::char_set_collate();
 
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
-	$sql_values_table = "CREATE TABLE IF NOT EXISTS " . USP_RATING_PREF . "rating_values (
+	$sql_values_table = "CREATE TABLE IF NOT EXISTS " . USERSPACE_RATING_PREF . "rating_values (
 						ID BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 						user_id BIGINT(20) UNSIGNED NOT NULL,
 						object_id BIGINT(20) UNSIGNED NOT NULL,
@@ -34,9 +29,9 @@ final class USP_Rating_Install {
 						KEY object_id (object_id),
 						KEY rating_value (rating_value),
 						KEY rating_type (rating_type)
-					  ) {$this->charset_collate};";
+					  ) {$charset_collate};";
 
-	$sql_totals_table = "CREATE TABLE IF NOT EXISTS " . USP_RATING_PREF . "rating_totals (
+	$sql_totals_table = "CREATE TABLE IF NOT EXISTS " . USERSPACE_RATING_PREF . "rating_totals (
 						ID BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 						object_id BIGINT(20) UNSIGNED NOT NULL,
 						object_author BIGINT(20) UNSIGNED NOT NULL,
@@ -47,14 +42,14 @@ final class USP_Rating_Install {
 						KEY object_author (object_author),
 						KEY rating_type (rating_type),
 						KEY rating_total (rating_total)
-					  ) {$this->charset_collate};";
+					  ) {$charset_collate};";
 
-	$sql_users_table = "CREATE TABLE IF NOT EXISTS " . USP_RATING_PREF . "rating_users (
+	$sql_users_table = "CREATE TABLE IF NOT EXISTS " . USERSPACE_RATING_PREF . "rating_users (
 						user_id BIGINT(20) UNSIGNED NOT NULL,
 						rating_total VARCHAR(10) NOT NULL,
 						PRIMARY KEY  id (user_id),
 						KEY rating_total (rating_total)
-					  ) {$this->charset_collate};";
+					  ) {$charset_collate};";
 
 	dbDelta($sql_values_table);
 	dbDelta($sql_totals_table);
@@ -67,18 +62,22 @@ final class USP_Rating_Install {
    * 
    * @return void
    */
-  private function charSetCollate() {
+  private function char_set_collate() {
 
 	global $wpdb;
+	
+	$charset_collate = '';
 
 	if ($wpdb->has_cap('collation')) {
 	  if (!empty($wpdb->charset)) {
-		$this->charset_collate .= "DEFAULT CHARACTER SET {$wpdb->charset}";
+		$charset_collate .= "DEFAULT CHARACTER SET {$wpdb->charset}";
 	  }
 	  if (!empty($wpdb->collate)) {
-		$this->charset_collate .= " COLLATE {$wpdb->collate}";
+		$charset_collate .= " COLLATE {$wpdb->collate}";
 	  }
 	}
+	
+	return $charset_collate;
 
   }
 

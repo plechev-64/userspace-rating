@@ -1,6 +1,6 @@
 <?php
 
-final class USP_Rating_Uninstall {
+final class USP_Rating_Uninstaller {
 
   public function __construct() {
 	
@@ -15,9 +15,9 @@ final class USP_Rating_Uninstall {
 	global $wpdb;
 	
 	$tables = [
-		USP_RATING_PREF . 'rating_values',
-		USP_RATING_PREF . 'rating_totals',
-		USP_RATING_PREF . 'rating_users'
+		USERSPACE_RATING_PREF . 'rating_values',
+		USERSPACE_RATING_PREF . 'rating_totals',
+		USERSPACE_RATING_PREF . 'rating_users'
 	];
 	
 	$wpdb->query("DROP TABLE IF EXISTS `" . implode('`, `', $tables) . "`");
