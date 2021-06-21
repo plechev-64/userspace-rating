@@ -9,7 +9,7 @@ class USP_Rating_Types {
 
   public function __construct() {
 
-	do_action('userspace_rating_types', $this);
+	do_action( 'userspace_rating_types', $this );
 
   }
 
@@ -22,9 +22,9 @@ class USP_Rating_Types {
    */
   public function add($rating_type) {
 
-	if ($rating_type && $rating_type instanceof USP_Rating_Type_Abstract) {
+	if ( $rating_type && $rating_type instanceof USP_Rating_Type_Abstract ) {
 
-	  if ($this->get($rating_type->get_id()) === false) {
+	  if ( $this->get( $rating_type->get_id() ) === false ) {
 
 		$this->types[] = $rating_type;
 	  }
@@ -45,13 +45,13 @@ class USP_Rating_Types {
    */
   public function get($id = '') {
 
-	if (!$id) {
+	if ( !$id ) {
 	  return $this->types;
 	}
 
-	foreach ($this->types as $rating_type) {
+	foreach ( $this->types as $rating_type ) {
 
-	  if ($rating_type->get_id() == $id) {
+	  if ( $rating_type->get_id() == $id ) {
 
 		return $rating_type;
 	  }
@@ -70,15 +70,15 @@ class USP_Rating_Types {
    */
   public function remove($id) {
 
-	if (!$id) {
+	if ( !$id ) {
 	  return false;
 	}
 
-	foreach ($this->types as $key => $rating_type) {
+	foreach ( $this->types as $key => $rating_type ) {
 
-	  if ($rating_type->get_id() == $id) {
+	  if ( $rating_type->get_id() == $id ) {
 
-		unset($this->types[$key]);
+		unset( $this->types[ $key ] );
 
 		return true;
 	  }

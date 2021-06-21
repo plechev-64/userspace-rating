@@ -8,7 +8,7 @@ final class USP_Rating_Activator {
 
   public static function activate() {
 
-	if (!current_user_can('activate_plugins')) {
+	if ( !current_user_can( 'activate_plugins' ) ) {
 	  return;
 	}
 
@@ -51,9 +51,9 @@ final class USP_Rating_Activator {
 						KEY rating_total (rating_total)
 					  ) {$charset_collate};";
 
-	dbDelta($sql_values_table);
-	dbDelta($sql_totals_table);
-	dbDelta($sql_users_table);
+	dbDelta( $sql_values_table );
+	dbDelta( $sql_totals_table );
+	dbDelta( $sql_users_table );
 
   }
 
@@ -65,18 +65,18 @@ final class USP_Rating_Activator {
   private function char_set_collate() {
 
 	global $wpdb;
-	
+
 	$charset_collate = '';
 
-	if ($wpdb->has_cap('collation')) {
-	  if (!empty($wpdb->charset)) {
+	if ( $wpdb->has_cap( 'collation' ) ) {
+	  if ( !empty( $wpdb->charset ) ) {
 		$charset_collate .= "DEFAULT CHARACTER SET {$wpdb->charset}";
 	  }
-	  if (!empty($wpdb->collate)) {
+	  if ( !empty( $wpdb->collate ) ) {
 		$charset_collate .= " COLLATE {$wpdb->collate}";
 	  }
 	}
-	
+
 	return $charset_collate;
 
   }
