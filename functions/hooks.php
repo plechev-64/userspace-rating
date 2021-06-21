@@ -1,8 +1,8 @@
 <?php
 
-add_filter( 'the_content', 'userspace_rating_comment_display' );
+add_filter( 'the_content', 'userspace_rating_posts_display' );
 
-function userspace_rating_comment_display($content) {
+function userspace_rating_posts_display($content) {
 
   global $post;
 

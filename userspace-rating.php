@@ -35,11 +35,21 @@ if ( !defined( 'USERSPACE_RATING_PREF' ) ) {
  * Register class autoloader
  */
 spl_autoload_register( function ($class_name) {
+  
+  /**
+   * TODO
+   * 
+   * refactoring
+   */
 
-  $path = USERSPACE_RATING_PATH . "classes/class-" . mb_strtolower( str_replace( "_", "-", $class_name ) ) . ".php";
+  $folders = [ 'admin', 'core', 'core', 'query', 'object-type', 'rating-type' ];
 
-  if ( file_exists( $path ) ) {
-	require_once $path;
+  $fileName = "class-" . mb_strtolower( str_replace( "_", "-", $class_name ) ) . ".php";
+  foreach ( $folders as $folder ) {
+	if ( is_readable( USERSPACE_RATING_PATH . 'classes/' . $folder . '/' . $fileName ) ) {
+	  require_once USERSPACE_RATING_PATH . 'classes/' . $folder . '/' . $fileName;
+	  break;
+	}
   }
 } );
 

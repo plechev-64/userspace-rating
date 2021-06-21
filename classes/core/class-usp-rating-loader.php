@@ -21,11 +21,11 @@ class USP_Rating_Loader {
    */
   private function init_rating_types() {
 
-	add_action( 'userspace_rating_types', function($USP_Rating_Object_Types) {
+	add_action( 'userspace_rating_types', function($USP_Rating_Types) {
 
-	  $USP_Rating_Object_Types->add( new USP_Rating_Type_Likes() );
-	  $USP_Rating_Object_Types->add( new USP_Rating_Type_Stars() );
-	  $USP_Rating_Object_Types->add( new USP_Rating_Type_Plus_Minus() );
+	  $USP_Rating_Types->add( new USP_Rating_Type_Likes() );
+	  $USP_Rating_Types->add( new USP_Rating_Type_Stars() );
+	  $USP_Rating_Types->add( new USP_Rating_Type_Plus_Minus() );
 	} );
 
   }
@@ -34,6 +34,7 @@ class USP_Rating_Loader {
    * Init all default rating object types
    */
   private function init_object_types() {
+	
 	$this->init_object_types_posts();
 	$this->init_object_types_comment();
 

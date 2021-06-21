@@ -41,6 +41,7 @@ class USP_Rating_Type_Stars extends USP_Rating_Type_Abstract {
    * @return array - Array of custom options for rating type stars
    */
   public function get_custom_options($USP_Object_Type) {
+	
 	return [
 		[
 			'type' => 'runner',
