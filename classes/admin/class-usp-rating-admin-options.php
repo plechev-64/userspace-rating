@@ -10,9 +10,7 @@ class USP_Rating_Admin_Options {
 
   public function init_options($options) {
 
-	$USP_Rating = USP_Rating::get_instance();
-
-	$object_types = $USP_Rating->get_object_types();
+	$object_types = USP_Rating()->get_object_types();
 
 	$options->add_box( 'rating', array(
 		'title' => __( 'Rating settings', 'userspace-rating' ),
@@ -66,9 +64,7 @@ class USP_Rating_Admin_Options {
 
   private function rating_type_option($USP_Object_Type) {
 
-	$USP_Rating = USP_Rating::get_instance();
-
-	$rating_types = $USP_Rating->get_rating_types();
+	$rating_types = USP_Rating()->get_rating_types();
 
 	$values = [];
 

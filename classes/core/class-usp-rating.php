@@ -17,19 +17,8 @@ class USP_Rating {
   private static $_instance = null;
 
   protected function __construct() {
-
-	$this->init_loader();
-
-  }
-
-  /**
-   * Run the loader to execute all of the hooks with WordPress.
-   * 
-   * @return void
-   */
-  public function run() {
-
-	$this->loader->run();
+	
+	$this->run();
 
   }
 
@@ -136,16 +125,15 @@ class USP_Rating {
   }
 
   /**
-   * Load the required dependencies for this plugin.
-   *
-   * Create an instance of the loader which will be used to register the hooks
-   * with WordPress.
+   * Run the loader to execute all of the hooks with WordPress.
    * 
    * @return void
    */
-  private function init_loader() {
-
+  private function run() {
+	
 	$this->loader = new USP_Rating_Loader();
+
+	$this->loader->run();
 
   }
 

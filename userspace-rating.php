@@ -35,14 +35,13 @@ if ( !defined( 'USERSPACE_RATING_PREF' ) ) {
  * Register class autoloader
  */
 spl_autoload_register( function ($class_name) {
-  
+
   /**
    * TODO
    * 
    * refactoring
    */
-
-  $folders = [ 'admin', 'core', 'core', 'query', 'object-type', 'rating-type' ];
+  $folders = [ 'admin', 'core', 'query', 'object-type', 'rating-type' ];
 
   $fileName = "class-" . mb_strtolower( str_replace( "_", "-", $class_name ) ) . ".php";
   foreach ( $folders as $folder ) {
@@ -76,16 +75,18 @@ function uninstall_userspace_rating() {
 register_activation_hook( __FILE__, 'activate_userspace_rating' );
 register_uninstall_hook( __FILE__, 'uninstall_userspace_rating' );
 
+function USP_Rating() {
+
+  return USP_Rating::get_instance();
+
+}
+
 /**
  * Check if UserSpace is active
  * */
 if ( in_array( 'userspace/userspace.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
 
-  add_action( 'init', function() {
-
-	$USP_Rating = USP_Rating::get_instance();
-	$USP_Rating->run();
-  } );
+  add_action( 'init', 'USP_Rating' );
 } else {
 
   add_action( 'admin_notices', function () {
