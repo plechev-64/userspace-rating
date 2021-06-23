@@ -17,7 +17,7 @@ class USP_Rating {
   private static $_instance = null;
 
   protected function __construct() {
-	
+
 	$this->run();
 
   }
@@ -92,7 +92,6 @@ class USP_Rating {
    * @param object|string $object_type - USP_Rating_Object_Type instance or id USP_Rating_Object_Type
    * 
    * @return string - html code of rating box
-   *  
    */
   public function get_rating_box($object_id, $object_author, $object_type) {
 
@@ -125,12 +124,119 @@ class USP_Rating {
   }
 
   /**
+   * 
+   * @return \USP_Rating_Totals_Query
+   */
+  public function totals_query() {
+	return new USP_Rating_Totals_Query();
+
+  }
+
+  /**
+   * 
+   * @return \USP_Rating_Values_Query
+   */
+  public function values_query() {
+	return new USP_Rating_Values_Query();
+
+  }
+
+  /**
+   * 
+   * @return \USP_Rating_Users_Query
+   */
+  public function users_query() {
+	return new USP_Rating_Users_Query();
+
+  }
+
+  /**
+   * @param int $user_id
+   * @param int $object_id
+   * 
+   * @return string - $user_id vote value for $object_id
+   */
+  public function get_user_vote($user_id, $object_id, $object_type) {
+
+	if ( $object_type instanceof USP_Rating_Object_Type_Abstract ) {
+	  $object_type = $object_type->get_id();
+	}
+
+	$query = $this->values_query();
+
+	return $query->select( [ 'rating_value' ] )
+	->where( [ 'user_id' => $user_id, 'object_id' => $object_id, 'rating_type' => $object_type ] )
+	->get_var();
+
+  }
+
+  /**
+   * @param int $object_id
+   * @param object|string $object_type
+   * 
+   * @return string - total rating of $object_id
+   */
+  public function get_object_rating($object_id, $object_type) {
+
+	if ( $object_type instanceof USP_Rating_Object_Type_Abstract ) {
+	  $object_type = $object_type->get_id();
+	}
+
+	$query = $this->totals_query();
+
+	return $query->select( [ 'rating_total' ] )
+	->where( [ 'object_id' => $object_id, 'rating_type' => $object_type ] )
+	->get_var();
+
+  }
+
+  /**
+   * @param int $object_id
+   * @param object|string $object_type
+   * 
+   * @return array - array of all votes for object
+   */
+  public function get_object_votes($object_id, $object_type) {
+
+	if ( $object_type instanceof USP_Rating_Object_Type_Abstract ) {
+	  $object_type = $object_type->get_id();
+	}
+
+	$query = $this->values_query();
+
+	return $query->select( [] )
+	->where( [ 'object_id' => $object_id, 'rating_type' => $object_type ] )
+	->get_results();
+
+  }
+
+  /**
+   * @param int $object_id
+   * @param object|string $object_type
+   * 
+   * @return string - votes count for $object_id
+   */
+  public function get_object_votes_count($object_id, $object_type) {
+
+	if ( $object_type instanceof USP_Rating_Object_Type_Abstract ) {
+	  $object_type = $object_type->get_id();
+	}
+
+	$query = $this->values_query();
+
+	return $query->select( [ 'ID' ] )
+	->where( [ 'object_id' => $object_id, 'rating_type' => $object_type ] )
+	->get_count();
+
+  }
+
+  /**
    * Run the loader to execute all of the hooks with WordPress.
    * 
    * @return void
    */
   private function run() {
-	
+
 	$this->loader = new USP_Rating_Loader();
 
 	$this->loader->run();

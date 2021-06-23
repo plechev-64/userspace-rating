@@ -11,7 +11,7 @@ abstract class USP_Rating_Type_Abstract {
    * @param int $object_author - user_id
    * @param object $object_type - rating object type
    * 
-   * @return string | bool - html code of rating box or false if rating for object disabled
+   * @return string - html code of rating box
    */
   abstract public function get_rating_box($object_id, $object_author, $object_type);
 

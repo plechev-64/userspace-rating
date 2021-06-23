@@ -32,8 +32,31 @@ class USP_Rating_Type_Likes extends USP_Rating_Type_Abstract {
   public function get_rating_box($object_id, $object_author, $object_type) {
 
 	$counting_type = $object_type->get_option( 'rating_' . $this->get_id() . '_overall_' . $object_type->get_id(), 0 );
-	
-	return 'html box of rating type Likes';
+
+	$user_vote = null;
+
+	$object_rating = USP_Rating()->get_object_rating( $object_id, $object_type );
+
+	$object_votes_count = USP_Rating()->get_object_votes_count( $object_id, $object_type );
+
+	$user_can_vote = $object_type->user_can_vote( get_current_user_id(), $object_id, $object_author );
+
+	if ( $user_can_vote ) {
+	  $user_vote = USP_Rating()->get_user_vote( get_current_user_id(), $object_id, $object_type );
+	}
+
+	$html = usp_get_include_template( 'usp-rating-' . $this->get_id() . '.php', USERSPACE_RATING_PATH . 'userspace-rating.php', [
+		'object_type' => $object_type,
+		'object_id' => $object_id,
+		'object_author' => $object_author,
+		'user_can_vote' => $user_can_vote,
+		'user_vote' => $user_vote,
+		'object_rating' => $object_rating,
+		'object_votes_count' => $object_votes_count,
+		'counting_type' => $counting_type
+	] );
+
+	return $html;
 
   }
 

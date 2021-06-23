@@ -27,6 +27,12 @@ class USP_Rating_Object_Type_Posts extends USP_Rating_Object_Type_Abstract {
 
   }
 
+  public function is_valid_object_id($object_id) {
+
+	return (get_post( $object_id )) ? true : false;
+
+  }
+
   public function get_history_template_custom_vars() {
 
 	return [ '%POST%' => __( 'link to publication', 'userspace-rating' ) ];

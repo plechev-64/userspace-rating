@@ -12,7 +12,13 @@ class USP_Rating_Loader {
 
 	$this->init_object_types();
 
-	$this->init_admin_options();
+	if ( is_admin() ) {
+	  $this->init_admin_options();
+	}
+
+	if ( wp_doing_ajax() ) {
+	  $this->init_ajax();
+	}
 
   }
 
@@ -34,7 +40,7 @@ class USP_Rating_Loader {
    * Init all default rating object types
    */
   private function init_object_types() {
-	
+
 	$this->init_object_types_posts();
 	$this->init_object_types_comment();
 
@@ -89,6 +95,15 @@ class USP_Rating_Loader {
 		$USP_Rating_Object_Types->add( $object_type );
 	  } );
 	}
+
+  }
+
+  /**
+   * Init ajax worker
+   */
+  private function init_ajax() {
+	$ajax = new USP_Rating_Ajax();
+	$ajax->process();
 
   }
 
