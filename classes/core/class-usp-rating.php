@@ -134,10 +134,10 @@ class USP_Rating {
 
   /**
    * 
-   * @return \USP_Rating_Values_Query
+   * @return \USP_Rating_Votes_Query
    */
-  public function values_query() {
-	return new USP_Rating_Values_Query();
+  public function votes_query() {
+	return new USP_Rating_Votes_Query();
 
   }
 
@@ -153,6 +153,7 @@ class USP_Rating {
   /**
    * @param int $user_id
    * @param int $object_id
+   * @param object $object_type
    * 
    * @return string - $user_id vote value for $object_id
    */
@@ -162,10 +163,10 @@ class USP_Rating {
 	  $object_type = $object_type->get_id();
 	}
 
-	$query = $this->values_query();
+	$query = $this->votes_query();
 
 	return $query->select( [ 'rating_value' ] )
-	->where( [ 'user_id' => $user_id, 'object_id' => $object_id, 'rating_type' => $object_type ] )
+	->where( [ 'user_id' => $user_id, 'object_id' => $object_id, 'object_type' => $object_type ] )
 	->get_var();
 
   }
@@ -181,11 +182,11 @@ class USP_Rating {
 	if ( $object_type instanceof USP_Rating_Object_Type_Abstract ) {
 	  $object_type = $object_type->get_id();
 	}
-
+	
 	$query = $this->totals_query();
 
 	return $query->select( [ 'rating_total' ] )
-	->where( [ 'object_id' => $object_id, 'rating_type' => $object_type ] )
+	->where( [ 'object_id' => $object_id, 'object_type' => $object_type ] )
 	->get_var();
 
   }
@@ -202,10 +203,10 @@ class USP_Rating {
 	  $object_type = $object_type->get_id();
 	}
 
-	$query = $this->values_query();
+	$query = $this->votes_query();
 
 	return $query->select( [] )
-	->where( [ 'object_id' => $object_id, 'rating_type' => $object_type ] )
+	->where( [ 'object_id' => $object_id, 'object_type' => $object_type ] )
 	->get_results();
 
   }
@@ -222,11 +223,172 @@ class USP_Rating {
 	  $object_type = $object_type->get_id();
 	}
 
-	$query = $this->values_query();
+	$query = $this->votes_query();
 
 	return $query->select( [ 'ID' ] )
-	->where( [ 'object_id' => $object_id, 'rating_type' => $object_type ] )
+	->where( [ 'object_id' => $object_id, 'object_type' => $object_type ] )
 	->get_count();
+
+  }
+
+  /**
+   * Insert / update user vote
+   * 
+   * array['user_id'] - int (required)
+   * array['object_id'] - int (required)
+   * array['object_author'] - int (required)
+   * array['object_type'] - object|string (required)
+   * array['rating_value'] - numeric value (required)
+   * array['rating_date'] - vote date
+   * 
+   * @param array $_args
+   * 
+   * @return bool|WP_Error
+   */
+  public function add_object_vote($_args) {
+
+	$args = $this->prepare_vote_args( $_args );
+	$is_valid_vote_args = $this->is_valid_vote_args( $args );
+
+	if ( is_wp_error( $is_valid_vote_args ) ) {
+	  return $is_valid_vote_args;
+	}
+
+	$object_type = $args[ 'object_type' ];
+
+	$rating_type = $this->get_rating_type( $object_type->get_option( 'rating_type' ) );
+
+	/**
+	 * if rating_type for this object_type not exist or incorrect
+	 */
+	if ( !$rating_type instanceof USP_Rating_Type_Abstract ) {
+
+	  $error_message = sprintf( __( "Rating type for object_type %s not found", 'userspace-rating' ), $object_type->get_id() );
+
+	  return new WP_Error( 'userspace-rating', $error_message );
+	}
+
+	/**
+	 * if rating value incorrect
+	 */
+	if ( !$rating_type->is_valid_rating_value( $args[ 'rating_value' ], $object_type ) ) {
+
+	  $error_message = __( "rating_value incorrect", 'userspace-rating' );
+
+	  return new WP_Error( 'userspace-rating', $error_message );
+	}
+
+
+	$prev_rating_value = $this->get_user_vote( $args[ 'user_id' ], $args[ 'object_id' ], $object_type );
+
+	$args[ 'object_type' ] = $args[ 'object_type' ]->get_id();
+
+	if ( !is_null( $prev_rating_value ) ) {
+
+	  if ( $prev_rating_value == $args[ 'rating_value' ] ) {
+		/**
+		 * Remove vote
+		 */
+		return $this->remove_vote( $args );
+	  } else {
+		/**
+		 * Update vote
+		 */
+		return $this->update_vote( $args );
+	  }
+	}
+
+	/**
+	 * Insert vote
+	 */
+	return $this->insert_vote( $args );
+
+  }
+
+  /**
+   * Insert user vote
+   * 
+   * Use $this->add_object_vote
+   * 
+   * @param array $args
+   * 
+   * @return bool
+   */
+  private function insert_vote($args) {
+
+	$result = USP_Rating_Votes_Query::insert( $args );
+
+	if ( $result === 1 ) {
+	  do_action( 'userspace_rating_insert_vote', $args );
+	}
+
+	return $result;
+
+  }
+
+  /**
+   * Update vote for object
+   * 
+   * Use $this->add_object_vote
+   * 
+   * @param array $args
+   * 
+   * @return bool|WP_Error
+   */
+  private function update_vote($args) {
+
+	$remove_result = $this->remove_vote( $args );
+
+	if ( $remove_result !== 1 ) {
+	  return $remove_result;
+	}
+
+	$insert_result = $this->insert_vote( $args );
+
+	return $insert_result;
+
+  }
+
+  /**
+   * Remove vote for object
+   * 
+   * array['user_id'] - int (required)
+   * array['object_id'] - int (required)
+   * array['object_type'] - object|string (required)
+   * 
+   * @param array $args
+   * 
+   * @return bool|WP_Error
+   */
+  public function remove_vote($args) {
+
+	$user_id = $args[ 'user_id' ];
+	$object_id = $args[ 'object_id' ];
+	$object_type = $args[ 'object_type' ];
+
+	if ( !$object_type instanceof USP_Rating_Object_Type_Abstract ) {
+
+	  $object_type = $this->get_object_type( $object_type );
+	}
+
+	if ( !$object_type instanceof USP_Rating_Object_Type_Abstract ) {
+
+	  $error_message = __( "Incorrect object_type", 'userspace-rating' );
+
+	  return new WP_Error( 'userspace-rating', $error_message );
+	}
+
+	$result = USP_Rating_Votes_Query::delete( [
+		'user_id' => (int) $user_id,
+		'object_id' => (int) $object_id,
+		'object_type' => $object_type->get_id()
+	] );
+
+	if ( $result === 1 ) {
+	  do_action( 'userspace_rating_remove_vote', $args );
+	}
+
+	return $result;
 
   }
 
@@ -240,6 +402,90 @@ class USP_Rating {
 	$this->loader = new USP_Rating_Loader();
 
 	$this->loader->run();
+
+  }
+
+  private function prepare_vote_args($args) {
+
+	$prepared_args = wp_parse_args( $args, [
+		'user_id' => 0,
+		'object_id' => 0,
+		'object_author' => 0,
+		'object_type' => '',
+		'rating_value' => 0,
+		'rating_date' => current_time( 'mysql' )
+	] );
+
+	if ( !$prepared_args[ 'object_type' ] instanceof USP_Rating_Object_Type_Abstract ) {
+	  $prepared_args[ 'object_type' ] = $this->get_object_type( $prepared_args[ 'object_type' ] );
+	}
+
+	return $prepared_args;
+
+  }
+
+  private function is_valid_vote_args($args) {
+
+	$object_type = $args[ 'object_type' ];
+
+	if ( !$object_type instanceof USP_Rating_Object_Type_Abstract ) {
+
+	  $error_message = __( "Incorrect object_type", 'userspace-rating' );
+
+	  return new WP_Error( 'userspace-rating', $error_message );
+	}
+
+	/**
+	 * if rating for this object_type disabled
+	 */
+	if ( !$object_type->get_option( 'rating' ) ) {
+
+	  $error_message = sprintf( __( "Rating for object_type %s disabled", 'userspace-rating' ), $object_type->get_id() );
+
+	  return new WP_Error( 'userspace-rating', $error_message );
+	}
+
+	/**
+	 * if rating for this object_id disabled
+	 */
+	if ( !$object_type->is_rating_enable( $args[ 'object_id' ] ) ) {
+
+	  $error_message = sprintf( __( "Rating for object_id %s disabled", 'userspace-rating' ), $args[ 'object_id' ] );
+
+	  return new WP_Error( 'userspace-rating', $error_message );
+	}
+
+	/**
+	 * if Incorrect object_id
+	 */
+	if ( !$object_type->is_valid_object_id( $args[ 'object_id' ] ) ) {
+
+	  $error_message = sprintf( __( "Incorrect object_id %s", 'userspace-rating' ), $args[ 'object_id' ] );
+
+	  return new WP_Error( 'userspace-rating', $error_message );
+	}
+
+	/**
+	 * if object_author incorrect
+	 */
+	if ( $object_type->get_object_author( $args[ 'object_id' ] ) != $args[ 'object_author' ] ) {
+
+	  $error_message = sprintf( __( "Incorrect object_author %s", 'userspace-rating' ), $args[ 'object_author' ] );
+
+	  return new WP_Error( 'userspace-rating', $error_message );
+	}
+
+	/**
+	 * if user_id cannot vote for this object_id
+	 */
+	if ( !$object_type->user_can_vote( $args[ 'user_id' ], $args[ 'object_id' ], $args[ 'object_author' ] ) ) {
+
+	  $error_message = __( "You cannot vote for this object", 'userspace-rating' );
+
+	  return new WP_Error( 'userspace-rating', $error_message );
+	}
+
+	return true;
 
   }
 

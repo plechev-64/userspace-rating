@@ -3,7 +3,8 @@
 class USP_Rating_Loader {
 
   public function __construct() {
-	
+	add_action( 'usp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+	usp_ajax_action( 'userspace_rating_ajax' );
   }
 
   public function run() {
@@ -16,9 +17,18 @@ class USP_Rating_Loader {
 	  $this->init_admin_options();
 	}
 
-	if ( wp_doing_ajax() ) {
-	  $this->init_ajax();
+  }
+
+  /**
+   * Register scripts & styles
+   */
+  public function enqueue_scripts() {
+
+	if ( is_user_logged_in() ) {
+	  usp_enqueue_script( 'userspace-rating', USERSPACE_RATING_URL . 'assets/js/scripts.js' );
 	}
+
+	usp_enqueue_style( 'userspace-rating', USERSPACE_RATING_URL . 'assets/css/style.css' );
 
   }
 
@@ -95,15 +105,6 @@ class USP_Rating_Loader {
 		$USP_Rating_Object_Types->add( $object_type );
 	  } );
 	}
-
-  }
-
-  /**
-   * Init ajax worker
-   */
-  private function init_ajax() {
-	$ajax = new USP_Rating_Ajax();
-	$ajax->process();
 
   }
 

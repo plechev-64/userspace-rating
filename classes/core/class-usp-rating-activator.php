@@ -16,31 +16,30 @@ final class USP_Rating_Activator {
 
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
-	$sql_values_table = "CREATE TABLE IF NOT EXISTS " . USERSPACE_RATING_PREF . "rating_values (
+	$sql_votes_table = "CREATE TABLE IF NOT EXISTS " . USERSPACE_RATING_PREF . "rating_votes (
 						ID BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 						user_id BIGINT(20) UNSIGNED NOT NULL,
 						object_id BIGINT(20) UNSIGNED NOT NULL,
 						object_author BIGINT(20) UNSIGNED NOT NULL,
+						object_type VARCHAR(20) NOT NULL,
 						rating_value VARCHAR(5) NOT NULL,
 						rating_date DATETIME NOT NULL,
-						rating_type VARCHAR(20) NOT NULL,
 						PRIMARY KEY  ID (ID),
 						KEY user_id (user_id),
 						KEY object_id (object_id),
-						KEY rating_value (rating_value),
-						KEY rating_type (rating_type)
+						KEY object_type (object_type)
 					  ) {$charset_collate};";
 
 	$sql_totals_table = "CREATE TABLE IF NOT EXISTS " . USERSPACE_RATING_PREF . "rating_totals (
 						ID BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 						object_id BIGINT(20) UNSIGNED NOT NULL,
 						object_author BIGINT(20) UNSIGNED NOT NULL,
+						object_type VARCHAR(20) NOT NULL,
 						rating_total VARCHAR(10) NOT NULL,
-						rating_type VARCHAR(20) NOT NULL,
 						PRIMARY KEY  ID (ID),
 						KEY object_id (object_id),
 						KEY object_author (object_author),
-						KEY rating_type (rating_type),
+						KEY object_type (object_type),
 						KEY rating_total (rating_total)
 					  ) {$charset_collate};";
 
@@ -51,7 +50,7 @@ final class USP_Rating_Activator {
 						KEY rating_total (rating_total)
 					  ) {$charset_collate};";
 
-	dbDelta( $sql_values_table );
+	dbDelta( $sql_votes_table );
 	dbDelta( $sql_totals_table );
 	dbDelta( $sql_users_table );
 

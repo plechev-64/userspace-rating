@@ -27,6 +27,12 @@ class USP_Rating_Object_Type_Posts extends USP_Rating_Object_Type_Abstract {
 
   }
 
+  public function get_object_author($object_id) {
+
+	return get_post_field( 'post_author', $object_id );
+
+  }
+
   public function is_valid_object_id($object_id) {
 
 	return (get_post( $object_id )) ? true : false;

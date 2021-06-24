@@ -22,6 +22,14 @@ class USP_Rating_Type_Stars extends USP_Rating_Type_Abstract {
 
   }
 
+  public function is_valid_rating_value($rating_value, $object_type) {
+
+	$option_rating_points = $object_type->get_option( 'rating_points' );
+
+	return $option_rating_points == $option_rating_points;
+
+  }
+
   /**
    * @param int $object_id - post_id, comment_id etc...
    * @param int $object_author - user_id
@@ -41,7 +49,7 @@ class USP_Rating_Type_Stars extends USP_Rating_Type_Abstract {
    * @return array - Array of custom options for rating type stars
    */
   public function get_custom_options($USP_Object_Type) {
-	
+
 	return [
 		[
 			'type' => 'runner',

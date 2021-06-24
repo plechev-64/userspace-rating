@@ -22,6 +22,14 @@ class USP_Rating_Type_Likes extends USP_Rating_Type_Abstract {
 
   }
 
+  public function is_valid_rating_value($rating_value, $object_type) {
+
+	$option_rating_points = $object_type->get_option( 'rating_points' );
+
+	return $option_rating_points == $rating_value;
+
+  }
+
   /**
    * @param int $object_id - post_id, comment_id etc...
    * @param int $object_author - user_id
@@ -32,18 +40,35 @@ class USP_Rating_Type_Likes extends USP_Rating_Type_Abstract {
   public function get_rating_box($object_id, $object_author, $object_type) {
 
 	$counting_type = $object_type->get_option( 'rating_' . $this->get_id() . '_overall_' . $object_type->get_id(), 0 );
+	$rating_points = $object_type->get_option( 'rating_points' );
 
 	$user_vote = null;
 
-	$object_rating = USP_Rating()->get_object_rating( $object_id, $object_type );
+	if ( $counting_type ) {
 
-	$object_votes_count = USP_Rating()->get_object_votes_count( $object_id, $object_type );
+	  /**
+	   * If counting_type == 1, $object_rating = number of votes
+	   */
+	  $object_rating = USP_Rating()->get_object_votes_count( $object_id, $object_type );
+	} else {
+	  /**
+	   * If counting_type == 0, $object_rating = sum of votes
+	   */
+	  $object_rating = USP_Rating()->get_object_rating( $object_id, $object_type );
+	}
+
+	if ( !$object_rating ) {
+
+	  $object_rating = 0;
+	}
 
 	$user_can_vote = $object_type->user_can_vote( get_current_user_id(), $object_id, $object_author );
 
 	if ( $user_can_vote ) {
 	  $user_vote = USP_Rating()->get_user_vote( get_current_user_id(), $object_id, $object_type );
 	}
+
+	$user_can_view_history = true;
 
 	$html = usp_get_include_template( 'usp-rating-' . $this->get_id() . '.php', USERSPACE_RATING_PATH . 'userspace-rating.php', [
 		'object_type' => $object_type,
@@ -52,8 +77,8 @@ class USP_Rating_Type_Likes extends USP_Rating_Type_Abstract {
 		'user_can_vote' => $user_can_vote,
 		'user_vote' => $user_vote,
 		'object_rating' => $object_rating,
-		'object_votes_count' => $object_votes_count,
-		'counting_type' => $counting_type
+		'user_can_view_history' => $user_can_view_history,
+		'rating_points' => $rating_points
 	] );
 
 	return $html;

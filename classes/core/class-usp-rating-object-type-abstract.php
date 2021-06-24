@@ -15,6 +15,13 @@ abstract class USP_Rating_Object_Type_Abstract {
   /**
    * @param int $object_id
    * 
+   * @return int - user_id
+   */
+  abstract public function get_object_author($object_id);
+
+  /**
+   * @param int $object_id
+   * 
    * @return bool - valid or not object_id
    */
   abstract public function is_valid_object_id($object_id);
@@ -27,7 +34,9 @@ abstract class USP_Rating_Object_Type_Abstract {
    * @return bool - can $user_id vote for $object_id
    */
   public function user_can_vote($user_id, $object_id, $object_author) {
-
+	/**
+	 * Возможно метод надо перенести в основной класс плагина
+	 */
 	if ( !$user_id ) {
 	  return false;
 	}

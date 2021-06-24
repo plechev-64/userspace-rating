@@ -22,6 +22,14 @@ class USP_Rating_Type_Plus_Minus extends USP_Rating_Type_Abstract {
 
   }
 
+  public function is_valid_rating_value($rating_value, $object_type) {
+
+	$option_rating_points = $object_type->get_option( 'rating_points' );
+
+	return $option_rating_points == $option_rating_points;
+
+  }
+
   /**
    * @param int $object_id - post_id, comment_id etc...
    * @param int $object_author - user_id
@@ -30,15 +38,15 @@ class USP_Rating_Type_Plus_Minus extends USP_Rating_Type_Abstract {
    * @return string | bool - html code of rating box or false if rating for object disabled
    */
   public function get_rating_box($object_id, $object_author, $object_type) {
-	
+
 	/**
 	 * Rating counting type 0 - sum of votes / 1 - Number of positive and negative votes 
 	 */
 	$counting_type = $object_type->get_option( 'rating_' . $this->get_id() . '_overall_' . $object_type->get_id(), 0 );
-	
-	
-	
-	
+
+
+
+
 
 	return 'html box of rating type Plus/Minus';
 

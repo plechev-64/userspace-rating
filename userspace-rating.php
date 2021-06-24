@@ -28,7 +28,7 @@ if ( !defined( 'USERSPACE_RATING_URL' ) ) {
 if ( !defined( 'USERSPACE_RATING_PREF' ) ) {
   global $wpdb;
 
-  define( 'USERSPACE_RATING_PREF', $wpdb->base_prefix . 'uspr_' );
+  define( 'USERSPACE_RATING_PREF', $wpdb->base_prefix . 'usp_' );
 }
 
 /**
@@ -81,11 +81,22 @@ function USP_Rating() {
 
 }
 
+function userspace_rating_ajax() {
+
+  $ajax = new USP_Rating_Ajax();
+
+  $ajax->process();
+
+}
+
 /**
  * Check if UserSpace is active
  * */
 if ( in_array( 'userspace/userspace.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
 
+  /**
+   * Load UserSpace Rating
+   */
   add_action( 'init', 'USP_Rating' );
 } else {
 

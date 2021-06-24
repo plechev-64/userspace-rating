@@ -2,13 +2,7 @@
 
 class USP_Rating_Totals_Query extends USP_Query {
 
-  private $db;
-
   function __construct($as = false) {
-
-	global $wpdb;
-
-	$this->db = $wpdb;
 
 	$table = array(
 		'name' => USERSPACE_RATING_PREF . "rating_totals",
@@ -17,8 +11,8 @@ class USP_Rating_Totals_Query extends USP_Query {
 			'ID',
 			'object_id',
 			'object_author',
-			'rating_total',
-			'rating_type'
+			'object_type',
+			'rating_total'
 		)
 	);
 
@@ -26,21 +20,27 @@ class USP_Rating_Totals_Query extends USP_Query {
 
   }
 
-  function insert($data) {
+  static function insert($data) {
 
-	return $this->db->insert( $this->query[ 'table' ][ 'name' ], $data );
+	global $wpdb;
 
-  }
-
-  function update($where, $data) {
-
-	return $this->db->update( $this->query[ 'table' ][ 'name' ], $data, $where );
+	return $wpdb->insert( USERSPACE_RATING_PREF . "rating_totals", $data );
 
   }
 
-  function delete($where) {
+  static function update($where, $data) {
 
-	return $this->db->delete( $this->query[ 'table' ][ 'name' ], $where );
+	global $wpdb;
+
+	return $wpdb->update( USERSPACE_RATING_PREF . "rating_totals", $data, $where );
+
+  }
+
+  static function delete($where) {
+
+	global $wpdb;
+
+	return $wpdb->delete( USERSPACE_RATING_PREF . "rating_totals", $where );
 
   }
 

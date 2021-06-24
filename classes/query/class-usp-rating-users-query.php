@@ -2,13 +2,7 @@
 
 class USP_Rating_Users_Query extends USP_Query {
 
-  private $db;
-
   function __construct($as = false) {
-
-	global $wpdb;
-
-	$this->db = $wpdb;
 
 	$table = array(
 		'name' => USERSPACE_RATING_PREF . "rating_users",
@@ -23,21 +17,27 @@ class USP_Rating_Users_Query extends USP_Query {
 
   }
 
-  function insert($data) {
+  static function insert($data) {
 
-	return $this->db->insert( $this->query[ 'table' ][ 'name' ], $data );
-
-  }
-
-  function update($where, $data) {
-
-	return $this->db->update( $this->query[ 'table' ][ 'name' ], $data, $where );
+	global $wpdb;
+	
+	return $wpdb->insert( USERSPACE_RATING_PREF . "rating_users", $data );
 
   }
 
-  function delete($where) {
+  static function update($where, $data) {
 
-	return $this->db->delete( $this->query[ 'table' ][ 'name' ], $where );
+	global $wpdb;
+
+	return $wpdb->update( USERSPACE_RATING_PREF . "rating_users", $data, $where );
+
+  }
+
+  static function delete($where) {
+
+	global $wpdb;
+
+	return $wpdb->delete( USERSPACE_RATING_PREF . "rating_users", $where );
 
   }
 

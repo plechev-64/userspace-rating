@@ -22,6 +22,12 @@ class USP_Rating_Object_Type_Comment extends USP_Rating_Object_Type_Abstract {
 
   }
 
+  public function get_object_author($object_id) {
+
+	return get_comment( $object_id )->user_id;
+
+  }
+
   public function is_valid_object_id($object_id) {
 
 	return (get_comment( $object_id )) ? true : false;
