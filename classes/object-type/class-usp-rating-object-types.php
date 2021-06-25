@@ -1,6 +1,6 @@
 <?php
 
-class USP_Rating_Object_Types {
+final class USP_Rating_Object_Types {
 
   /**
    * Array of instances with all registered object types
@@ -41,12 +41,12 @@ class USP_Rating_Object_Types {
    * 
    * @param string $id
    * 
-   * return object|array|false - instance of object type or array of all instances object types or false
+   * return object|false - instance of object type or false
    */
   public function get($id = '') {
 
 	if ( !$id ) {
-	  return $this->types;
+	  return false;
 	}
 
 	foreach ( $this->types as $object_type ) {
@@ -58,6 +58,17 @@ class USP_Rating_Object_Types {
 	}
 
 	return false;
+
+  }
+
+  /**
+   * Get all object types
+   * 
+   * @return array - all object types
+   */
+  public function get_all() {
+
+	return $this->types;
 
   }
 

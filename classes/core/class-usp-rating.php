@@ -1,14 +1,5 @@
 <?php
 
-/**
- * The file that defines the core plugin class
- *
- * A class definition that includes attributes and functions used across both the
- * public-facing side of the site and the admin area.
- *
- * @link       http://user-space.com
- * @since      1.0.0
- */
 class USP_Rating {
 
   private $loader = null;
@@ -153,80 +144,80 @@ class USP_Rating {
   /**
    * @param int $user_id
    * @param int $object_id
-   * @param object $object_type
+   * @param object|string $object_type_id
    * 
    * @return string - $user_id vote value for $object_id
    */
-  public function get_user_vote($user_id, $object_id, $object_type) {
+  public function get_user_vote($user_id, $object_id, $object_type_id) {
 
-	if ( $object_type instanceof USP_Rating_Object_Type_Abstract ) {
-	  $object_type = $object_type->get_id();
+	if ( $object_type_id instanceof USP_Rating_Object_Type_Abstract ) {
+	  $object_type_id = $object_type_id->get_id();
 	}
 
 	$query = $this->votes_query();
 
 	return $query->select( [ 'rating_value' ] )
-	->where( [ 'user_id' => $user_id, 'object_id' => $object_id, 'object_type' => $object_type ] )
+	->where( [ 'user_id' => $user_id, 'object_id' => $object_id, 'object_type' => $object_type_id ] )
 	->get_var();
 
   }
 
   /**
    * @param int $object_id
-   * @param object|string $object_type
+   * @param object|string $object_type_id
    * 
    * @return string - total rating of $object_id
    */
-  public function get_object_rating($object_id, $object_type) {
+  public function get_object_rating($object_id, $object_type_id) {
 
-	if ( $object_type instanceof USP_Rating_Object_Type_Abstract ) {
-	  $object_type = $object_type->get_id();
+	if ( $object_type_id instanceof USP_Rating_Object_Type_Abstract ) {
+	  $object_type_id = $object_type_id->get_id();
 	}
-	
+
 	$query = $this->totals_query();
 
 	return $query->select( [ 'rating_total' ] )
-	->where( [ 'object_id' => $object_id, 'object_type' => $object_type ] )
+	->where( [ 'object_id' => $object_id, 'object_type' => $object_type_id ] )
 	->get_var();
 
   }
 
   /**
    * @param int $object_id
-   * @param object|string $object_type
+   * @param object|string $object_type_id
    * 
    * @return array - array of all votes for object
    */
-  public function get_object_votes($object_id, $object_type) {
+  public function get_object_votes($object_id, $object_type_id) {
 
-	if ( $object_type instanceof USP_Rating_Object_Type_Abstract ) {
-	  $object_type = $object_type->get_id();
+	if ( $object_type_id instanceof USP_Rating_Object_Type_Abstract ) {
+	  $object_type_id = $object_type_id->get_id();
 	}
 
 	$query = $this->votes_query();
 
 	return $query->select( [] )
-	->where( [ 'object_id' => $object_id, 'object_type' => $object_type ] )
+	->where( [ 'object_id' => $object_id, 'object_type' => $object_type_id ] )
 	->get_results();
 
   }
 
   /**
    * @param int $object_id
-   * @param object|string $object_type
+   * @param object|string $object_type_id
    * 
    * @return string - votes count for $object_id
    */
-  public function get_object_votes_count($object_id, $object_type) {
+  public function get_object_votes_count($object_id, $object_type_id) {
 
-	if ( $object_type instanceof USP_Rating_Object_Type_Abstract ) {
-	  $object_type = $object_type->get_id();
+	if ( $object_type_id instanceof USP_Rating_Object_Type_Abstract ) {
+	  $object_type_id = $object_type_id->get_id();
 	}
 
 	$query = $this->votes_query();
 
 	return $query->select( [ 'ID' ] )
-	->where( [ 'object_id' => $object_id, 'object_type' => $object_type ] )
+	->where( [ 'object_id' => $object_id, 'object_type' => $object_type_id ] )
 	->get_count();
 
   }
@@ -319,7 +310,14 @@ class USP_Rating {
 	$result = USP_Rating_Votes_Query::insert( $args );
 
 	if ( $result === 1 ) {
-	  do_action( 'userspace_rating_insert_vote', $args );
+
+	  $added_vote = $this->votes_query()->select( [] )->where( [
+		  'user_id' => $args[ 'user_id' ],
+		  'object_id' => $args[ 'object_id' ],
+		  'object_type' => $args[ 'object_type' ]
+	  ] )->get_row();
+
+	  do_action( 'userspace_rating_insert_vote', $added_vote );
 	}
 
 	return $result;
@@ -378,6 +376,12 @@ class USP_Rating {
 	  return new WP_Error( 'userspace-rating', $error_message );
 	}
 
+	$removed_vote = $this->votes_query()->select( [] )->where( [
+		'user_id' => (int) $user_id,
+		'object_id' => (int) $object_id,
+		'object_type' => $object_type->get_id()
+	] )->get_row();
+
 	$result = USP_Rating_Votes_Query::delete( [
 		'user_id' => (int) $user_id,
 		'object_id' => (int) $object_id,
@@ -385,7 +389,7 @@ class USP_Rating {
 	] );
 
 	if ( $result === 1 ) {
-	  do_action( 'userspace_rating_remove_vote', $args );
+	  do_action( 'userspace_rating_remove_vote', $removed_vote );
 	}
 
 	return $result;
@@ -471,16 +475,6 @@ class USP_Rating {
 	if ( $object_type->get_object_author( $args[ 'object_id' ] ) != $args[ 'object_author' ] ) {
 
 	  $error_message = sprintf( __( "Incorrect object_author %s", 'userspace-rating' ), $args[ 'object_author' ] );
-
-	  return new WP_Error( 'userspace-rating', $error_message );
-	}
-
-	/**
-	 * if user_id cannot vote for this object_id
-	 */
-	if ( !$object_type->user_can_vote( $args[ 'user_id' ], $args[ 'object_id' ], $args[ 'object_author' ] ) ) {
-
-	  $error_message = __( "You cannot vote for this object", 'userspace-rating' );
 
 	  return new WP_Error( 'userspace-rating', $error_message );
 	}

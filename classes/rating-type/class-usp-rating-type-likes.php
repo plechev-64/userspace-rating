@@ -24,9 +24,9 @@ class USP_Rating_Type_Likes extends USP_Rating_Type_Abstract {
 
   public function is_valid_rating_value($rating_value, $object_type) {
 
-	$option_rating_points = $object_type->get_option( 'rating_points' );
+	$option_rating_value = $object_type->get_option( 'rating_likes_value' );
 
-	return $option_rating_points == $rating_value;
+	return $option_rating_value == $rating_value;
 
   }
 
@@ -39,8 +39,8 @@ class USP_Rating_Type_Likes extends USP_Rating_Type_Abstract {
    */
   public function get_rating_box($object_id, $object_author, $object_type) {
 
-	$counting_type = $object_type->get_option( 'rating_' . $this->get_id() . '_overall_' . $object_type->get_id(), 0 );
-	$rating_points = $object_type->get_option( 'rating_points' );
+	$counting_type = $object_type->get_option( 'rating_likes_overall' );
+	$rating_points = $object_type->get_option( 'rating_likes_value' );
 
 	$user_vote = null;
 
@@ -62,7 +62,7 @@ class USP_Rating_Type_Likes extends USP_Rating_Type_Abstract {
 	  $object_rating = 0;
 	}
 
-	$user_can_vote = $object_type->user_can_vote( get_current_user_id(), $object_id, $object_author );
+	$user_can_vote = get_current_user_id() && get_current_user_id() != $object_author;
 
 	if ( $user_can_vote ) {
 	  $user_vote = USP_Rating()->get_user_vote( get_current_user_id(), $object_id, $object_type );
@@ -86,16 +86,22 @@ class USP_Rating_Type_Likes extends USP_Rating_Type_Abstract {
   }
 
   /**
-   * @param $USP_Object_Type - Current rating object type
+   * @param $object_type - Current rating object type
    * 
    * @return array - Array of custom options for rating type likes
    */
-  public function get_custom_options($USP_Object_Type) {
+  public function get_custom_options($object_type) {
 	return [
 		[
+			'type' => 'number',
+			'slug' => 'rating_likes_value_' . $object_type->get_id(),
+			'title' => __( 'Rating value', 'userspace-rating' ),
+			'default' => 1
+		],
+		[
 			'type' => 'select',
-			'slug' => 'rating_likes_overall_' . $USP_Object_Type->get_id(),
-			'title' => __( 'Overall rating', 'userspace-rating' ) . ' ' . $USP_Object_Type->get_name(),
+			'slug' => 'rating_likes_overall_' . $object_type->get_id(),
+			'title' => __( 'Overall rating', 'userspace-rating' ) . ' ' . $object_type->get_name(),
 			'values' => array( __( 'Sum of votes', 'userspace-rating' ), __( 'Number of votes', 'userspace-rating' ) )
 		]
 	];

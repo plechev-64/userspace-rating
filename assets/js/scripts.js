@@ -2,9 +2,13 @@ jQuery(document).ready(function () {
 
   const $ = jQuery;
 
-  $(document).on('click', '.usp-rating-box__vote_can', function () {
+  $(document).on('click', '.usp-rating-box__vote', function () {
 
 	let $box = $(this).closest('.usp-rating-box');
+	
+	if(!$box.hasClass('usp-rating-box_vote_can')) {
+	  return;
+	}
 
 	usp_preloader_show($box);
 

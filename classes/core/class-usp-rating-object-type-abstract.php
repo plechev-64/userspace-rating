@@ -27,29 +27,6 @@ abstract class USP_Rating_Object_Type_Abstract {
   abstract public function is_valid_object_id($object_id);
 
   /**
-   * @param int $user_id
-   * @param int $object_id
-   * @param int $object_author
-   * 
-   * @return bool - can $user_id vote for $object_id
-   */
-  public function user_can_vote($user_id, $object_id, $object_author) {
-	/**
-	 * Возможно метод надо перенести в основной класс плагина
-	 */
-	if ( !$user_id ) {
-	  return false;
-	}
-
-	if ( $user_id == $object_author ) {
-	  return false;
-	}
-
-	return true;
-
-  }
-
-  /**
    * @return string - default history template for object type
    */
   public function get_history_template_default() {

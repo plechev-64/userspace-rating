@@ -60,6 +60,12 @@ class USP_Rating_Type_Plus_Minus extends USP_Rating_Type_Abstract {
   public function get_custom_options($object_type) {
 	return [
 		[
+			'type' => 'number',
+			'slug' => 'rating_plus-minus_value_' . $object_type->get_id(),
+			'title' => __( 'Rating value', 'userspace-rating' ),
+			'default' => 1
+		],
+		[
 			'type' => 'select',
 			'slug' => 'rating_plus-minus_overall_' . $object_type->get_id(),
 			'title' => __( 'Overall rating', 'userspace-rating' ) . ' ' . $object_type->get_name(),

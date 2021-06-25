@@ -47,7 +47,7 @@ class USP_Rating_Ajax {
 	  $this->error( __( 'Unknown error', 'userspace-rating' ) );
 	}
 
-	$this->success( __( 'Success ' . $result, 'userspace-rating' ), [
+	$this->success( '', [
 		'html' => USP_Rating()->get_rating_box( $object_id, $object_author, $object_type )
 	] );
 

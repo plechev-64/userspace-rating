@@ -1,10 +1,46 @@
-/*
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
+/**
+* Core
 */
-/* 
-    Created on : 24.06.2021, 18:29:00
-    Author     : admin
-*/
+.usp-rating-box {
+  position: relative;
+}
 
+.usp-rating-box__inner,
+.usp-rating-box__vote {
+  display: flex;
+}
+
+.usp-rating-box__inner > *:not(:last-child) {
+  margin-right: 6px;
+}
+
+/**
+* Stars
+*/
+.usp-rating-box__stars {
+  display: flex;
+}
+
+.usp-rating-box_type_stars .usp-rating-box__vote i {
+  font-size: 22px;
+}
+
+.usp-rating-box_type_stars .usp-rating-box__value {
+  font-size: 18px;
+}
+
+.usp-rating-box_type_stars .usp-rating-box__vote {
+  color: orange;
+}
+
+.usp-rating-box_type_stars.usp-rating-box_vote_can .usp-rating-box__vote {
+  cursor: pointer;
+}
+
+.usp-rating-box_type_stars.usp-rating-box_vote_can .usp-rating-box__stars:hover .usp-rating-box__vote i:before {
+  opacity: 1;
+}
+
+.usp-rating-box_type_stars.usp-rating-box_vote_can .usp-rating-box__vote:hover ~ .usp-rating-box__vote i:before {
+  opacity: .3;
+}

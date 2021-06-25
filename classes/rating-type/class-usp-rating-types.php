@@ -1,6 +1,6 @@
 <?php
 
-class USP_Rating_Types {
+final class USP_Rating_Types {
 
   /**
    * Array of instances with all registered rating types
@@ -24,7 +24,7 @@ class USP_Rating_Types {
 
 	if ( $rating_type && $rating_type instanceof USP_Rating_Type_Abstract ) {
 
-	  if ( $this->get( $rating_type->get_id() ) === false ) {
+	  if ( !$this->get( $rating_type->get_id() ) ) {
 
 		$this->types[] = $rating_type;
 	  }
@@ -41,12 +41,12 @@ class USP_Rating_Types {
    * 
    * @param string $id
    * 
-   * @return object|array|false - instance of rating type or array of all instances rating types or false
+   * @return object|false - instance of rating type or false
    */
   public function get($id = '') {
 
 	if ( !$id ) {
-	  return $this->types;
+	  return false;
 	}
 
 	foreach ( $this->types as $rating_type ) {
@@ -58,6 +58,17 @@ class USP_Rating_Types {
 	}
 
 	return false;
+
+  }
+
+  /**
+   * Get all rating types
+   * 
+   * @return array - all rating types
+   */
+  public function get_all() {
+
+	return $this->types;
 
   }
 
