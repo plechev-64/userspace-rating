@@ -42,6 +42,11 @@ class USP_Rating_Type_Likes extends USP_Rating_Type_Abstract {
 	$counting_type = $object_type->get_option( 'rating_likes_overall' );
 	$rating_points = $object_type->get_option( 'rating_likes_value' );
 
+	$icons = [
+		'default' => $object_type->get_option( 'rating_likes_icon_default' ),
+		'voted' => $object_type->get_option( 'rating_likes_icon_voted' )
+	];
+
 	$user_vote = null;
 
 	if ( $counting_type ) {
@@ -78,7 +83,8 @@ class USP_Rating_Type_Likes extends USP_Rating_Type_Abstract {
 		'user_vote' => $user_vote,
 		'object_rating' => $object_rating,
 		'user_can_view_history' => $user_can_view_history,
-		'rating_points' => $rating_points
+		'rating_points' => $rating_points,
+		'icons' => $icons
 	] );
 
 	return $html;
@@ -99,10 +105,22 @@ class USP_Rating_Type_Likes extends USP_Rating_Type_Abstract {
 			'default' => 1
 		],
 		[
+			'type' => 'text',
+			'slug' => 'rating_likes_icon_default_' . $object_type->get_id(),
+			'title' => __( 'Default class icon', 'userspace-rating' ),
+			'default' => 'fa-heart'
+		],
+		[
+			'type' => 'text',
+			'slug' => 'rating_likes_icon_voted_' . $object_type->get_id(),
+			'title' => __( 'Voted class icon', 'userspace-rating' ),
+			'default' => 'fa-heart-fill'
+		],
+		[
 			'type' => 'select',
 			'slug' => 'rating_likes_overall_' . $object_type->get_id(),
 			'title' => __( 'Overall rating', 'userspace-rating' ) . ' ' . $object_type->get_name(),
-			'values' => array( __( 'Sum of votes', 'userspace-rating' ), __( 'Number of votes', 'userspace-rating' ) )
+			'values' => array( __( 'Sum of ratings', 'userspace-rating' ), __( 'Number of votes', 'userspace-rating' ) )
 		]
 	];
 

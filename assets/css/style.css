@@ -8,6 +8,7 @@
 .usp-rating-box__inner,
 .usp-rating-box__vote {
   display: flex;
+  align-items: center;
 }
 
 .usp-rating-box__inner > *:not(:last-child) {
@@ -22,7 +23,7 @@
 }
 
 .usp-rating-box_type_stars .usp-rating-box__vote i {
-  font-size: 22px;
+  font-size: 24px;
 }
 
 .usp-rating-box_type_stars .usp-rating-box__value {
@@ -43,4 +44,49 @@
 
 .usp-rating-box_type_stars.usp-rating-box_vote_can .usp-rating-box__vote:hover ~ .usp-rating-box__vote i:before {
   opacity: .3;
+}
+
+/**
+* Plus-minus
+*/
+
+.usp-rating-box_type_plus-minus .usp-rating-box__vote i {
+  font-size: 20px;
+}
+
+.usp-rating-box_type_plus-minus .usp-rating-box__value {
+  font-size: 16px;
+}
+
+.usp-rating-box_type_plus-minus.usp-rating-box_vote_can .usp-rating-box__vote:hover {
+  cursor: pointer;
+  opacity: .7;
+}
+
+.usp-rating-box_type_plus-minus .usp-rating-box__vote_type_minus {
+  color: var(--uspRed-500);
+}
+
+.usp-rating-box_type_plus-minus .usp-rating-box__vote_type_plus {
+  color: var(--uspGreen-500);
+}
+
+/**
+* Likes
+*/
+.usp-rating-box_type_likes .usp-rating-box__vote i {
+  font-size: 20px;
+}
+
+.usp-rating-box_type_likes .usp-rating-box__value {
+  font-size: 18px;
+}
+
+.usp-rating-box_type_likes .usp-rating-box__vote {
+  color: var(--uspRed-400);
+}
+
+.usp-rating-box_type_likes.usp-rating-box_vote_can .usp-rating-box__vote:hover {
+  cursor: pointer;
+  opacity: .7;
 }

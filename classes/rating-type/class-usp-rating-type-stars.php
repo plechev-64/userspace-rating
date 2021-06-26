@@ -24,9 +24,16 @@ class USP_Rating_Type_Stars extends USP_Rating_Type_Abstract {
 
   public function is_valid_rating_value($rating_value, $object_type) {
 
-	$option_rating_points = $object_type->get_option( 'rating_points' );
+	$rating_per_star = $object_type->get_option( 'rating_stars_value' );
+	$rating_max_stars = $object_type->get_option( 'rating_stars_count' );
 
-	return $option_rating_points == $option_rating_points;
+	$valid_values = [];
+
+	foreach ( range( 1, $rating_max_stars ) as $star_num ) {
+	  $valid_values[] = $star_num * $rating_per_star;
+	}
+
+	return in_array( $rating_value, $valid_values );
 
   }
 
@@ -41,6 +48,7 @@ class USP_Rating_Type_Stars extends USP_Rating_Type_Abstract {
 
 	$rating_per_star = $object_type->get_option( 'rating_stars_value' );
 	$stars_count = $object_type->get_option( 'rating_stars_count' );
+
 	$icons = [
 		'empty' => $object_type->get_option( 'rating_stars_icon_empty' ),
 		'half' => $object_type->get_option( 'rating_stars_icon_half' ),
@@ -93,16 +101,16 @@ class USP_Rating_Type_Stars extends USP_Rating_Type_Abstract {
   }
 
   /**
-   * @param $USP_Object_Type - rating object type
+   * @param $object_type - rating object type
    * 
    * @return array - Array of custom options for rating type stars
    */
-  public function get_custom_options($USP_Object_Type) {
+  public function get_custom_options($object_type) {
 
 	return [
 		[
 			'type' => 'runner',
-			'slug' => 'rating_stars_count_' . $USP_Object_Type->get_id(),
+			'slug' => 'rating_stars_count_' . $object_type->get_id(),
 			'title' => __( 'Number of stars', 'userspace-rating' ),
 			'value_min' => 1,
 			'value_max' => 20,
@@ -110,31 +118,31 @@ class USP_Rating_Type_Stars extends USP_Rating_Type_Abstract {
 		],
 		[
 			'type' => 'number',
-			'slug' => 'rating_stars_value_' . $USP_Object_Type->get_id(),
+			'slug' => 'rating_stars_value_' . $object_type->get_id(),
 			'title' => __( 'Rating value per star', 'userspace-rating' ),
 			'default' => 1
 		],
 		[
 			'type' => 'text',
-			'slug' => 'rating_stars_icon_empty_' . $USP_Object_Type->get_id(),
+			'slug' => 'rating_stars_icon_empty_' . $object_type->get_id(),
 			'title' => __( 'Class icon for empty star', 'userspace-rating' ),
 			'default' => 'fa-star'
 		],
 		[
 			'type' => 'text',
-			'slug' => 'rating_stars_icon_half_' . $USP_Object_Type->get_id(),
+			'slug' => 'rating_stars_icon_half_' . $object_type->get_id(),
 			'title' => __( 'Class icon for half star', 'userspace-rating' ),
 			'default' => 'fa-star-half'
 		],
 		[
 			'type' => 'text',
-			'slug' => 'rating_stars_icon_full_' . $USP_Object_Type->get_id(),
+			'slug' => 'rating_stars_icon_full_' . $object_type->get_id(),
 			'title' => __( 'Class icon for full star', 'userspace-rating' ),
 			'default' => 'fa-star-fill'
 		],
 		[
 			'type' => 'select',
-			'slug' => 'rating_stars_shema_' . $USP_Object_Type->get_id(),
+			'slug' => 'rating_stars_shema_' . $object_type->get_id(),
 			'title' => __( 'Rating markup', 'userspace-rating' ),
 			'values' => array(
 				__( 'Disable', 'userspace-rating' ),
