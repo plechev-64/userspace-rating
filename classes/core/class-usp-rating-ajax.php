@@ -31,7 +31,7 @@ class USP_Rating_Ajax {
 	$object_author = $params[ 'object_author' ];
 	$rating_value = $params[ 'rating_value' ];
 
-	$result = USP_Rating()->add_object_vote( [
+	$vote = new USP_Rating_Vote( [
 		'user_id' => $user_id,
 		'object_id' => $object_id,
 		'object_type' => $object_type,
@@ -39,6 +39,8 @@ class USP_Rating_Ajax {
 		'rating_value' => $rating_value
 	] );
 
+	$result = $vote->process();
+	
 	if ( is_wp_error( $result ) ) {
 	  $this->error( $result->get_error_message() );
 	}

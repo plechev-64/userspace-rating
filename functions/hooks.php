@@ -12,13 +12,13 @@ function userspace_rating_posts_display($content) {
 
 }
 
-add_action( 'userspace_rating_remove_vote', 'userspace_rating_decrease_total_rating' );
+add_action( 'userspace_rating_vote_delete', 'userspace_rating_decrease_total_rating' );
 
 function userspace_rating_decrease_total_rating($vote_data) {
 
   $object_type = USP_Rating()->get_object_type( $vote_data->object_type );
 
-  if ( !$object_type instanceof USP_Rating_Object_Type_Abstract ) {
+  if ( !$object_type ) {
 	return;
   }
 
@@ -30,13 +30,13 @@ function userspace_rating_decrease_total_rating($vote_data) {
 
 }
 
-add_action( 'userspace_rating_insert_vote', 'userspace_rating_increase_total_rating' );
+add_action( 'userspace_rating_vote_insert', 'userspace_rating_increase_total_rating' );
 
 function userspace_rating_increase_total_rating($vote_data) {
 
   $object_type = USP_Rating()->get_object_type( $vote_data->object_type );
 
-  if ( !$object_type instanceof USP_Rating_Object_Type_Abstract ) {
+  if ( !$object_type ) {
 	return;
   }
 

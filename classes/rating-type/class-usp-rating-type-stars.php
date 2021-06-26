@@ -73,7 +73,7 @@ class USP_Rating_Type_Stars extends USP_Rating_Type_Abstract {
 	$user_can_vote = get_current_user_id() && get_current_user_id() != $object_author;
 
 	if ( $user_can_vote && $object_rating ) {
-	  $user_vote = USP_Rating()->get_user_vote( get_current_user_id(), $object_id, $object_type );
+	  $user_vote = USP_Rating()->get_user_vote_value( get_current_user_id(), $object_id, $object_type );
 	}
 
 	$user_can_view_history = true;

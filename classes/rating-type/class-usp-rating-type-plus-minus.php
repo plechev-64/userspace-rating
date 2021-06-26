@@ -70,7 +70,7 @@ class USP_Rating_Type_Plus_Minus extends USP_Rating_Type_Abstract {
 	$user_vote = null;
 
 	if ( $user_can_vote ) {
-	  $user_vote = USP_Rating()->get_user_vote( get_current_user_id(), $object_id, $object_type );
+	  $user_vote = USP_Rating()->get_user_vote_value( get_current_user_id(), $object_id, $object_type );
 	}
 
 	$user_can_view_history = true;
