@@ -2,13 +2,9 @@ jQuery(document).ready(function () {
 
   const $ = jQuery;
 
-  $(document).on('click', '.usp-rating-box__vote', function () {
+  $(document).on('click', '.usp-rating-box_vote_can .usp-rating-box__vote', function () {
 
 	let $box = $(this).closest('.usp-rating-box');
-	
-	if(!$box.hasClass('usp-rating-box_vote_can')) {
-	  return;
-	}
 
 	usp_preloader_show($box);
 
@@ -30,6 +26,32 @@ jQuery(document).ready(function () {
 	  },
 	  success: resp => {
 		$box.replaceWith(resp.html);
+	  }
+	});
+
+  });
+
+  $(document).on('click', '.usp-rating-box_history_can .usp-rating-box__value', function () {
+
+	let $box = $(this).closest('.usp-rating-box');
+
+	usp_preloader_show($box);
+
+	const object_type = $box.data('object_type');
+	const object_id = $box.data('object_id');
+
+	usp_ajax({
+	  data: {
+		action: 'userspace_rating_ajax',
+		method: 'object_votes',
+		params: {
+		  object_type,
+		  object_id
+		}
+	  },
+	  success: resp => {
+		$box.append(resp.html);
+		$box.removeClass('usp-rating-box_history_can');
 	  }
 	});
 

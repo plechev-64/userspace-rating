@@ -17,7 +17,7 @@
  */
 ?>
 
-<div class="usp-rating-box usp-rating-box_type_likes <?php echo $user_can_vote ? 'usp-rating-box_vote_can' : ''; ?>" data-object_type="<?php echo $object_type->get_id(); ?>" data-object_id="<?php echo $object_id; ?>" data-object_author="<?php echo $object_author; ?>">
+<div class="usp-rating-box usp-rating-box_type_likes <?php echo $user_can_vote ? 'usp-rating-box_vote_can' : ''; ?> <?php echo $user_can_view_history ? 'usp-rating-box_history_can' : ''; ?>" data-object_type="<?php echo $object_type->get_id(); ?>" data-object_id="<?php echo $object_id; ?>" data-object_author="<?php echo $object_author; ?>">
 
   <div class="usp-rating-box__inner">
 

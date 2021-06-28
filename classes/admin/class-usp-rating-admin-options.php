@@ -44,7 +44,7 @@ class USP_Rating_Admin_Options {
 	$sub_options = [];
 
 	$sub_options[] = $this->rating_type_option( $object_type );
-	$sub_options[] = $this->rating_user_option( $object_type );
+	$sub_options[] = $this->rating_influence_option( $object_type );
 
 	$options = array(
 		array(
@@ -90,7 +90,7 @@ class USP_Rating_Admin_Options {
 
   }
 
-  private function rating_user_option($object_type) {
+  private function rating_influence_option($object_type) {
 
 	$notice = '';
 
@@ -102,7 +102,7 @@ class USP_Rating_Admin_Options {
 
 	return array(
 		'type' => 'select',
-		'slug' => 'rating_user_' . $object_type->get_id(),
+		'slug' => 'rating_influence_' . $object_type->get_id(),
 		'title' => sprintf( __( 'The influence of rating %s on the overall rating', 'userspace-rating' ), $object_type->get_name() ),
 		'values' => array( __( 'No', 'userspace-rating' ), __( 'Yes', 'userspace-rating' ) ),
 		'childrens' => array(

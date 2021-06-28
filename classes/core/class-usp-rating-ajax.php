@@ -26,7 +26,7 @@ class USP_Rating_Ajax {
   private function process_vote($params) {
 
 	$user_id = get_current_user_id();
-	$object_id = (int) $params[ 'object_id' ];
+	$object_id = $params[ 'object_id' ];
 	$object_type = $params[ 'object_type' ];
 	$object_author = $params[ 'object_author' ];
 	$rating_value = $params[ 'rating_value' ];
@@ -40,7 +40,7 @@ class USP_Rating_Ajax {
 	] );
 
 	$result = $vote->process();
-	
+
 	if ( is_wp_error( $result ) ) {
 	  $this->error( $result->get_error_message() );
 	}
@@ -51,6 +51,27 @@ class USP_Rating_Ajax {
 
 	$this->success( '', [
 		'html' => USP_Rating()->get_rating_box( $object_id, $object_author, $object_type )
+	] );
+
+  }
+
+  public function object_votes($params) {
+
+	$object_id = $params[ 'object_id' ];
+	$object_type = $params[ 'object_type' ];
+
+	$votes = USP_Rating()->get_object_votes( $object_id, $object_type );
+
+	if ( !$votes ) {
+	  $this->error( __( 'No votes', 'userspace-rating' ) );
+	}
+
+	$html = usp_get_include_template( 'usp-rating-votes-list.php', USERSPACE_RATING_PATH . 'userspace-rating.php', [
+		'votes' => $votes
+	] );
+
+	$this->success( '', [
+		'html' => $html
 	] );
 
   }

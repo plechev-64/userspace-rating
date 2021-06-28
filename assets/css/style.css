@@ -15,6 +15,10 @@
   margin-right: 6px;
 }
 
+.usp-rating-box_history_can .usp-rating-box__value:hover {
+  cursor: pointer;
+}
+
 /**
 * Stars
 */
@@ -89,4 +93,15 @@
 .usp-rating-box_type_likes.usp-rating-box_vote_can .usp-rating-box__vote:hover {
   cursor: pointer;
   opacity: .7;
+}
+
+/**
+* Votes list
+*/
+.usp-rating-votes__vote {
+  display: flex;
+}
+
+.usp-rating-votes__vote > div:not(:last-child) {
+  margin-right: 6px;
 }

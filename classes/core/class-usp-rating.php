@@ -244,6 +244,21 @@ class USP_Rating {
   }
 
   /**
+   * @param int $user_id
+   * 
+   * @return number - total rating of $user_id
+   */
+  public function get_user_rating($user_id) {
+
+	$query = $this->users_query();
+
+	return $query->select( [ 'rating_total' ] )
+	->where( [ 'user_id' => $user_id ] )
+	->get_var();
+
+  }
+
+  /**
    * Run the loader to execute all of the hooks with WordPress.
    * 
    * @return void
