@@ -7,6 +7,7 @@
 /**
  * @var array $votes
  */
+$votes = array_merge($votes,$votes,$votes,$votes,$votes,$votes,$votes,$votes,$votes,$votes,$votes,$votes,$votes,$votes,$votes,$votes,$votes,$votes,$votes,$votes,$votes,$votes);
 ?>
 
 <div class="usp-rating-votes">
