@@ -45,4 +45,19 @@ class USP_Rating_Object_Type_Posts extends USP_Rating_Object_Type_Abstract {
 
   }
 
+  public function replace_custom_vars($template, $vote) {
+
+	return preg_replace_callback_array(
+	[
+		'/(%POST%)/m' => function ($match) use ($vote) {
+		  $post_name = get_post_field( 'post_title', $vote->object_id );
+		  $permalink = get_post_permalink( $vote->object_id );
+		  return "<a href='{$permalink}'>{$post_name}</a>";
+		}
+	],
+	$template
+	);
+
+  }
+
 }

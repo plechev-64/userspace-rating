@@ -1,13 +1,9 @@
 <?php
 
-/*
- * AUTHOR: https://codeseller.ru/author/preci/
- */
-
 /**
  * @var array $votes
  */
-$votes = array_merge($votes,$votes,$votes,$votes,$votes,$votes,$votes,$votes,$votes,$votes,$votes,$votes,$votes,$votes,$votes,$votes,$votes,$votes,$votes,$votes,$votes,$votes);
+
 ?>
 
 <div class="usp-rating-votes">

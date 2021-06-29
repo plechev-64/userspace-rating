@@ -139,3 +139,74 @@ function userspace_rating_increase_author_rating($vote_data) {
   }
 
 }
+
+/**
+ * Register profile tabs
+ */
+add_action( 'init', 'userspace_rating_profile_tabs', 10 );
+
+function userspace_rating_profile_tabs() {
+
+  $object_types = USP_Rating()->get_object_types()->get_all();
+
+  $subtabs = [];
+
+  foreach ( $object_types as $object_type ) {
+
+	$subtab = [
+		'id' => 'rating-' . $object_type->get_id(),
+		'name' => $object_type->get_name(),
+		'icon' => 'fa-comments',
+		'callback' => [
+			'name' => 'userspace_rating_profile_tab_content',
+			'args' => [ 'object_type' => $object_type->get_id() ]
+		]
+	];
+
+	$subtabs[] = $subtab;
+  }
+
+  $tab_data = array(
+	  'id' => 'rating',
+	  'name' => __( 'Rating', 'userspace-chat' ),
+	  'supports' => array( 'ajax' ),
+	  'public' => 1,
+	  'icon' => 'fa-comments',
+	  'output' => 'counters',
+	  'counter' => 123,
+	  'content' => $subtabs
+  );
+
+  usp_tab( $tab_data );
+
+}
+
+function userspace_rating_profile_tab_content($object_type_id) {
+
+  global $usp_office;
+
+  $object_type = USP_Rating()->get_object_type( $object_type_id );
+
+  $query = new USP_Rating_Votes_Query();
+
+  /**
+   * Votes for user objects by $object_type
+   */
+  $votes = $query->select( [] )
+  ->where( [ 'object_author' => $usp_office, 'object_type' => $object_type->get_id() ] )
+  ->get_results();
+
+  if ( !$votes ) {
+	return usp_get_notice( [ 'type' => 'simple', 'text' => __( 'There were no votes yet', 'userspace-rating' ) ] );
+  }
+
+  $html = usp_get_include_template( 'usp-rating-user-objects-votes.php', USERSPACE_RATING_PATH . 'userspace-rating.php', [
+	  'votes' => $votes,
+	  'object_type' => $object_type,
+	  'template' => $object_type->get_option( 'rating_history_template' )
+  ] );
+
+
+  return $html;
+
+}

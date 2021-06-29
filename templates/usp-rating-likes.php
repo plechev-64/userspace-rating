@@ -1,9 +1,5 @@
 <?php
 
-/*
- * AUTHOR: https://codeseller.ru/author/preci/
- */
-
 /**
  * @var object $object_type
  * @var int $object_id

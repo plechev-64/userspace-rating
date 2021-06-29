@@ -62,6 +62,65 @@ abstract class USP_Rating_Object_Type_Abstract {
   }
 
   /**
+   * Replace custom vars in history template
+   * 
+   * @param string $template
+   * @param object $vote
+   * 
+   * @return string
+   */
+  public function convert_history_template($template, $vote) {
+
+	$result = $this->replace_default_vars( $template, $vote );
+
+	return $this->replace_custom_vars( $result, $vote );
+
+  }
+
+  /**
+   * Replace default vars in template
+   * 
+   * @param string $template
+   * @param object $vote
+   * 
+   * @return string
+   */
+  public function replace_default_vars($template, $vote) {
+
+	return preg_replace_callback_array(
+	[
+		'/(%DATE%)/m' => function ($match) use ($vote) {
+		  return date( "Y-m-d", strtotime( $vote->rating_date ) );
+		},
+		'/(%USER%)/m' => function ($match) use ($vote) {
+		  $userdata = get_userdata( $vote->user_id );
+		  $user_url = get_author_posts_url( $vote->user_id );
+		  return "<a href='{$user_url}'>{$userdata->display_name}</a>";
+		},
+		'/(%VALUE%)/m' => function ($match) use ($vote) {
+		  return $vote->rating_value;
+		}
+	],
+	$template
+	);
+
+  }
+
+  /**
+   * Replace custom vars in template
+   * 
+   * @param string $template
+   * @param object $vote
+   * 
+   * @return string
+   */
+  public function replace_custom_vars($template, $vote) {
+
+	return $template;
+
+  }
+
+  /**
    * @param string $option_name
    * @param string|int|bool $default - default value
    * 

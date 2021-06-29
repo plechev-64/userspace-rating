@@ -69,7 +69,7 @@ jQuery(document).ready(function () {
 	let votes_left = value_pos.left - $votes_html.outerWidth() + $value.outerWidth();
 
 	let votes_css = {
-	  left: (votes_left - $votes_html.outerWidth() < 10) ? 10 : votes_left,
+	  left: (votes_left < 10) ? 10 : votes_left,
 	  top: value_pos.top + $container.outerHeight(),
 	  opacity: 1
 	};
