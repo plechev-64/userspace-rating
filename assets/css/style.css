@@ -98,10 +98,11 @@
 /**
 * Votes list
 */
-.usp-rating-votes {
+
+.usp-rating-votes_context_object {
+  padding: 6px;
   opacity: 0;
   position: absolute;
-  padding: 6px;
   background-color: var(--uspWhite);
   box-shadow: var(--uspBox400);
   transition: opacity var(--uspLoad);
@@ -109,7 +110,8 @@
   z-index: 9;
 }
 
-.usp-rating-votes__list {
+
+.usp-rating-votes_context_object .usp-rating-votes__list {
   max-height: 150px;
   overflow: auto;
 }
@@ -126,8 +128,11 @@
 }
 
 .usp-rating-votes__vote {
-  display: flex;
-  margin: 3px;
+  margin: 6px;
+}
+
+.usp-rating-votes_context_object .usp-rating-votes__vote {
+  margin: 3px 6px 3px 3px;
 }
 
 .usp-rating-votes__vote > div:not(:last-child) {

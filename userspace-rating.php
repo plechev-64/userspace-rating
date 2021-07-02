@@ -17,19 +17,19 @@
  */
 define( 'USERSPACE_RATING_VERSION', '1.0.0' );
 
-if ( !defined( 'USERSPACE_RATING_PATH' ) ) {
-  define( 'USERSPACE_RATING_PATH', trailingslashit( plugin_dir_path( __FILE__ ) ) );
-}
+define( 'USERSPACE_RATING_PRECISION', 2 );
 
-if ( !defined( 'USERSPACE_RATING_URL' ) ) {
-  define( 'USERSPACE_RATING_URL', trailingslashit( plugin_dir_url( __FILE__ ) ) );
-}
+define( 'USERSPACE_RATING_CACHE', true );
 
-if ( !defined( 'USERSPACE_RATING_PREF' ) ) {
-  global $wpdb;
+define( 'USERSPACE_RATING_CACHE_TIME', 600 );
 
-  define( 'USERSPACE_RATING_PREF', $wpdb->base_prefix . 'usp_' );
-}
+define( 'USERSPACE_RATING_PATH', trailingslashit( plugin_dir_path( __FILE__ ) ) );
+
+define( 'USERSPACE_RATING_URL', trailingslashit( plugin_dir_url( __FILE__ ) ) );
+
+global $wpdb;
+
+define( 'USERSPACE_RATING_PREF', $wpdb->base_prefix . 'usp_' );
 
 /**
  * Register class autoloader
@@ -51,8 +51,6 @@ spl_autoload_register( function ($class_name) {
 	}
   }
 } );
-
-require_once 'functions/hooks.php';
 
 /**
  * Fires once on activate plugin UserSpace Rating
@@ -94,10 +92,12 @@ function userspace_rating_ajax() {
  * */
 if ( in_array( 'userspace/userspace.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
 
+  require_once 'functions/actions.php';
+
   /**
    * Load UserSpace Rating
    */
-  add_action( 'init', 'USP_Rating' );
+  add_action( 'usp_init', 'USP_Rating' );
 } else {
 
   add_action( 'admin_notices', function () {

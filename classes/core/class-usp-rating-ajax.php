@@ -29,9 +29,9 @@ class USP_Rating_Ajax {
 	$object_id = $params[ 'object_id' ];
 	$object_type = $params[ 'object_type' ];
 	$object_author = $params[ 'object_author' ];
-	$rating_value = $params[ 'rating_value' ];
+	$rating_value = round( $params[ 'rating_value' ], USERSPACE_RATING_PRECISION );
 
-	$vote = new USP_Rating_Vote( [
+	$vote = new USP_Rating_Vote_Process( [
 		'user_id' => $user_id,
 		'object_id' => $object_id,
 		'object_type' => $object_type,
@@ -58,16 +58,24 @@ class USP_Rating_Ajax {
   public function object_votes($params) {
 
 	$object_id = $params[ 'object_id' ];
-	$object_type = $params[ 'object_type' ];
+	$object_type_id = $params[ 'object_type' ];
 
-	$votes = USP_Rating()->get_object_votes( $object_id, $object_type );
+	$object_type = USP_Rating()->get_object_type( $object_type_id );
+
+	if ( !$object_type ) {
+	  $this->error( __( 'Object type not found', 'userspace-rating' ) );
+	}
+
+	$votes = USP_Rating()->get_object_votes( $object_id, $object_type->get_id() );
 
 	if ( !$votes ) {
 	  $this->error( __( 'No votes', 'userspace-rating' ) );
 	}
 
 	$html = usp_get_include_template( 'usp-rating-votes-list.php', USERSPACE_RATING_PATH . 'userspace-rating.php', [
-		'votes' => $votes
+		'votes' => $votes,
+		'object_type' => $object_type,
+		'context' => 'object'
 	] );
 
 	$this->success( '', [

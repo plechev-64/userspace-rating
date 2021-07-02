@@ -44,6 +44,7 @@ class USP_Rating_Admin_Options {
 	$sub_options = [];
 
 	$sub_options[] = $this->rating_type_option( $object_type );
+	$sub_options[] = $this->rating_value_option( $object_type );
 	$sub_options[] = $this->rating_influence_option( $object_type );
 
 	$options = array(
@@ -90,11 +91,22 @@ class USP_Rating_Admin_Options {
 
   }
 
+  private function rating_value_option($object_type) {
+
+	return array(
+		'type' => 'text',
+		'slug' => 'rating_value_' . $object_type->get_id(),
+		'title' => __( 'Rating value', 'userspace-rating' ),
+		'default' => 1
+	);
+
+  }
+
   private function rating_influence_option($object_type) {
 
 	$notice = '';
 
-	$template_vars = $object_type->get_history_template_vars();
+	$template_vars = $object_type->get_vote_template_vars();
 
 	foreach ( $template_vars as $var => $var_descr ) {
 	  $notice .= "<p>{$var} - {$var_descr}</p>";
@@ -109,9 +121,9 @@ class USP_Rating_Admin_Options {
 			1 => array(
 				array(
 					'type' => 'text',
-					'slug' => 'rating_history_template_' . $object_type->get_id(),
+					'slug' => 'rating_vote_template_' . $object_type->get_id(),
 					'title' => __( 'Template of votes list output', 'userspace-rating' ),
-					'default' => $object_type->get_history_template_default(),
+					'default' => $object_type->get_vote_template(),
 					'notice' => $notice
 				)
 			)

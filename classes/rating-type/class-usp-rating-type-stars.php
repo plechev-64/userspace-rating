@@ -24,16 +24,9 @@ class USP_Rating_Type_Stars extends USP_Rating_Type_Abstract {
 
   public function is_valid_rating_value($rating_value, $object_type) {
 
-	$rating_per_star = $object_type->get_option( 'rating_stars_value' );
-	$rating_max_stars = $object_type->get_option( 'rating_stars_count' );
+	$stars_values = $this->get_stars_values( $object_type );
 
-	$valid_values = [];
-
-	foreach ( range( 1, $rating_max_stars ) as $star_num ) {
-	  $valid_values[] = $star_num * $rating_per_star;
-	}
-
-	return in_array( $rating_value, $valid_values );
+	return in_array( $rating_value, $stars_values );
 
   }
 
@@ -46,14 +39,7 @@ class USP_Rating_Type_Stars extends USP_Rating_Type_Abstract {
    */
   public function get_rating_box($object_id, $object_author, $object_type) {
 
-	$rating_per_star = $object_type->get_option( 'rating_stars_value' );
-	$stars_count = $object_type->get_option( 'rating_stars_count' );
-
-	$icons = [
-		'empty' => $object_type->get_option( 'rating_stars_icon_empty' ),
-		'half' => $object_type->get_option( 'rating_stars_icon_half' ),
-		'full' => $object_type->get_option( 'rating_stars_icon_full' )
-	];
+	$stars_values = $this->get_stars_values( $object_type );
 
 	$object_rating = USP_Rating()->get_object_rating( $object_id, $object_type );
 
@@ -78,7 +64,9 @@ class USP_Rating_Type_Stars extends USP_Rating_Type_Abstract {
 
 	$user_can_view_history = true;
 
-	$average_rating = $object_rating && $object_votes_count ? round( $object_rating / $object_votes_count, 2 ) : 0;
+	$average_rating = $object_rating && $object_votes_count ? round( $object_rating / $object_votes_count, USERSPACE_RATING_PRECISION ) : 0;
+
+	$stars_percent = $this->get_stars_percent( $stars_values, $average_rating );
 
 	$html = usp_get_include_template( 'usp-rating-' . $this->get_id() . '.php', USERSPACE_RATING_PATH . 'userspace-rating.php', [
 		'object_type' => $object_type,
@@ -88,15 +76,83 @@ class USP_Rating_Type_Stars extends USP_Rating_Type_Abstract {
 		'user_vote' => $user_vote,
 		'object_rating' => $object_rating,
 		'user_can_view_history' => $user_can_view_history,
-		'stars_count' => $stars_count,
 		'average_rating' => $average_rating,
-		'rating_per_star' => $rating_per_star,
-		'full_stars' => floor( $average_rating / $rating_per_star ),
-		'half_star' => ceil( $average_rating ) - floor( $average_rating ),
-		'icons' => $icons
+		'stars_values' => $stars_values,
+		'stars_percent' => $stars_percent
 	] );
 
 	return $html;
+
+  }
+
+  public function get_html_from_value($rating_value, $object_type) {
+
+	$stars_values = $this->get_stars_values( $object_type );
+
+	$stars_percent = $this->get_stars_percent( $stars_values, $rating_value );
+
+	$html = usp_get_include_template( 'usp-rating-' . $this->get_id() . '.php', USERSPACE_RATING_PATH . 'userspace-rating.php', [
+		'object_type' => $object_type,
+		'object_id' => 0,
+		'object_author' => 0,
+		'user_can_vote' => false,
+		'user_vote' => $rating_value,
+		'object_rating' => $rating_value,
+		'user_can_view_history' => false,
+		'average_rating' => $rating_value,
+		'stars_values' => $stars_values,
+		'stars_percent' => $stars_percent
+	] );
+
+	return $html;
+
+  }
+
+  private function get_stars_percent($stars_values, $total_rating) {
+
+	$stars = array_fill( 1, count( $stars_values ), 0 );
+
+	foreach ( $stars_values as $star_num => $star_value ) {
+
+	  if ( $total_rating >= $star_value ) {
+		$stars[ $star_num ] = 100;
+		continue;
+	  }
+
+	  $star_percent = round( (($total_rating - $stars_values[ $star_num - 1 ]) / $stars_values[ 1 ]) * 100 );
+
+	  $stars[ $star_num ] = $star_percent;
+
+	  break;
+	}
+
+	return $stars;
+
+  }
+
+  private function get_stars_values($object_type) {
+
+	$stars_count = $object_type->get_option( 'rating_stars_count' );
+	$max_rating = $object_type->get_option( 'rating_value' );
+
+	$single_star_rating = round( $max_rating / $stars_count, USERSPACE_RATING_PRECISION );
+	$last_star_rating = round( $max_rating, USERSPACE_RATING_PRECISION );
+
+	$stars = [];
+
+	foreach ( range( 1, $stars_count ) as $star_num ) {
+
+	  if ( $stars_count == $star_num ) {
+		$value = $last_star_rating;
+	  } else {
+
+		$value = round( $single_star_rating * $star_num, USERSPACE_RATING_PRECISION );
+	  }
+
+	  $stars[ $star_num ] = $value;
+	}
+
+	return $stars;
 
   }
 
@@ -115,30 +171,6 @@ class USP_Rating_Type_Stars extends USP_Rating_Type_Abstract {
 			'value_min' => 1,
 			'value_max' => 20,
 			'default' => 5
-		],
-		[
-			'type' => 'number',
-			'slug' => 'rating_stars_value_' . $object_type->get_id(),
-			'title' => __( 'Rating value per star', 'userspace-rating' ),
-			'default' => 1
-		],
-		[
-			'type' => 'text',
-			'slug' => 'rating_stars_icon_empty_' . $object_type->get_id(),
-			'title' => __( 'Class icon for empty star', 'userspace-rating' ),
-			'default' => 'fa-star'
-		],
-		[
-			'type' => 'text',
-			'slug' => 'rating_stars_icon_half_' . $object_type->get_id(),
-			'title' => __( 'Class icon for half star', 'userspace-rating' ),
-			'default' => 'fa-star-half'
-		],
-		[
-			'type' => 'text',
-			'slug' => 'rating_stars_icon_full_' . $object_type->get_id(),
-			'title' => __( 'Class icon for full star', 'userspace-rating' ),
-			'default' => 'fa-star-fill'
 		],
 		[
 			'type' => 'select',

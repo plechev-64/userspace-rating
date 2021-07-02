@@ -2,11 +2,12 @@
 
 /**
  * @var array $votes
+ * @var object $object_type
+ * @var string $context
  */
-
 ?>
 
-<div class="usp-rating-votes">
+<div class="usp-rating-votes usp-rating-votes_context_<?php echo $context; ?>">
 
   <div class="usp-rating-votes__list">
 
@@ -14,30 +15,12 @@
 
 	  <?php
 
-	  $userdata = get_userdata( $vote->user_id );
-
-	  if ( $userdata ) {
-		$username = '<a href="' . get_author_posts_url( $vote->user_id ) . '">' . $userdata->display_name . '</a>';
-	  } else {
-		$username = __( 'Unknown', 'userspace-rating' );
-	  }
-
-	  $date = date( "Y-m-d", strtotime( $vote->rating_date ) );
-
-	  $value = $vote->rating_value;
+	  $vote_html = $object_type->convert_vote_to_template( $vote );
 
 	  ?>
 
   	<div class="usp-rating-votes__vote">
-  	  <div class="usp-rating-votes__vote_date">
-		  <?php echo $date; ?>
-  	  </div>
-  	  <div class="usp-rating-votes__vote_user">
-		  <?php echo $username; ?>
-  	  </div>
-  	  <div class="usp-rating-votes__vote_value">
-		  <?php echo $value; ?>
-  	  </div>
+		<?php echo $vote_html; ?>
   	</div>
 
 	<?php } ?>

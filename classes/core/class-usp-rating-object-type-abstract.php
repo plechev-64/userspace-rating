@@ -22,101 +22,106 @@ abstract class USP_Rating_Object_Type_Abstract {
   /**
    * @param int $object_id
    * 
+   * @return string - url for object_id
+   */
+  abstract public function get_object_url($object_id);
+
+  /**
+   * @param int $object_id
+   * 
+   * @return string - name for object_id (post_title, comment...)
+   */
+  abstract public function get_object_name($object_id);
+
+  /**
+   * @param int $object_id
+   * 
    * @return bool - valid or not object_id
    */
   abstract public function is_valid_object_id($object_id);
 
   /**
-   * @return string - default history template for object type
+   * @return string - vote template for object type
    */
-  public function get_history_template_default() {
+  public function get_vote_template() {
 
-	return '%DATE% %USER% ' . __( 'has voted', 'userspace-rating' ) . ': %VALUE%';
+	$default = '%DATE% - %USER% ' . __( 'voted', 'userspace-rating' ) . ' %VALUE% %OBJECT%';
+
+	return $this->get_option( 'rating_vote_template', $default );
 
   }
 
   /**
    * @return array - all aviable vars in template for object type (['%var%' => 'description'])
    */
-  public function get_history_template_vars() {
+  public function get_vote_template_vars() {
 
-	$default_vars = [
+	$vars = [
 		'%DATE%' => __( 'Voting date', 'userspace-rating' ),
 		'%USER%' => __( 'User who voted', 'userspace-rating' ),
-		'%VALUE%' => __( 'Vote value', 'userspace-rating' )
+		'%VALUE%' => __( 'Vote value', 'userspace-rating' ),
+		'%OBJECT%' => __( 'Voting object', 'userspace-rating' )
 	];
 
-	$custom_vars = $this->get_history_template_custom_vars();
-
-	return array_merge( $default_vars, $custom_vars );
+	return $vars;
 
   }
 
   /**
-   * @return array - custom vars in template for object type (['%var%' => 'description'])
-   */
-  public function get_history_template_custom_vars() {
-
-	return [];
-
-  }
-
-  /**
-   * Replace custom vars in history template
+   * Replace vars in vote template
    * 
-   * @param string $template
    * @param object $vote
    * 
    * @return string
    */
-  public function convert_history_template($template, $vote) {
+  public function convert_vote_to_template($vote) {
 
-	$result = $this->replace_default_vars( $template, $vote );
+	$template = $this->get_vote_template();
 
-	return $this->replace_custom_vars( $result, $vote );
+	return $this->convert_vote_template_vars( $vote, $template );
 
   }
 
   /**
    * Replace default vars in template
    * 
-   * @param string $template
    * @param object $vote
+   * @param string $template
    * 
    * @return string
    */
-  public function replace_default_vars($template, $vote) {
+  public function convert_vote_template_vars($vote, $template) {
 
 	return preg_replace_callback_array(
 	[
 		'/(%DATE%)/m' => function ($match) use ($vote) {
+
 		  return date( "Y-m-d", strtotime( $vote->rating_date ) );
 		},
 		'/(%USER%)/m' => function ($match) use ($vote) {
+
 		  $userdata = get_userdata( $vote->user_id );
 		  $user_url = get_author_posts_url( $vote->user_id );
+
 		  return "<a href='{$user_url}'>{$userdata->display_name}</a>";
 		},
 		'/(%VALUE%)/m' => function ($match) use ($vote) {
-		  return $vote->rating_value;
+
+		  $object_type = USP_Rating()->get_object_type( $vote->object_type );
+		  $rating_type = USP_Rating()->get_rating_type( $object_type->get_option( 'rating_type' ) );
+
+		  return $rating_type->get_html_from_value( $vote->rating_value, $object_type );
+		},
+		'/(%OBJECT%)/m' => function ($match) use ($vote) {
+
+		  $object_name = $this->get_object_name( $vote->object_id );
+		  $object_url = $this->get_object_url( $vote->object_id );
+
+		  return "<a href='{$object_url}'>{$object_name}</a>";
 		}
 	],
 	$template
 	);
-
-  }
-
-  /**
-   * Replace custom vars in template
-   * 
-   * @param string $template
-   * @param object $vote
-   * 
-   * @return string
-   */
-  public function replace_custom_vars($template, $vote) {
-
-	return $template;
 
   }
 
@@ -142,13 +147,11 @@ abstract class USP_Rating_Object_Type_Abstract {
   /**
    * Enable or disable rating for object_id
    * 
-   * Run if rating enable in options.
-   * 
    * @param int $object_id
    * 
    * @return bool
    */
-  public function is_rating_enable($object_id) {
+  public function is_object_rating_enable($object_id) {
 
 	return true;
 

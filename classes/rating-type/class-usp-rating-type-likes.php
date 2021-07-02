@@ -24,7 +24,7 @@ class USP_Rating_Type_Likes extends USP_Rating_Type_Abstract {
 
   public function is_valid_rating_value($rating_value, $object_type) {
 
-	$option_rating_value = $object_type->get_option( 'rating_likes_value' );
+	$option_rating_value = $object_type->get_option( 'rating_value' );
 
 	return $option_rating_value == $rating_value;
 
@@ -40,23 +40,18 @@ class USP_Rating_Type_Likes extends USP_Rating_Type_Abstract {
   public function get_rating_box($object_id, $object_author, $object_type) {
 
 	$counting_type = $object_type->get_option( 'rating_likes_overall' );
-	$rating_points = $object_type->get_option( 'rating_likes_value' );
-
-	$icons = [
-		'default' => $object_type->get_option( 'rating_likes_icon_default' ),
-		'voted' => $object_type->get_option( 'rating_likes_icon_voted' )
-	];
+	$rating_points = $object_type->get_option( 'rating_value' );
 
 	$user_vote = null;
 
 	if ( $counting_type ) {
 
-	  /**
+	  /*
 	   * If counting_type == 1, $object_rating = number of votes
 	   */
 	  $object_rating = USP_Rating()->get_object_votes_count( $object_id, $object_type );
 	} else {
-	  /**
+	  /*
 	   * If counting_type == 0, $object_rating = sum of votes
 	   */
 	  $object_rating = USP_Rating()->get_object_rating( $object_id, $object_type );
@@ -83,8 +78,7 @@ class USP_Rating_Type_Likes extends USP_Rating_Type_Abstract {
 		'user_vote' => $user_vote,
 		'object_rating' => $object_rating,
 		'user_can_view_history' => $user_can_view_history,
-		'rating_points' => $rating_points,
-		'icons' => $icons
+		'rating_points' => $rating_points
 	] );
 
 	return $html;
@@ -98,24 +92,6 @@ class USP_Rating_Type_Likes extends USP_Rating_Type_Abstract {
    */
   public function get_custom_options($object_type) {
 	return [
-		[
-			'type' => 'number',
-			'slug' => 'rating_likes_value_' . $object_type->get_id(),
-			'title' => __( 'Rating value', 'userspace-rating' ),
-			'default' => 1
-		],
-		[
-			'type' => 'text',
-			'slug' => 'rating_likes_icon_default_' . $object_type->get_id(),
-			'title' => __( 'Default class icon', 'userspace-rating' ),
-			'default' => 'fa-heart'
-		],
-		[
-			'type' => 'text',
-			'slug' => 'rating_likes_icon_voted_' . $object_type->get_id(),
-			'title' => __( 'Voted class icon', 'userspace-rating' ),
-			'default' => 'fa-heart-fill'
-		],
 		[
 			'type' => 'select',
 			'slug' => 'rating_likes_overall_' . $object_type->get_id(),

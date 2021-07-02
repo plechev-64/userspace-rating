@@ -9,7 +9,6 @@
  * @var bool $user_can_vote
  * @var null|string $user_vote
  * @var bool $user_can_view_history
- * @var array $icons
  */
 ?>
 
@@ -20,7 +19,7 @@
 	<div class="usp-rating-box__value"><?php echo $object_rating; ?></div>
 
 	<div class="usp-rating-box__vote <?php echo $user_vote ? 'usp-rating-box__vote_voted' : ''; ?>" data-rating_value="<?php echo $rating_points; ?>">
-	  <i class="uspi <?php echo $user_vote ? $icons[ 'voted' ] : $icons[ 'default' ]; ?>"></i>
+	  <i class="uspi <?php echo $user_vote ? 'fa-heart-fill' : 'fa-heart'; ?>"></i>
 	</div>
 
   </div>

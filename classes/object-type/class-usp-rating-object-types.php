@@ -16,7 +16,7 @@ final class USP_Rating_Object_Types {
   /**
    * Register new object type
    * 
-   * @param object $object_type must extends USP_Rating_Object_Type_Abstract
+   * @param object $object_type must extends \USP_Rating_Object_Type_Abstract
    * 
    * @return bool
    */

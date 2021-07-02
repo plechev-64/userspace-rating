@@ -9,7 +9,6 @@
  * @var bool $user_can_vote
  * @var null|string $user_vote
  * @var bool $user_can_view_history
- * @var array $icons
  */
 
 ?>
@@ -19,13 +18,13 @@
   <div class="usp-rating-box__inner">
 
 	<div class="usp-rating-box__vote usp-rating-box__vote_type_minus <?php echo $user_vote && $user_vote == -$rating_points ? 'usp-rating-box__vote_voted' : ''; ?>" data-rating_value="<?php echo -$rating_points; ?>">
-	  <i class="uspi <?php echo $icons[ 'minus' ]; ?>"></i>
+	  <i class="uspi fa-minus"></i>
 	</div>
 
 	<div class="usp-rating-box__value"><?php echo $object_rating; ?></div>
 
 	<div class="usp-rating-box__vote usp-rating-box__vote_type_plus <?php echo $user_vote && $user_vote == $rating_points ? 'usp-rating-box__vote_voted' : ''; ?>" data-rating_value="<?php echo $rating_points; ?>">
-	  <i class="uspi <?php echo $icons[ 'plus' ]; ?>"></i>
+	  <i class="uspi fa-plus"></i>
 	</div>
 
   </div>

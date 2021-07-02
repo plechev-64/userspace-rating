@@ -28,15 +28,21 @@ class USP_Rating_Object_Type_Comment extends USP_Rating_Object_Type_Abstract {
 
   }
 
-  public function is_valid_object_id($object_id) {
+  public function get_object_name($object_id) {
 
-	return (get_comment( $object_id )) ? true : false;
+	return __( 'comment', 'userspace-rating' );
 
   }
 
-  public function get_history_template_custom_vars() {
+  public function get_object_url($object_id) {
 
-	return [ '%COMMENT%' => __( 'link to comment', 'userspace-rating' ) ];
+	return get_comment_link( $object_id );
+
+  }
+
+  public function is_valid_object_id($object_id) {
+
+	return (get_comment( $object_id )) ? true : false;
 
   }
 

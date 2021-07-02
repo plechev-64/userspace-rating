@@ -3,8 +3,7 @@
 class USP_Rating_Loader {
 
   public function __construct() {
-	add_action( 'usp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
-	usp_ajax_action( 'userspace_rating_ajax' );
+	
   }
 
   public function run() {
@@ -16,6 +15,13 @@ class USP_Rating_Loader {
 	if ( is_admin() ) {
 	  $this->init_admin_options();
 	}
+
+	add_action( 'usp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+
+	usp_ajax_action( 'userspace_rating_ajax' );
+
+	add_action( 'wp', [ $this, 'load_posts_rating_data' ] );
+	add_filter( 'comments_array', [ $this, 'load_comments_rating_data' ] );
 
   }
 
@@ -29,6 +35,172 @@ class USP_Rating_Loader {
 	}
 
 	usp_enqueue_style( 'userspace-rating', USERSPACE_RATING_URL . 'assets/css/style.css' );
+
+  }
+
+  /**
+   * load rating data for posts and posts authors after main query
+   */
+  public function load_posts_rating_data() {
+
+	global $wp_query;
+
+	if ( !$wp_query->posts ) {
+	  return;
+	}
+
+	$post_types = [];
+	$post_ids = [];
+	$post_authors = [];
+
+	foreach ( $wp_query->posts as $post ) {
+
+	  $object_type = USP_Rating()->get_object_type( $post->post_type );
+
+	  if ( !$object_type || !$object_type->get_option( 'rating' ) ) {
+		continue;
+	  }
+
+	  $post_types[] = $post->post_type;
+	  $post_ids[] = $post->ID;
+	  $post_authors[] = $post->post_author;
+	}
+
+	if ( !$post_ids ) {
+	  return;
+	}
+
+	$post_types = array_unique( $post_types );
+	$post_authors = array_unique( $post_authors );
+
+	/*
+	 * Rating data for post_ids
+	 */
+
+	$totals_query = USP_Rating()->totals_query();
+
+	$totals_data = $totals_query
+	->select( [ 'object_id', 'rating_total', 'object_type' ] )
+	->where( [
+		'object_type__in' => $post_types,
+		'object_id__in' => $post_ids,
+		'number' => count( $post_ids )
+	] )->get_results();
+
+	if ( $totals_data ) {
+
+	  /*
+	   * Rating data to cache
+	   */
+	  foreach ( $totals_data as $object_rating_data ) {
+		USP_Rating()->set_cache( $object_rating_data->object_type, $object_rating_data->object_id, [
+			'rating_total' => $object_rating_data->rating_total
+		] );
+	  }
+	}
+
+	/*
+	 * Rating data for post_authors
+	 */
+
+	$users_query = USP_Rating()->users_query();
+
+	$users_data = $users_query
+	->select( [ 'user_id', 'rating_total' ] )
+	->where( [
+		'user_id__in' => $post_authors,
+		'number' => count( $post_authors )
+	] )->get_results();
+
+	if ( $users_data ) {
+
+	  /*
+	   * Rating data to cache
+	   */
+	  foreach ( $users_data as $user_rating_data ) {
+		USP_Rating()->set_cache( 'user', $user_rating_data->user_id, [
+			'rating_total' => $user_rating_data->rating_total
+		] );
+	  }
+	}
+
+  }
+
+  /**
+   * load rating data for comments and posts authors after main query
+   */
+  public function load_comments_rating_data($comments) {
+
+	$object_type = USP_Rating()->get_object_type( 'comment' );
+
+	if ( !$comments || !$object_type || !$object_type->get_option( 'rating' ) ) {
+	  return $comments;
+	}
+
+	$comment_authors = [];
+	$comment_ids = [];
+
+	foreach ( $comments as $comment ) {
+	  $comment_authors[] = $comment->user_id;
+	  $comment_ids[] = $comment->comment_ID;
+	}
+
+	$comment_authors = array_unique( $comment_authors );
+
+	if ( $comment_authors ) {
+
+	  /*
+	   * Rating data for comment_authors
+	   */
+
+	  $users_query = USP_Rating()->users_query();
+
+	  $users_data = $users_query
+	  ->select( [ 'user_id', 'rating_total' ] )
+	  ->where( [
+		  'user_id__in' => $comment_authors,
+		  'number' => count( $comment_authors )
+	  ] )->get_results();
+
+	  if ( $users_data ) {
+		/*
+		 * Rating data to cache
+		 */
+		foreach ( $users_data as $user_rating_data ) {
+		  USP_Rating()->set_cache( 'user', $user_rating_data->user_id, [
+			  'rating_total' => $user_rating_data->rating_total
+		  ] );
+		}
+	  }
+	}
+
+	/*
+	 * Rating data for comment_ids
+	 */
+
+	$totals_query = USP_Rating()->totals_query();
+
+	$comments_data = $totals_query
+	->select( [ 'object_id', 'rating_total' ] )
+	->where( [
+		'object_type' => 'comment',
+		'object_id__in' => $comment_ids,
+		'number' => count( $comment_ids )
+	] )->get_results();
+
+	if ( $comments_data ) {
+
+	  /*
+	   * Rating data to cache
+	   */
+	  foreach ( $comments_data as $object_rating_data ) {
+		USP_Rating()->set_cache( 'comment', $object_rating_data->object_id, [
+			'rating_total' => $object_rating_data->rating_total
+		] );
+	  }
+	}
+
+	return $comments;
 
   }
 

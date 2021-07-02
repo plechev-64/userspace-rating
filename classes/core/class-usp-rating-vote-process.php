@@ -1,6 +1,6 @@
 <?php
 
-final class USP_Rating_Vote {
+final class USP_Rating_Vote_Process {
 
   private $user_id;
   private $object_id;
@@ -72,7 +72,7 @@ final class USP_Rating_Vote {
 	/**
 	 * if rating for this object_id disabled
 	 */
-	if ( !$object_type->is_rating_enable( $this->object_id ) ) {
+	if ( !$object_type->is_object_rating_enable( $this->object_id ) ) {
 
 	  $error_message = sprintf( __( "Rating for object_id %s disabled", 'userspace-rating' ), $this->object_id );
 

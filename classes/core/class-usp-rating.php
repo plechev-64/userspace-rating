@@ -24,7 +24,7 @@ class USP_Rating {
   }
 
   /**
-   * @return USP_Rating_Types
+   * @return \USP_Rating_Types
    */
   public function get_rating_types() {
 
@@ -50,7 +50,7 @@ class USP_Rating {
   }
 
   /**
-   * @return USP_Rating_Object_Types
+   * @return \USP_Rating_Object_Types
    */
   public function get_object_types() {
 
@@ -80,7 +80,7 @@ class USP_Rating {
    * 
    * @param int object_id - post_id_ comment_id, etc...
    * @param int object_author - user_id
-   * @param object|string $object_type - USP_Rating_Object_Type instance or id USP_Rating_Object_Type
+   * @param object|string $object_type - object type instance or object type id
    * 
    * @return string - html code of rating box
    */
@@ -90,17 +90,17 @@ class USP_Rating {
 	  $object_type = $this->get_object_type( $object_type );
 	}
 
-	/**
+	/*
 	 * if rating for this object disabled
 	 */
 	if ( !$object_type->get_option( 'rating' ) ) {
 	  return false;
 	}
 
-	/**
+	/*
 	 * if rating for this object_id disabled
 	 */
-	if ( !$object_type->is_rating_enable( $object_id ) ) {
+	if ( !$object_type->is_object_rating_enable( $object_id ) ) {
 	  return false;
 	}
 
@@ -187,12 +187,21 @@ class USP_Rating {
    * @param int $object_id
    * @param object|string $object_type_id
    * 
-   * @return string - total rating of $object_id
+   * @return string|null - total rating of $object_id
    */
   public function get_object_rating($object_id, $object_type_id) {
 
 	if ( $object_type_id instanceof USP_Rating_Object_Type_Abstract ) {
 	  $object_type_id = $object_type_id->get_id();
+	}
+
+	if ( USERSPACE_RATING_CACHE ) {
+
+	  $object_rating = $this->get_cache( $object_type_id, $object_id, 'rating_total' );
+
+	  if ( $object_rating !== false ) {
+		return $object_rating;
+	  }
 	}
 
 	$query = $this->totals_query();
@@ -227,7 +236,7 @@ class USP_Rating {
    * @param int $object_id
    * @param object|string $object_type_id
    * 
-   * @return string - votes count for $object_id
+   * @return int - votes count for $object_id
    */
   public function get_object_votes_count($object_id, $object_type_id) {
 
@@ -246,15 +255,86 @@ class USP_Rating {
   /**
    * @param int $user_id
    * 
-   * @return number - total rating of $user_id
+   * @return int|null - total rating of $user_id
    */
   public function get_user_rating($user_id) {
+
+	if ( USERSPACE_RATING_CACHE ) {
+
+	  $user_rating = $this->get_cache( 'user', $user_id, 'rating_total' );
+
+	  if ( $user_rating !== false ) {
+		return $user_rating;
+	  }
+	}
 
 	$query = $this->users_query();
 
 	return $query->select( [ 'rating_total' ] )
 	->where( [ 'user_id' => $user_id ] )
 	->get_var();
+
+  }
+
+  /**
+   * Add/Update cached rating data
+   * 
+   * @param string $cache_slug
+   * @param int $object_id
+   * @param array $data
+   * 
+   * @return bool
+   */
+  public function set_cache($cache_slug, $object_id, $data) {
+
+	if ( !USERSPACE_RATING_CACHE ) {
+	  return false;
+	}
+
+	$cache_key = $cache_slug . '_' . $object_id;
+
+	$cache = wp_cache_get( $cache_key, 'userspace_rating' );
+
+	$old_data = $cache === false ? [] : $cache;
+
+	$to_cache = array_merge( $old_data, $data );
+
+	return wp_cache_set( $cache_key, $to_cache, 'userspace_rating', USERSPACE_RATING_CACHE_TIME );
+
+  }
+
+  /**
+   * Get rating data from cache
+   * 
+   * @param string $cache_slug
+   * @param int $object_id
+   * @param string|false $data_key
+   * 
+   * @return array|string|bool - cache value
+   */
+  public function get_cache($cache_slug, $object_id, $data_key = false) {
+
+	if ( !USERSPACE_RATING_CACHE ) {
+	  return false;
+	}
+
+	$cache_key = $cache_slug . '_' . $object_id;
+
+	$cache = wp_cache_get( $cache_key, 'userspace_rating' );
+	
+	if ( $cache === false ) {
+	  return false;
+	}
+
+	if ( !$data_key ) {
+	  return $cache;
+	}
+
+	if ( isset( $cache[ $data_key ] ) ) {
+	  return $cache[ $data_key ];
+	}
+
+	return false;
 
   }
 

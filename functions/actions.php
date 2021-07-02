@@ -1,12 +1,28 @@
 <?php
 
-add_filter( 'the_content', 'userspace_rating_posts_display', 999 );
+if ( !is_admin() ) {
+  add_filter( 'the_content', 'userspace_rating_posts_display', 999 );
+}
 
 function userspace_rating_posts_display($content) {
 
   global $post;
 
   $content .= USP_Rating()->get_rating_box( $post->ID, $post->post_author, $post->post_type );
+
+  return $content;
+
+}
+
+if ( !is_admin() ) {
+  add_filter( 'comment_text', 'userspace_rating_comment_display', 999 );
+}
+
+function userspace_rating_comment_display($content) {
+
+  global $comment;
+
+  $content .= USP_Rating()->get_rating_box( $comment->comment_ID, $comment->user_id, 'comment' );
 
   return $content;
 
@@ -152,6 +168,10 @@ function userspace_rating_profile_tabs() {
   $subtabs = [];
 
   foreach ( $object_types as $object_type ) {
+	
+	if(!$object_type->get_option('rating')) {
+	  continue;
+	}
 
 	$subtab = [
 		'id' => 'rating-' . $object_type->get_id(),
@@ -200,10 +220,10 @@ function userspace_rating_profile_tab_content($object_type_id) {
 	return usp_get_notice( [ 'type' => 'simple', 'text' => __( 'There were no votes yet', 'userspace-rating' ) ] );
   }
 
-  $html = usp_get_include_template( 'usp-rating-user-objects-votes.php', USERSPACE_RATING_PATH . 'userspace-rating.php', [
+  $html = usp_get_include_template( 'usp-rating-votes-list.php', USERSPACE_RATING_PATH . 'userspace-rating.php', [
 	  'votes' => $votes,
 	  'object_type' => $object_type,
-	  'template' => $object_type->get_option( 'rating_history_template' )
+	  'context' => 'tab'
   ] );
 
 

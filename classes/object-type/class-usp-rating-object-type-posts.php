@@ -33,30 +33,21 @@ class USP_Rating_Object_Type_Posts extends USP_Rating_Object_Type_Abstract {
 
   }
 
+  public function get_object_name($object_id) {
+
+	return get_post_field( 'post_title', $object_id );
+
+  }
+
+  public function get_object_url($object_id) {
+
+	return get_permalink( $object_id );
+
+  }
+
   public function is_valid_object_id($object_id) {
 
 	return (get_post( $object_id )) ? true : false;
-
-  }
-
-  public function get_history_template_custom_vars() {
-
-	return [ '%POST%' => __( 'link to publication', 'userspace-rating' ) ];
-
-  }
-
-  public function replace_custom_vars($template, $vote) {
-
-	return preg_replace_callback_array(
-	[
-		'/(%POST%)/m' => function ($match) use ($vote) {
-		  $post_name = get_post_field( 'post_title', $vote->object_id );
-		  $permalink = get_post_permalink( $vote->object_id );
-		  return "<a href='{$permalink}'>{$post_name}</a>";
-		}
-	],
-	$template
-	);
 
   }
 

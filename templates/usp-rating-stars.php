@@ -9,11 +9,10 @@
  * @var null|string $user_vote
  * @var bool $user_can_view_history
  * @var int $stars_count
- * @var number $average_rating
- * @var number $rating_per_star
- * @var number $full_stars
- * @var number $half_star
- * @var array $icons
+ * @var int $average_rating
+ * @var int $rating_per_star
+ * @var array $stars_values
+ * @var array $stars_percent
  */
 
 ?>
@@ -24,25 +23,21 @@
 
 	<div class="usp-rating-box__stars">
 
-	  <?php for ( $i = 1; $i <= $stars_count; $i++ ) { ?>
+	  <?php foreach ( $stars_values as $star_num => $rating_value ) { ?>
 
-  	  <div class="usp-rating-box__vote" data-rating_value="<?php echo $rating_per_star * $i; ?>">
+  	  <div class="usp-rating-box__vote" data-rating_value="<?php echo $rating_value; ?>">
 
-		  <?php if ( $full_stars ) { ?>
+		  <?php if ( $stars_percent[$star_num] == 100 ) { ?>
 
-			<?php $full_stars--; ?>
+			<i class="uspi fa-star-fill"></i>
 
-			<i class="uspi <?php echo $icons[ 'full' ]; ?>"></i>
+		  <?php } else if ( $stars_percent[$star_num] > 0 ) { ?>
 
-		  <?php } else if ( $half_star ) { ?>
-
-			<?php $half_star--; ?>
-
-			<i class="uspi <?php echo $icons[ 'half' ]; ?>"></i>
+			<i class="uspi fa-star-half-o"></i>
 
 		  <?php } else { ?>
 
-			<i class="uspi <?php echo $icons[ 'empty' ]; ?>"></i>
+			<i class="uspi fa-star"></i>
 
 		  <?php } ?>
   	  </div>
@@ -50,7 +45,7 @@
 	  <?php } ?>
 	</div>
 
-	<div class="usp-rating-box__value"><?php echo $object_rating; ?></div>
+	<div class="usp-rating-box__value"><?php echo $average_rating; ?></div>
 
   </div>
 
