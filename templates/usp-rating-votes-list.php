@@ -2,9 +2,9 @@
 
 /**
  * @var array $votes
- * @var object $object_type
  * @var string $context
  */
+
 ?>
 
 <div class="usp-rating-votes usp-rating-votes_context_<?php echo $context; ?>">
@@ -15,15 +15,17 @@
 
 	  <?php
 
+	  $object_type = USP_Rating()->get_object_type( $vote->object_type );
+
 	  $vote_html = $object_type->convert_vote_to_template( $vote );
 
 	  ?>
 
   	<div class="usp-rating-votes__vote">
-		<?php echo $vote_html; ?>
+  <?php echo $vote_html; ?>
   	</div>
 
-	<?php } ?>
+<?php } ?>
 
   </div>
 

@@ -138,3 +138,7 @@
 .usp-rating-votes__vote > div:not(:last-child) {
   margin-right: 6px;
 }
+
+.usp-rating-votes__vote .usp-rating-box {
+  display: inline-block;
+}
