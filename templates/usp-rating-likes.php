@@ -4,10 +4,10 @@
  * @var object $object_type
  * @var int $object_id
  * @var int $object_author
- * @var int $rating_points
- * @var string $object_rating
+ * @var number $rating_points
+ * @var number $object_rating
  * @var bool $user_can_vote
- * @var null|string $user_vote
+ * @var number $user_vote
  * @var bool $user_can_view_history
  */
 ?>

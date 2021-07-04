@@ -8,7 +8,9 @@ function userspace_rating_posts_display($content) {
 
   global $post;
 
-  $content .= USP_Rating()->get_rating_box( $post->ID, $post->post_author, $post->post_type );
+  $rating_data = isset( $post->rating_data ) ? $post->rating_data : [];
+
+  $content .= USP_Rating()->get_rating_box( $post->ID, $post->post_author, $post->post_type, $rating_data );
 
   return $content;
 
@@ -22,7 +24,9 @@ function userspace_rating_comment_display($content) {
 
   global $comment;
 
-  $content .= USP_Rating()->get_rating_box( $comment->comment_ID, $comment->user_id, 'comment' );
+  $rating_data = isset( $comment->rating_data ) ? $comment->rating_data : [];
+
+  $content .= USP_Rating()->get_rating_box( $comment->comment_ID, $comment->user_id, 'comment', $rating_data );
 
   return $content;
 
@@ -190,16 +194,14 @@ function userspace_rating_profile_tabs() {
 function userspace_rating_profile_tab_content($master_lk) {
 
   global $usp_office;
-  
+
   USP()->use_module( 'content-manager' );
 
   $manager = new USP_Votes_List_Manager( [
 	  'object_author' => $usp_office
   ] );
 
-  $content = '<div class="posts-manager">';
-  $content .= $manager->get_manager();
-  $content .= '</div>';
+  $content = $manager->get_manager();
 
   return $content;
 

@@ -5,6 +5,7 @@ class USP_Rating {
   private $loader = null;
   private $rating_types = null;
   private $object_types = null;
+  private $preloaded_data = [];
   private static $_instance = null;
 
   protected function __construct() {
@@ -88,6 +89,10 @@ class USP_Rating {
 
 	if ( !$object_type instanceof USP_Rating_Object_Type_Abstract ) {
 	  $object_type = $this->get_object_type( $object_type );
+
+	  if ( !$object_type ) {
+		return false;
+	  }
 	}
 
 	/*
@@ -106,7 +111,7 @@ class USP_Rating {
 
 	$rating_type = $this->get_rating_type( $object_type->get_option( 'rating_type' ) );
 
-	if ( !$rating_type instanceof USP_Rating_Type_Abstract ) {
+	if ( !$rating_type ) {
 	  return false;
 	}
 
@@ -195,15 +200,6 @@ class USP_Rating {
 	  $object_type_id = $object_type_id->get_id();
 	}
 
-	if ( USERSPACE_RATING_CACHE ) {
-
-	  $object_rating = $this->get_cache( $object_type_id, $object_id, 'rating_total' );
-
-	  if ( $object_rating !== false ) {
-		return $object_rating;
-	  }
-	}
-
 	$query = $this->totals_query();
 
 	return $query->select( [ 'rating_total' ] )
@@ -259,15 +255,6 @@ class USP_Rating {
    */
   public function get_user_rating($user_id) {
 
-	if ( USERSPACE_RATING_CACHE ) {
-
-	  $user_rating = $this->get_cache( 'user', $user_id, 'rating_total' );
-
-	  if ( $user_rating !== false ) {
-		return $user_rating;
-	  }
-	}
-
 	$query = $this->users_query();
 
 	return $query->select( [ 'rating_total' ] )
@@ -279,62 +266,41 @@ class USP_Rating {
   /**
    * Add/Update cached rating data
    * 
-   * @param string $cache_slug
    * @param int $object_id
+   * @param string $object_type_id
    * @param array $data
    * 
    * @return bool
    */
-  public function set_cache($cache_slug, $object_id, $data) {
+  public function set_preloaded_data($object_id, $object_type_id, $data) {
 
-	if ( !USERSPACE_RATING_CACHE ) {
+	if ( !USERSPACE_RATING_PRELOAD_DATA ) {
 	  return false;
 	}
 
-	$cache_key = $cache_slug . '_' . $object_id;
+	$cur_data = $this->get_preloaded_data( $object_id, $object_type_id );
 
-	$cache = wp_cache_get( $cache_key, 'userspace_rating' );
+	$new_data = array_merge( $cur_data, $data );
 
-	$old_data = $cache === false ? [] : $cache;
+	$this->preloaded_data[ $object_type_id ][ $object_id ] = $new_data;
 
-	$to_cache = array_merge( $old_data, $data );
-
-	return wp_cache_set( $cache_key, $to_cache, 'userspace_rating', USERSPACE_RATING_CACHE_TIME );
+	return true;
 
   }
 
   /**
-   * Get rating data from cache
+   * Get preloaded rating data for object
    * 
-   * @param string $cache_slug
    * @param int $object_id
-   * @param string|false $data_key
-   * 
-   * @return array|string|bool - cache value
+   * @param string $object_type_id
    */
-  public function get_cache($cache_slug, $object_id, $data_key = false) {
+  public function get_preloaded_data($object_id, $object_type_id) {
 
-	if ( !USERSPACE_RATING_CACHE ) {
-	  return false;
+	if ( isset( $this->preloaded_data[ $object_type_id ][ $object_id ] ) ) {
+	  return $this->preloaded_data[ $object_type_id ][ $object_id ];
 	}
 
-	$cache_key = $cache_slug . '_' . $object_id;
-
-	$cache = wp_cache_get( $cache_key, 'userspace_rating' );
-	
-	if ( $cache === false ) {
-	  return false;
-	}
-
-	if ( !$data_key ) {
-	  return $cache;
-	}
-
-	if ( isset( $cache[ $data_key ] ) ) {
-	  return $cache[ $data_key ];
-	}
-
-	return false;
+	return [];
 
   }
 

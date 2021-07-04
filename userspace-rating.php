@@ -19,9 +19,7 @@ define( 'USERSPACE_RATING_VERSION', '1.0.0' );
 
 define( 'USERSPACE_RATING_PRECISION', 2 );
 
-define( 'USERSPACE_RATING_CACHE', true );
-
-define( 'USERSPACE_RATING_CACHE_TIME', 600 );
+define( 'USERSPACE_RATING_PRELOAD_DATA', true );
 
 define( 'USERSPACE_RATING_PATH', trailingslashit( plugin_dir_path( __FILE__ ) ) );
 

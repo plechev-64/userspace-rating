@@ -127,18 +127,13 @@ abstract class USP_Rating_Object_Type_Abstract {
 
   /**
    * @param string $option_name
-   * @param string|int|bool $default - default value
+   * @param mixed $default - default value
    * 
-   * @return string|int|array|bool - value of option for current object type
+   * @return mixed - value of option for current object type
    */
   public function get_option($option_name = '', $default = '') {
 
-	$option_value = usp_get_option( $option_name, null );
-
-	if ( is_null( $option_value ) ) {
-
-	  $option_value = usp_get_option( $option_name . '_' . $this->get_id(), null );
-	}
+	$option_value = usp_get_option( $option_name . '_' . $this->get_id(), null );
 
 	return is_null( $option_value ) ? $default : $option_value;
 

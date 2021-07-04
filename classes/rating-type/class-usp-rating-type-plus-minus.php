@@ -42,42 +42,16 @@ class USP_Rating_Type_Plus_Minus extends USP_Rating_Type_Abstract {
 	$counting_type = $object_type->get_option( 'rating_plus-minus_overall' );
 	$rating_points = $object_type->get_option( 'rating_value' );
 
-	/*
-	 * Sum of ratings
-	 */
-	$object_rating = USP_Rating()->get_object_rating( $object_id, $object_type );
-
-	if ( $counting_type && $object_rating ) {
-
-	  /*
-	   * If counting_type == 1, $object_rating = sum of votes
-	   */
-	  $object_rating = $object_rating / $rating_points;
-	}
-
-	if ( !$object_rating ) {
-
-	  $object_rating = 0;
-	}
-
-	$user_can_vote = get_current_user_id() && get_current_user_id() != $object_author;
-
-	$user_vote = null;
-
-	if ( $user_can_vote ) {
-	  $user_vote = USP_Rating()->get_user_vote_value( get_current_user_id(), $object_id, $object_type );
-	}
-
-	$user_can_view_history = true;
+	$data = $this->get_rating_box_data( $object_id, $object_author, $object_type );
 
 	$html = usp_get_include_template( 'usp-rating-' . $this->get_id() . '.php', USERSPACE_RATING_PATH . 'userspace-rating.php', [
 		'object_type' => $object_type,
 		'object_id' => $object_id,
 		'object_author' => $object_author,
-		'user_can_vote' => $user_can_vote,
-		'user_vote' => $user_vote,
-		'object_rating' => $object_rating,
-		'user_can_view_history' => $user_can_view_history,
+		'user_can_vote' => $data[ 'user_can_vote' ],
+		'user_vote' => $data[ 'user_vote' ],
+		'object_rating' => $counting_type == 1 ? $data[ 'votes_count' ] : $data[ 'object_rating' ],
+		'user_can_view_history' => $data[ 'user_can_view_history' ],
 		'rating_points' => $rating_points
 	] );
 

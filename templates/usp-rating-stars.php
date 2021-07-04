@@ -4,13 +4,11 @@
  * @var object $object_type
  * @var int $object_id
  * @var int $object_author
- * @var string $object_rating
+ * @var number $object_rating
  * @var bool $user_can_vote
- * @var null|string $user_vote
+ * @var number $user_vote
  * @var bool $user_can_view_history
- * @var int $stars_count
  * @var int $average_rating
- * @var int $rating_per_star
  * @var array $stars_values
  * @var array $stars_percent
  */
@@ -27,11 +25,11 @@
 
   	  <div class="usp-rating-box__vote" data-rating_value="<?php echo $rating_value; ?>">
 
-		  <?php if ( $stars_percent[$star_num] == 100 ) { ?>
+		  <?php if ( $stars_percent[ $star_num ] == 100 ) { ?>
 
 			<i class="uspi fa-star-fill"></i>
 
-		  <?php } else if ( $stars_percent[$star_num] > 0 ) { ?>
+		  <?php } else if ( $stars_percent[ $star_num ] > 0 ) { ?>
 
 			<i class="uspi fa-star-half-o"></i>
 

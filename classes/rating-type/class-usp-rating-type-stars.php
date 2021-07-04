@@ -39,43 +39,21 @@ class USP_Rating_Type_Stars extends USP_Rating_Type_Abstract {
    */
   public function get_rating_box($object_id, $object_author, $object_type) {
 
+	$data = $this->get_rating_box_data( $object_id, $object_author, $object_type );
+
+	$average_rating = $data[ 'rating_average' ];
+
 	$stars_values = $this->get_stars_values( $object_type );
-
-	$object_rating = USP_Rating()->get_object_rating( $object_id, $object_type );
-
-	if ( !$object_rating ) {
-
-	  $object_rating = 0;
-	}
-
-	if ( $object_rating ) {
-	  $object_votes_count = USP_Rating()->get_object_votes_count( $object_id, $object_type );
-	} else {
-	  $object_votes_count = 0;
-	}
-
-	$user_vote = null;
-
-	$user_can_vote = get_current_user_id() && get_current_user_id() != $object_author;
-
-	if ( $user_can_vote && $object_rating ) {
-	  $user_vote = USP_Rating()->get_user_vote_value( get_current_user_id(), $object_id, $object_type );
-	}
-
-	$user_can_view_history = true;
-
-	$average_rating = $object_rating && $object_votes_count ? round( $object_rating / $object_votes_count, USERSPACE_RATING_PRECISION ) : 0;
-
 	$stars_percent = $this->get_stars_percent( $stars_values, $average_rating );
 
 	$html = usp_get_include_template( 'usp-rating-' . $this->get_id() . '.php', USERSPACE_RATING_PATH . 'userspace-rating.php', [
 		'object_type' => $object_type,
 		'object_id' => $object_id,
 		'object_author' => $object_author,
-		'user_can_vote' => $user_can_vote,
-		'user_vote' => $user_vote,
-		'object_rating' => $object_rating,
-		'user_can_view_history' => $user_can_view_history,
+		'user_can_vote' => $data['user_can_vote'],
+		'user_vote' => $data['user_vote'],
+		'object_rating' => $data[ 'rating' ],
+		'user_can_view_history' => $data[ 'user_can_view_history' ],
 		'average_rating' => $average_rating,
 		'stars_values' => $stars_values,
 		'stars_percent' => $stars_percent

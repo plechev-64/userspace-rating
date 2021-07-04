@@ -137,19 +137,6 @@ class USP_Rating_Admin_Options {
 	return array(
 		array(
 			'type' => 'select',
-			'slug' => 'rating_results_can',
-			'title' => __( 'View results', 'userspace-rating' ),
-			'values' => array(
-				0 => __( 'All users', 'userspace-rating' ),
-				1 => __( 'Participants and higher', 'userspace-rating' ),
-				2 => __( 'Authors and higher', 'userspace-rating' ),
-				7 => __( 'Editors and higher', 'userspace-rating' ),
-				10 => __( 'only Administrators', 'userspace-rating' )
-			),
-			'notice' => __( 'specify the user group which is allowed to view votes', 'userspace-rating' )
-		),
-		array(
-			'type' => 'select',
 			'slug' => 'rating_delete_vote',
 			'title' => __( 'Delete your vote', 'userspace-rating' ),
 			'values' => array( __( 'No', 'userspace-rating' ), __( 'Yes', 'userspace-rating' ) )
