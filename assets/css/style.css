@@ -5,12 +5,6 @@
   position: relative;
 }
 
-.usp-rating-box__inner,
-.usp-rating-box__vote {
-  display: flex;
-  align-items: center;
-}
-
 .usp-rating-box__inner > *:not(:last-child) {
   margin-right: 6px;
 }
@@ -22,27 +16,21 @@
 /**
 * Stars
 */
-.usp-rating-box__stars {
-  display: flex;
-}
-
-.usp-rating-box_type_stars .usp-rating-box__vote i {
-  font-size: 24px;
-}
-
-.usp-rating-box_type_stars .usp-rating-box__value {
-  font-size: 18px;
-}
-
-.usp-rating-box_type_stars .usp-rating-box__vote {
+.usp-rating-stars {
   color: orange;
+  font-size: 24px;
+  vertical-align: bottom;
+}
+
+.usp-rating-stars_size_small {
+  font-size: 18px;
 }
 
 .usp-rating-box_type_stars.usp-rating-box_vote_can .usp-rating-box__vote {
   cursor: pointer;
 }
 
-.usp-rating-box_type_stars.usp-rating-box_vote_can .usp-rating-box__stars:hover .usp-rating-box__vote i:before {
+.usp-rating-box_type_stars.usp-rating-box_vote_can .usp-rating-stars:hover .usp-rating-box__vote i:before {
   opacity: 1;
 }
 
@@ -54,12 +42,23 @@
 * Plus-minus
 */
 
-.usp-rating-box_type_plus-minus .usp-rating-box__vote i {
+.usp-rating-plus,
+.usp-rating-minus {
   font-size: 20px;
+  vertical-align: bottom;
 }
 
-.usp-rating-box_type_plus-minus .usp-rating-box__value {
+.usp-rating-plus.usp-rating-plus_size_small,
+.usp-rating-minus_size_small {
   font-size: 16px;
+}
+
+.usp-rating-minus {
+  color: var(--uspRed-500);
+}
+
+.usp-rating-plus {
+  color: var(--uspGreen-500);
 }
 
 .usp-rating-box_type_plus-minus.usp-rating-box_vote_can .usp-rating-box__vote:hover {
@@ -67,27 +66,17 @@
   opacity: .7;
 }
 
-.usp-rating-box_type_plus-minus .usp-rating-box__vote_type_minus {
-  color: var(--uspRed-500);
-}
-
-.usp-rating-box_type_plus-minus .usp-rating-box__vote_type_plus {
-  color: var(--uspGreen-500);
-}
-
 /**
 * Likes
 */
-.usp-rating-box_type_likes .usp-rating-box__vote i {
+.usp-rating-likes {
   font-size: 20px;
-}
-
-.usp-rating-box_type_likes .usp-rating-box__value {
-  font-size: 18px;
-}
-
-.usp-rating-box_type_likes .usp-rating-box__vote {
   color: var(--uspRed-400);
+  vertical-align: bottom;
+}
+
+.usp-rating-likes.usp-rating-likes_size_small {
+  font-size: 16px;
 }
 
 .usp-rating-box_type_likes.usp-rating-box_vote_can .usp-rating-box__vote:hover {
@@ -99,7 +88,7 @@
 * Votes list
 */
 
-.usp-rating-votes_context_object {
+.usp-rating-votes {
   padding: 6px;
   opacity: 0;
   position: absolute;
@@ -110,9 +99,9 @@
   z-index: 9;
 }
 
-
-.usp-rating-votes_context_object .usp-rating-votes__list {
+.usp-rating-votes .usp-rating-votes__list {
   max-height: 150px;
+  max-width: 300px;
   overflow: auto;
 }
 
@@ -128,17 +117,13 @@
 }
 
 .usp-rating-votes__vote {
-  margin: 6px;
-}
-
-.usp-rating-votes_context_object .usp-rating-votes__vote {
   margin: 3px 6px 3px 3px;
 }
 
-.usp-rating-votes__vote > div:not(:last-child) {
-  margin-right: 6px;
-}
+/**
+* History list
+*/
 
-.usp-rating-votes__vote .usp-rating-box {
-  display: inline-block;
+.usp-rating-history__vote {
+  margin: 12px 0;
 }

@@ -4,26 +4,31 @@
  * @var object $object_type
  * @var int $object_id
  * @var int $object_author
- * @var number $object_rating
- * @var bool $user_can_vote
  * @var number $user_vote
- * @var bool $user_can_view_history
- * @var int $average_rating
+ * @var number $object_rating
+ * @var number $average_points
+ * @var number $votes_count
+ * @var bool $user_can_vote
+ * @var bool $user_can_view_votes
  * @var array $stars_values
  * @var array $stars_percent
  */
+$classes = [ 'usp-rating-box', 'usp-rating-box_type_stars' ];
+
+$user_can_vote && $classes[] = 'usp-rating-box_vote_can';
+$user_can_view_votes && $votes_count && $classes[] = 'usp-rating-box_history_can';
 
 ?>
 
-<div class="usp-rating-box usp-rating-box_type_stars <?php echo $user_can_vote ? 'usp-rating-box_vote_can' : ''; ?> <?php echo $user_can_view_history ? 'usp-rating-box_history_can' : ''; ?>" data-object_type="<?php echo $object_type->get_id(); ?>" data-object_id="<?php echo $object_id; ?>" data-object_author="<?php echo $object_author; ?>">
+<div class="<?php echo implode( " ", $classes ); ?>" data-object_type="<?php echo $object_type->get_id(); ?>" data-object_id="<?php echo $object_id; ?>" data-object_author="<?php echo $object_author; ?>">
 
-  <div class="usp-rating-box__inner">
+  <div class="usp-rating-box__inner usps__inline usps__ai-center">
 
-	<div class="usp-rating-box__stars">
+	<div class="usp-rating-stars usps__inline">
 
 	  <?php foreach ( $stars_values as $star_num => $rating_value ) { ?>
 
-  	  <div class="usp-rating-box__vote" data-rating_value="<?php echo $rating_value; ?>">
+  	  <div class="usp-rating-box__vote usps__inline usps__ai-center" data-rating_value="<?php echo $rating_value; ?>">
 
 		  <?php if ( $stars_percent[ $star_num ] == 100 ) { ?>
 

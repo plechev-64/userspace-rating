@@ -224,6 +224,9 @@ class USP_Rating {
 
 	return $query->select( [] )
 	->where( [ 'object_id' => $object_id, 'object_type' => $object_type_id ] )
+	->number( -1 )
+	->orderby( 'rating_date' )
+	->order( 'DESC' )
 	->get_results();
 
   }

@@ -31,15 +31,13 @@ class USP_Rating_Ajax {
 	$object_author = $params[ 'object_author' ];
 	$rating_value = round( $params[ 'rating_value' ], USERSPACE_RATING_PRECISION );
 
-	$vote = new USP_Rating_Vote_Process( [
+	$result = usp_process_vote( [
 		'user_id' => $user_id,
 		'object_id' => $object_id,
 		'object_type' => $object_type,
 		'object_author' => $object_author,
 		'rating_value' => $rating_value
 	] );
-
-	$result = $vote->process();
 
 	if ( is_wp_error( $result ) ) {
 	  $this->error( $result->get_error_message() );
@@ -73,9 +71,7 @@ class USP_Rating_Ajax {
 	}
 
 	$html = usp_get_include_template( 'usp-rating-votes-list.php', USERSPACE_RATING_PATH . 'userspace-rating.php', [
-		'votes' => $votes,
-		'object_type' => $object_type,
-		'context' => 'object'
+		'votes' => $votes
 	] );
 
 	$this->success( '', [

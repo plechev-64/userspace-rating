@@ -22,7 +22,7 @@ final class USP_Rating_Activator {
 						object_id BIGINT(20) UNSIGNED NOT NULL,
 						object_author BIGINT(20) UNSIGNED NOT NULL,
 						object_type VARCHAR(20) NOT NULL,
-						rating_value VARCHAR(5) NOT NULL,
+						rating_value VARCHAR(10) NOT NULL,
 						rating_date DATETIME NOT NULL,
 						PRIMARY KEY  ID (ID),
 						KEY user_id (user_id),

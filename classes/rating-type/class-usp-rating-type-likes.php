@@ -49,12 +49,22 @@ class USP_Rating_Type_Likes extends USP_Rating_Type_Abstract {
 		'object_type' => $object_type,
 		'object_id' => $object_id,
 		'object_author' => $object_author,
-		'user_can_vote' => $data[ 'user_can_vote' ],
 		'user_vote' => $data[ 'user_vote' ],
-		'object_rating' => $counting_type == 1 ? $data[ 'votes_count' ] : $data[ 'object_rating' ],
-		'user_can_view_history' => $data[ 'user_can_view_history' ],
+		'object_rating' => $counting_type == 1 ? $data[ 'votes_count' ] : $data[ 'rating' ],
+		'average_rating' => $data[ 'rating_average' ],
+		'votes_count' => $data[ 'votes_count' ],
+		'user_can_vote' => $data[ 'user_can_vote' ],
+		'user_can_view_votes' => $data[ 'user_can_view_votes' ],
 		'rating_points' => $rating_points
 	] );
+
+	return $html;
+
+  }
+
+  public function get_html_from_value($rating_value, $object_type) {
+
+	$html = '<div class="usp-rating-likes usp-rating-likes_size_small usps__inline"><i class="uspi fa-heart-fill"></i></div>';
 
 	return $html;
 

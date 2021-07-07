@@ -9,7 +9,11 @@ final class USP_Rating_Vote_Process {
   private $rating_value;
   private $rating_date;
 
-  public function __construct($vote_args) {
+  function __construct($vote_args) {
+
+	if ( is_object( $vote_args ) ) {
+	  $vote_args = (array) $vote_args;
+	}
 
 	$this->user_id = isset( $vote_args[ 'user_id' ] ) ? $vote_args[ 'user_id' ] : null;
 	$this->object_id = isset( $vote_args[ 'object_id' ] ) ? $vote_args[ 'object_id' ] : null;
@@ -18,19 +22,9 @@ final class USP_Rating_Vote_Process {
 	$this->rating_value = isset( $vote_args[ 'rating_value' ] ) ? $vote_args[ 'rating_value' ] : null;
 	$this->rating_date = isset( $vote_args[ 'rating_date' ] ) ? $vote_args[ 'rating_date' ] : current_time( 'mysql' );
 
-	if ( $this->object_type instanceof USP_Rating_Object_Type_Abstract ) {
-	  $this->object_type = $this->object_type->get_id();
-	}
-
   }
 
-  public function process() {
-
-	$validate = $this->validate();
-
-	if ( is_wp_error( $validate ) ) {
-	  return $validate;
-	}
+  function process() {
 
 	$db_rating_value = USP_Rating()->get_user_vote_value( $this->user_id, $this->object_id, $this->object_type );
 
@@ -48,80 +42,101 @@ final class USP_Rating_Vote_Process {
 
   }
 
-  private function validate() {
+  private function validate($action = 'insert') {
 
 	$object_type = USP_Rating()->get_object_type( $this->object_type );
 
-	if ( !$object_type instanceof USP_Rating_Object_Type_Abstract ) {
+	if ( !$object_type ) {
 
-	  $error_message = __( "Incorrect object_type", 'userspace-rating' );
+	  $error_message = __( "Incorrect object type", 'userspace-rating' );
 
 	  return new WP_Error( 'userspace-rating', $error_message );
 	}
 
-	/**
+	/*
 	 * if rating for this object_type disabled
 	 */
 	if ( !$object_type->get_option( 'rating' ) ) {
 
-	  $error_message = sprintf( __( "Rating for object_type %s disabled", 'userspace-rating' ), $object_type->get_id() );
+	  $error_message = sprintf( __( "Rating for object type %s is disabled", 'userspace-rating' ), $object_type->get_id() );
 
 	  return new WP_Error( 'userspace-rating', $error_message );
 	}
 
-	/**
-	 * if rating for this object_id disabled
-	 */
-	if ( !$object_type->is_object_rating_enable( $this->object_id ) ) {
-
-	  $error_message = sprintf( __( "Rating for object_id %s disabled", 'userspace-rating' ), $this->object_id );
-
-	  return new WP_Error( 'userspace-rating', $error_message );
-	}
-
-	/**
+	/*
 	 * if Incorrect object_id
 	 */
 	if ( !$object_type->is_valid_object_id( $this->object_id ) ) {
 
-	  $error_message = sprintf( __( "Incorrect object_id %s", 'userspace-rating' ), $this->object_id );
+	  $error_message = sprintf( __( "Incorrect object id %s", 'userspace-rating' ), $this->object_id );
 
 	  return new WP_Error( 'userspace-rating', $error_message );
 	}
 
-	/**
+	/*
+	 * if rating for this object_id disabled
+	 */
+	if ( !$object_type->is_object_rating_enable( $this->object_id ) ) {
+
+	  $error_message = sprintf( __( "Rating for object id %s is disabled", 'userspace-rating' ), $this->object_id );
+
+	  return new WP_Error( 'userspace-rating', $error_message );
+	}
+
+	/*
 	 * if object_author incorrect
 	 */
 	if ( $object_type->get_object_author( $this->object_id ) != $this->object_author ) {
 
-	  $error_message = sprintf( __( "Incorrect object_author %s", 'userspace-rating' ), $this->object_author );
+	  $error_message = sprintf( __( "Incorrect object author %s", 'userspace-rating' ), $this->object_author );
 
 	  return new WP_Error( 'userspace-rating', $error_message );
 	}
 
 	$rating_type = USP_Rating()->get_rating_type( $object_type->get_option( 'rating_type' ) );
 
-	/**
+	/*
 	 * if rating_type for this object_type not exist or incorrect
 	 */
-	if ( !$rating_type instanceof USP_Rating_Type_Abstract ) {
+	if ( !$rating_type ) {
 
-	  $error_message = sprintf( __( "Incorrect rating type for object_type %s", 'userspace-rating' ), $object_type->get_id() );
+	  $error_message = sprintf( __( "Incorrect rating type", 'userspace-rating' ), $object_type->get_id() );
 
 	  return new WP_Error( 'userspace-rating', $error_message );
 	}
 
-	/**
+	/*
 	 * if rating value incorrect
 	 */
 	if ( !$rating_type->is_valid_rating_value( $this->rating_value, $object_type ) ) {
 
-	  $error_message = __( "rating_value incorrect", 'userspace-rating' );
+	  $error_message = __( "Incorrect vote value", 'userspace-rating' );
 
 	  return new WP_Error( 'userspace-rating', $error_message );
 	}
 
-	$valid_vote = apply_filters( 'userspace_rating_vote_validate', true, $this->get_params() );
+	/*
+	 * Only logged in and not object author can vote
+	 */
+	$user_can_vote = get_current_user_id() != $this->object_author;
+	$prev_vote_value = usp_get_user_vote_value( $this->user_id, $this->object_id, $this->object_type );
+
+	if ( $user_can_vote && $prev_vote_value ) {
+
+	  $allow_delete_vote = usp_get_option( 'rating_delete_vote', 0 );
+
+	  if ( !$allow_delete_vote ) {
+		$error_message = __( "Vote deletion prohibited", 'userspace-rating' );
+
+		return new WP_Error( 'userspace-rating', $error_message );
+	  }
+	}
+
+	/*
+	 * userspace_rating_insert_vote_validate
+	 * userspace_rating_delete_vote_validate
+	 */
+	$valid_vote = apply_filters( 'userspace_rating_' . $action . '_vote_validate', true, $this->get_params() );
 
 	if ( is_wp_error( $valid_vote ) ) {
 	  return $valid_vote;
@@ -139,7 +154,13 @@ final class USP_Rating_Vote_Process {
 
   private function insert() {
 
-	$result = USP_Rating_Votes_Query::insert( [
+	$validate = $this->validate( 'insert' );
+
+	if ( is_wp_error( $validate ) ) {
+	  return $validate;
+	}
+
+	$result = usp_insert_vote( [
 		'user_id' => $this->user_id,
 		'object_id' => $this->object_id,
 		'object_author' => $this->object_author,
@@ -148,16 +169,7 @@ final class USP_Rating_Vote_Process {
 		'rating_date' => $this->rating_date
 	] );
 
-	if ( $result === 1 ) {
-
-	  $vote_data = USP_Rating()->get_user_vote( $this->user_id, $this->object_id, $this->object_type );
-
-	  do_action( 'userspace_rating_vote_insert', $vote_data );
-
-	  return $result;
-	}
-
-	return new WP_Error( 'userspace-rating', __( 'Error on insert vote', 'userspace-rating' ) );
+	return $result ? $result : new WP_Error( 'userspace-rating', __( 'Error on insert vote', 'userspace-rating' ) );
 
   }
 
@@ -165,7 +177,7 @@ final class USP_Rating_Vote_Process {
 
 	$remove_result = $this->delete();
 
-	if ( $remove_result !== 1 ) {
+	if ( $remove_result !== true ) {
 	  return $remove_result;
 	}
 
@@ -177,21 +189,19 @@ final class USP_Rating_Vote_Process {
 
   private function delete() {
 
-	$vote_data = USP_Rating()->get_user_vote( $this->user_id, $this->object_id, $this->object_type );
+	$validate = $this->validate( 'delete' );
 
-	$result = USP_Rating_Votes_Query::delete( [
+	if ( is_wp_error( $validate ) ) {
+	  return $validate;
+	}
+
+	$result = usp_delete_vote( [
 		'user_id' => $this->user_id,
 		'object_id' => $this->object_id,
 		'object_type' => $this->object_type
 	] );
 
-	if ( $result === 1 ) {
-	  do_action( 'userspace_rating_vote_delete', $vote_data );
-
-	  return $result;
-	}
-
-	return new WP_Error( 'userspace-rating', __( 'Error on delete vote', 'userspace-rating' ) );
+	return $result ? $result : new WP_Error( 'userspace-rating', __( 'Error on delete vote', 'userspace-rating' ) );
 
   }
 

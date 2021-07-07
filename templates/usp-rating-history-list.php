@@ -6,9 +6,9 @@
 
 ?>
 
-<div class="usp-rating-votes">
+<div class="usp-rating-history">
 
-  <div class="usp-rating-votes__list">
+  <div class="usp-rating-history__list">
 
 	<?php foreach ( $votes as $vote ) { ?>
 
@@ -20,7 +20,7 @@
 
 	  ?>
 
-  	<div class="usp-rating-votes__vote">
+  	<div class="usp-rating-history__vote">
 		<?php echo $vote_html; ?>
   	</div>
 

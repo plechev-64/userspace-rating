@@ -18,12 +18,33 @@ class USP_Votes_List_Manager extends USP_Content_Manager {
 
   function get_query() {
 
+	$filter_by_type = $this->get_request_data_value( 'object_type' );
+
+	if ( $filter_by_type ) {
+	  $where = [
+		  'object_author' => $this->object_author,
+		  'object_type' => $filter_by_type
+	  ];
+	} else {
+
+	  $object_types = USP_Rating()->get_object_types()->get_all();
+
+	  $object_type__in = [];
+
+	  foreach ( $object_types as $object_type ) {
+
+		$object_type__in[] = $object_type->get_id();
+	  }
+
+	  $where = [
+		  'object_author' => $this->object_author,
+		  'object_type__in' => $object_type__in
+	  ];
+	}
+
 	return USP_Rating()->votes_query()
 	->select( [] )
-	->where( [
-		'object_author' => $this->object_author,
-		'object_type' => $this->get_request_data_value( 'object_type' )
-	] )
+	->where( $where )
 	->orderby(
 	$this->get_request_data_value( 'orderby', 'rating_date' ),
 	$this->get_request_data_value( 'order', 'DESC' )
@@ -39,9 +60,8 @@ class USP_Votes_List_Manager extends USP_Content_Manager {
 	  $content .= $this->get_no_result_notice();
 	} else {
 
-	  $content .= usp_get_include_template( 'usp-rating-votes-list.php', USERSPACE_RATING_PATH . 'userspace-rating.php', [
-		  'votes' => $this->data,
-		  'context' => 'tab'
+	  $content .= usp_get_include_template( 'usp-rating-history-list.php', USERSPACE_RATING_PATH . 'userspace-rating.php', [
+		  'votes' => $this->data
 	  ] );
 	}
 	$content .= '</div>';
@@ -54,7 +74,7 @@ class USP_Votes_List_Manager extends USP_Content_Manager {
 
 	$object_types = USP_Rating()->get_object_types()->get_all();
 
-	$object_types_list = ['' => 'Все'];
+	$object_types_list = [ '' => 'Все' ];
 
 	foreach ( $object_types as $object_type ) {
 	  $object_types_list[ $object_type->get_id() ] = $object_type->get_name();

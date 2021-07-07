@@ -349,8 +349,9 @@ class USP_Rating_Loader {
    */
   private function init_object_types() {
 
-	$this->init_object_types_posts();
-	$this->init_object_types_comment();
+	$this->init_object_type_posts();
+	$this->init_object_type_comment();
+	$this->init_object_type_user();
 
   }
 
@@ -366,7 +367,7 @@ class USP_Rating_Loader {
   /**
    * Init rating object type for comments
    */
-  private function init_object_types_comment() {
+  private function init_object_type_comment() {
 
 	$object_type = new USP_Rating_Object_Type_Comment();
 
@@ -378,9 +379,23 @@ class USP_Rating_Loader {
   }
 
   /**
+   * Init rating object type for user
+   */
+  private function init_object_type_user() {
+
+	$object_type = new USP_Rating_Object_Type_User();
+
+	add_action( 'userspace_rating_object_types', function($USP_Rating_Object_Types) use ($object_type) {
+
+	  $USP_Rating_Object_Types->add( $object_type );
+	} );
+
+  }
+
+  /**
    * Init rating object types for all post types
    */
-  private function init_object_types_posts() {
+  private function init_object_type_posts() {
 
 	$custom_post_types = get_post_types( array(
 		'public' => true,

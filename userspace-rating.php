@@ -43,8 +43,8 @@ spl_autoload_register( function ($class_name) {
 
   $fileName = "class-" . mb_strtolower( str_replace( "_", "-", $class_name ) ) . ".php";
   foreach ( $folders as $folder ) {
-	if ( is_readable( USERSPACE_RATING_PATH . 'classes/' . $folder . '/' . $fileName ) ) {
-	  require_once USERSPACE_RATING_PATH . 'classes/' . $folder . '/' . $fileName;
+	if ( file_exists( USERSPACE_RATING_PATH . 'classes' . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $fileName ) ) {
+	  require_once USERSPACE_RATING_PATH . 'classes' . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $fileName;
 	  break;
 	}
   }
@@ -71,7 +71,7 @@ function uninstall_userspace_rating() {
 register_activation_hook( __FILE__, 'activate_userspace_rating' );
 register_uninstall_hook( __FILE__, 'uninstall_userspace_rating' );
 
-function USP_Rating() {
+function USP_Rating(): USP_Rating {
 
   return USP_Rating::get_instance();
 
@@ -91,6 +91,7 @@ function userspace_rating_ajax() {
 if ( in_array( 'userspace/userspace.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
 
   require_once 'functions/actions.php';
+  require_once 'functions/functions.php';
 
   /**
    * Load UserSpace Rating
@@ -100,11 +101,11 @@ if ( in_array( 'userspace/userspace.php', apply_filters( 'active_plugins', get_o
 
   add_action( 'admin_notices', function () {
 
-	$url = '/wp-admin/plugin-install.php?s=UserSpace&tab=search&type=term';
+	$url = '/wp-admin/plugin-install.php?s = UserSpace&tab = search&type = term';
 
-	$notice = '<div class="notice notice-error">';
+	$notice = '<div class = "notice notice-error">';
 	$notice .= '<p>' . __( 'UserSpace plugin not installed!', 'userspace-rating' ) . '</p>';
-	$notice .= sprintf( __( 'Go to the page %sPlugins%s - install and activate the UserSpace plugin', 'userspace-rating' ), '<a href="' . $url . '">', '</a>' );
+	$notice .= sprintf( __( 'Go to the page %sPlugins%s - install and activate the UserSpace plugin', 'userspace-rating' ), '<a href = "' . $url . '">', '</a>' );
 	$notice .= '</div>';
 
 	echo $notice;

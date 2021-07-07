@@ -39,9 +39,12 @@ add_action( 'userspace_rating_vote_delete', 'userspace_rating_decrease_total_rat
 
 function userspace_rating_decrease_total_rating($vote_data) {
 
-  $object_type = USP_Rating()->get_object_type( $vote_data->object_type );
+  $pre_update = apply_filters( 'userspace_rating_pre_update_total_rating', null, $vote_data->object_type, $vote_data );
 
-  if ( !$object_type ) {
+  /*
+   * Stop update if filter return not null
+   */
+  if ( !is_null( $pre_update ) ) {
 	return;
   }
 
@@ -60,9 +63,12 @@ add_action( 'userspace_rating_vote_insert', 'userspace_rating_increase_total_rat
 
 function userspace_rating_increase_total_rating($vote_data) {
 
-  $object_type = USP_Rating()->get_object_type( $vote_data->object_type );
+  $pre_update = apply_filters( 'userspace_rating_pre_update_total_rating', null, $vote_data->object_type, $vote_data );
 
-  if ( !$object_type ) {
+  /*
+   * Stop update if filter return not null
+   */
+  if ( !is_null( $pre_update ) ) {
 	return;
   }
 

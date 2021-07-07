@@ -45,7 +45,7 @@ abstract class USP_Rating_Object_Type_Abstract {
    */
   public function get_vote_template() {
 
-	$default = '%DATE% - %USER% ' . __( 'voted', 'userspace-rating' ) . ' %VALUE% %OBJECT%';
+	$default = '%DATE% %USER% %VALUE%';
 
 	return $this->get_option( 'rating_vote_template', $default );
 
@@ -83,7 +83,7 @@ abstract class USP_Rating_Object_Type_Abstract {
   }
 
   /**
-   * Replace default vars in template
+   * Replace vars in template
    * 
    * @param object $vote
    * @param string $template
@@ -96,7 +96,7 @@ abstract class USP_Rating_Object_Type_Abstract {
 	[
 		'/(%DATE%)/m' => function ($match) use ($vote) {
 
-		  return date( "Y-m-d", strtotime( $vote->rating_date ) );
+		  return '<time>' . date( "Y-m-d", strtotime( $vote->rating_date ) ) . '</time>';
 		},
 		'/(%USER%)/m' => function ($match) use ($vote) {
 
@@ -108,7 +108,16 @@ abstract class USP_Rating_Object_Type_Abstract {
 		'/(%VALUE%)/m' => function ($match) use ($vote) {
 
 		  $object_type = USP_Rating()->get_object_type( $vote->object_type );
+
+		  if ( !$object_type ) {
+			return $vote->rating_value;
+		  }
+
 		  $rating_type = USP_Rating()->get_rating_type( $object_type->get_option( 'rating_type' ) );
+
+		  if ( !$rating_type ) {
+			return $vote->rating_value;
+		  }
 
 		  return $rating_type->get_html_from_value( $vote->rating_value, $object_type );
 		},
@@ -149,6 +158,17 @@ abstract class USP_Rating_Object_Type_Abstract {
   public function is_object_rating_enable($object_id) {
 
 	return true;
+
+  }
+
+  /**
+   * Must be return false if this object type not display and uses only for manipulate rating
+   * 
+   * 
+   * @return bool
+   */
+  public function is_hidden() {
+	return false;
 
   }
 

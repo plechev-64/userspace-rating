@@ -19,6 +19,10 @@ class USP_Rating_Admin_Options {
 
 	foreach ( $object_types->get_all() as $object_type ) {
 
+	  if ( $object_type->is_hidden() ) {
+		continue;
+	  }
+
 	  $options->box( 'rating' )->add_group( 'rating-' . $object_type->get_id(), array(
 		  'title' => __( 'Rating', 'userspace-rating' ) . ' ' . $object_type->get_name()
 	  ) )->add_options( $this->object_type_options( $object_type ) );

@@ -110,9 +110,11 @@ abstract class USP_Rating_Type_Abstract {
 	  }
 	}
 
-	$data[ 'user_can_vote' ] = $user_can_vote;
+	$data[ 'user_can_vote' ] = apply_filters( 'userspace_rating_user_can_vote', $user_can_vote, get_current_user_id(), $object_id, $object_type );
 
-	$data[ 'user_can_view_history' ] = get_current_user_id() ? true : false;
+	$user_can_view_votes = get_current_user_id() ? true : false;
+
+	$data[ 'user_can_view_votes' ] = apply_filters( 'userspace_rating_user_can_view_votes', $user_can_view_votes, get_current_user_id(), $object_id, $object_type );
 
 	$data[ 'rating_average' ] = $data[ 'rating' ] && $data[ 'votes_count' ] ? round( $data[ 'rating' ] / $data[ 'votes_count' ], USERSPACE_RATING_PRECISION ) : 0;
 

@@ -41,20 +41,19 @@ class USP_Rating_Type_Stars extends USP_Rating_Type_Abstract {
 
 	$data = $this->get_rating_box_data( $object_id, $object_author, $object_type );
 
-	$average_rating = $data[ 'rating_average' ];
-
 	$stars_values = $this->get_stars_values( $object_type );
-	$stars_percent = $this->get_stars_percent( $stars_values, $average_rating );
+	$stars_percent = $this->get_stars_percent( $stars_values, $data[ 'rating_average' ] );
 
 	$html = usp_get_include_template( 'usp-rating-' . $this->get_id() . '.php', USERSPACE_RATING_PATH . 'userspace-rating.php', [
 		'object_type' => $object_type,
 		'object_id' => $object_id,
 		'object_author' => $object_author,
-		'user_can_vote' => $data['user_can_vote'],
-		'user_vote' => $data['user_vote'],
+		'user_vote' => $data[ 'user_vote' ],
 		'object_rating' => $data[ 'rating' ],
-		'user_can_view_history' => $data[ 'user_can_view_history' ],
-		'average_rating' => $average_rating,
+		'average_rating' => $data[ 'rating_average' ],
+		'votes_count' => $data[ 'votes_count' ],
+		'user_can_vote' => $data[ 'user_can_vote' ],
+		'user_can_view_votes' => $data[ 'user_can_view_votes' ],
 		'stars_values' => $stars_values,
 		'stars_percent' => $stars_percent
 	] );
@@ -69,20 +68,25 @@ class USP_Rating_Type_Stars extends USP_Rating_Type_Abstract {
 
 	$stars_percent = $this->get_stars_percent( $stars_values, $rating_value );
 
-	$html = usp_get_include_template( 'usp-rating-' . $this->get_id() . '.php', USERSPACE_RATING_PATH . 'userspace-rating.php', [
-		'object_type' => $object_type,
-		'object_id' => 0,
-		'object_author' => 0,
-		'user_can_vote' => false,
-		'user_vote' => $rating_value,
-		'object_rating' => $rating_value,
-		'user_can_view_history' => false,
-		'average_rating' => $rating_value,
-		'stars_values' => $stars_values,
-		'stars_percent' => $stars_percent
-	] );
+	$stars_html = '<div class="usp-rating-stars usps__inline usp-rating-stars_size_small">';
 
-	return $html;
+	foreach ( $stars_values as $star_num => $rating_value ) {
+
+	  if ( $stars_percent[ $star_num ] == 100 ) {
+
+		$stars_html .= '<i class="uspi fa-star-fill"></i>';
+	  } else if ( $stars_percent[ $star_num ] > 0 ) {
+
+		$stars_html .= '<i class="uspi fa-star-half-o"></i>';
+	  } else {
+
+		$stars_html .= '<i class="uspi fa-star"></i>';
+	  }
+	}
+
+	$stars_html .= '</div>';
+
+	return $stars_html;
 
   }
 
