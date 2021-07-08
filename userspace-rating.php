@@ -101,11 +101,11 @@ if ( in_array( 'userspace/userspace.php', apply_filters( 'active_plugins', get_o
 
   add_action( 'admin_notices', function () {
 
-	$url = '/wp-admin/plugin-install.php?s = UserSpace&tab = search&type = term';
+	$url = '/wp-admin/plugin-install.php?s=UserSpace&tab=search&type=term';
 
-	$notice = '<div class = "notice notice-error">';
+	$notice = '<div class="notice notice-error">';
 	$notice .= '<p>' . __( 'UserSpace plugin not installed!', 'userspace-rating' ) . '</p>';
-	$notice .= sprintf( __( 'Go to the page %sPlugins%s - install and activate the UserSpace plugin', 'userspace-rating' ), '<a href = "' . $url . '">', '</a>' );
+	$notice .= sprintf( __( 'Go to the page %sPlugins%s - install and activate the UserSpace plugin', 'userspace-rating' ), '<a href="' . $url . '">', '</a>' );
 	$notice .= '</div>';
 
 	echo $notice;
