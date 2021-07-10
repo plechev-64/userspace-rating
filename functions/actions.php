@@ -203,7 +203,7 @@ function userspace_rating_profile_tab_content($master_lk) {
 
   USP()->use_module( 'content-manager' );
 
-  $manager = new USP_Votes_List_Manager( [
+  $manager = new USP_Rating_Votes_List_Manager( [
 	  'object_author' => $usp_office
   ] );
 

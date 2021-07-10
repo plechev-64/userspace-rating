@@ -115,7 +115,18 @@ class USP_Rating {
 	  return false;
 	}
 
-	return $rating_type->get_rating_box( $object_id, $object_author, $object_type );
+	$preloaded_data = USP_Rating()->get_preloaded_data( $object_id, $object_type->get_id() );
+
+	$rating_box_params = array_merge( [
+		'object_id' => $object_id,
+		'object_author' => $object_author,
+		'object_type' => $object_type,
+		'rating_type' => $rating_type
+	], $preloaded_data );
+	
+	$rating_box = new USP_Rating_Box( $rating_box_params );
+	
+	return $rating_box->get_box();
 
   }
 

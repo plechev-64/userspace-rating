@@ -7,7 +7,7 @@ final class USP_Rating_Uninstaller {
   }
 
   public static function uninstall() {
-	
+
 	if ( !current_user_can( 'activate_plugins' ) ) {
 	  return;
 	}
@@ -15,9 +15,9 @@ final class USP_Rating_Uninstaller {
 	global $wpdb;
 
 	$tables = [
-		USERSPACE_RATING_PREF . 'rating_votes',
-		USERSPACE_RATING_PREF . 'rating_totals',
-		USERSPACE_RATING_PREF . 'rating_users'
+		USERSPACE_RATING_TABLE_TOTALS,
+		USERSPACE_RATING_TABLE_VOTES,
+		USERSPACE_RATING_TABLE_USERS
 	];
 
 	$wpdb->query( "DROP TABLE IF EXISTS `" . implode( '`, `', $tables ) . "`" );

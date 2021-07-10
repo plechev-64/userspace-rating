@@ -31,30 +31,30 @@ class USP_Rating_Type_Plus_Minus extends USP_Rating_Type_Abstract {
   }
 
   /**
-   * @param int $object_id - post_id, comment_id etc...
-   * @param int $object_author - user_id
-   * @param object $object_type - rating object type
+   * @param array $params
    * 
-   * @return string | bool - html code of rating box or false if rating for object disabled
+   * @return string | bool - html
    */
-  public function get_rating_box($object_id, $object_author, $object_type) {
+  public function get_vote_buttons_and_value($params) {
+
+	$object_type = $params[ 'object_type' ];
 
 	$counting_type = $object_type->get_option( 'rating_plus-minus_overall' );
 	$rating_points = $object_type->get_option( 'rating_value' );
 
-	$data = $this->get_rating_box_data( $object_id, $object_author, $object_type );
-
-	$html = usp_get_include_template( 'usp-rating-' . $this->get_id() . '.php', USERSPACE_RATING_PATH . 'userspace-rating.php', [
+	$html = usp_get_include_template( 'usp-rating-' . $this->get_id() . '.php', USERSPACE_RATING_BASE, [
 		'object_type' => $object_type,
-		'object_id' => $object_id,
-		'object_author' => $object_author,
-		'user_vote' => $data[ 'user_vote' ],
-		'object_rating' => $data[ 'rating' ],
-		'average_rating' => $data[ 'rating_average' ],
-		'votes_count' => $data[ 'votes_count' ],
-		'user_can_vote' => $data[ 'user_can_vote' ],
-		'user_can_view_votes' => $data[ 'user_can_view_votes' ],
-		'rating_points' => $rating_points
+		'object_id' => $params[ 'object_id' ],
+		'object_author' => $params[ 'object_author' ],
+		'user_id' => $params[ 'user_id' ],
+		'user_vote' => $params[ 'user_vote' ],
+		'rating_total' => $params[ 'rating_total' ],
+		'rating_average' => $params[ 'rating_average' ],
+		'votes_count' => $params[ 'votes_count' ],
+		'user_can_vote' => $params[ 'user_can_vote' ],
+		'user_can_view_votes' => $params[ 'user_can_view_votes' ],
+		'rating_points' => $rating_points,
+		'counting_type' => $counting_type
 	] );
 
 	return $html;
@@ -63,7 +63,7 @@ class USP_Rating_Type_Plus_Minus extends USP_Rating_Type_Abstract {
 
   public function get_html_from_value($rating_value, $object_type) {
 
-	if($rating_value > 0) {
+	if ( $rating_value > 0 ) {
 	  $html = '<div class="usp-rating-plus usp-rating-plus_size_small usps__inline"><i class="uspi fa-plus"></i></div>';
 	} else {
 	  $html = '<div class="usp-rating-minus usp-rating-minus_size_small usps__inline"><i class="uspi fa-minus"></i></div>';
@@ -84,7 +84,7 @@ class USP_Rating_Type_Plus_Minus extends USP_Rating_Type_Abstract {
 			'type' => 'select',
 			'slug' => 'rating_plus-minus_overall_' . $object_type->get_id(),
 			'title' => __( 'Overall rating', 'userspace-rating' ) . ' ' . $object_type->get_name(),
-			'values' => array( __( 'Sum of ratings', 'userspace-rating' ), __( 'Sum of votes', 'userspace-rating' ) )
+			'values' => array( __( 'Sum of ratings', 'userspace-rating' ), __( 'Sum of positive and negative votes', 'userspace-rating' ) )
 		]
 	];
 

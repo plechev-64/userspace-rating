@@ -5,7 +5,7 @@ class USP_Rating_Users_Query extends USP_Query {
   function __construct($as = false) {
 
 	$table = array(
-		'name' => USERSPACE_RATING_PREF . "rating_users",
+		'name' => USERSPACE_RATING_TABLE_USERS,
 		'as' => $as ? $as : 'usp_rating_users',
 		'cols' => array(
 			'user_id',
@@ -20,8 +20,8 @@ class USP_Rating_Users_Query extends USP_Query {
   static function insert($data) {
 
 	global $wpdb;
-	
-	return $wpdb->insert( USERSPACE_RATING_PREF . "rating_users", $data );
+
+	return $wpdb->insert( USERSPACE_RATING_TABLE_USERS, $data );
 
   }
 
@@ -29,7 +29,7 @@ class USP_Rating_Users_Query extends USP_Query {
 
 	global $wpdb;
 
-	return $wpdb->update( USERSPACE_RATING_PREF . "rating_users", $data, $where );
+	return $wpdb->update( USERSPACE_RATING_TABLE_USERS, $data, $where );
 
   }
 
@@ -37,7 +37,7 @@ class USP_Rating_Users_Query extends USP_Query {
 
 	global $wpdb;
 
-	return $wpdb->delete( USERSPACE_RATING_PREF . "rating_users", $where );
+	return $wpdb->delete( USERSPACE_RATING_TABLE_USERS, $where );
 
   }
 

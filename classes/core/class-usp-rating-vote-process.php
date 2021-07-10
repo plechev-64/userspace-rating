@@ -42,7 +42,7 @@ final class USP_Rating_Vote_Process {
 
   }
 
-  private function validate($action = 'insert') {
+  private function validate() {
 
 	$object_type = USP_Rating()->get_object_type( $this->object_type );
 
@@ -115,31 +115,19 @@ final class USP_Rating_Vote_Process {
 	  return new WP_Error( 'userspace-rating', $error_message );
 	}
 
-	/*
-	 * Only logged in and not object author can vote
-	 */
-	$user_can_vote = get_current_user_id() != $this->object_author;
-	$prev_vote_value = usp_get_user_vote_value( $this->user_id, $this->object_id, $this->object_type );
+	$rating_box = new USP_Rating_Box( [
+		'object_type' => $object_type,
+		'object_id' => $this->object_id,
+		'user_id' => $this->user_id
+	] );
 
-	if ( $user_can_vote && $prev_vote_value ) {
+	$rating_box->init();
 
-	  $allow_delete_vote = usp_get_option( 'rating_delete_vote', 0 );
+	if ( !$rating_box->get_param( 'user_can_vote' ) ) {
 
-	  if ( !$allow_delete_vote ) {
-		$error_message = __( "Vote deletion prohibited", 'userspace-rating' );
+	  $error_message = __( "You can't vote on this object", 'userspace-rating' );
 
-		return new WP_Error( 'userspace-rating', $error_message );
-	  }
-	}
-
-	/*
-	 * userspace_rating_insert_vote_validate
-	 * userspace_rating_delete_vote_validate
-	 */
-	$valid_vote = apply_filters( 'userspace_rating_' . $action . '_vote_validate', true, $this->get_params() );
-
-	if ( is_wp_error( $valid_vote ) ) {
-	  return $valid_vote;
+	  return new WP_Error( 'userspace-rating', $error_message );
 	}
 
 	return true;
@@ -148,13 +136,13 @@ final class USP_Rating_Vote_Process {
 
   private function get_params() {
 
-	return (object) get_object_vars( $this );
+	return get_object_vars( $this );
 
   }
 
   private function insert() {
 
-	$validate = $this->validate( 'insert' );
+	$validate = $this->validate();
 
 	if ( is_wp_error( $validate ) ) {
 	  return $validate;
@@ -189,7 +177,7 @@ final class USP_Rating_Vote_Process {
 
   private function delete() {
 
-	$validate = $this->validate( 'delete' );
+	$validate = $this->validate();
 
 	if ( is_wp_error( $validate ) ) {
 	  return $validate;

@@ -22,6 +22,22 @@
   vertical-align: bottom;
 }
 
+.usp-rating-stars__icon {
+  position: relative;
+  z-index: 1;
+}
+
+.usp-rating-stars__icon_in {
+  bottom: 0;
+  display: block;
+  font-size: inherit;
+  left: 0;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  z-index: 2;
+}
+
 .usp-rating-stars_size_small {
   font-size: 18px;
 }
@@ -30,12 +46,12 @@
   cursor: pointer;
 }
 
-.usp-rating-box_type_stars.usp-rating-box_vote_can .usp-rating-stars:hover .usp-rating-box__vote i:before {
-  opacity: 1;
+.usp-rating-box_type_stars.usp-rating-box_vote_can .usp-rating-stars:hover .usp-rating-stars__icon_in {
+  width: 100%!important;
 }
 
-.usp-rating-box_type_stars.usp-rating-box_vote_can .usp-rating-box__vote:hover ~ .usp-rating-box__vote i:before {
-  opacity: .3;
+.usp-rating-box_type_stars.usp-rating-box_vote_can .usp-rating-box__vote:hover ~ .usp-rating-box__vote .usp-rating-stars__icon_in {
+  width: 0!important;
 }
 
 /**

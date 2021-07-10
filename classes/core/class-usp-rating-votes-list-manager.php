@@ -1,6 +1,6 @@
 <?php
 
-class USP_Votes_List_Manager extends USP_Content_Manager {
+class USP_Rating_Votes_List_Manager extends USP_Content_Manager {
 
   public $object_author;
 
@@ -60,7 +60,7 @@ class USP_Votes_List_Manager extends USP_Content_Manager {
 	  $content .= $this->get_no_result_notice();
 	} else {
 
-	  $content .= usp_get_include_template( 'usp-rating-history-list.php', USERSPACE_RATING_PATH . 'userspace-rating.php', [
+	  $content .= usp_get_include_template( 'usp-rating-history-list.php', USERSPACE_RATING_BASE, [
 		  'votes' => $this->data
 	  ] );
 	}

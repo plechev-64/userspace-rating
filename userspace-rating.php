@@ -11,7 +11,6 @@
   License: GPLv2 or later (license.txt)
  */
 
-
 /**
  * Currently plugin version.
  */
@@ -21,13 +20,17 @@ define( 'USERSPACE_RATING_PRECISION', 2 );
 
 define( 'USERSPACE_RATING_PRELOAD_DATA', true );
 
+define( 'USERSPACE_RATING_BASE', __FILE__ );
+
 define( 'USERSPACE_RATING_PATH', trailingslashit( plugin_dir_path( __FILE__ ) ) );
 
 define( 'USERSPACE_RATING_URL', trailingslashit( plugin_dir_url( __FILE__ ) ) );
 
 global $wpdb;
 
-define( 'USERSPACE_RATING_PREF', $wpdb->base_prefix . 'usp_' );
+define( 'USERSPACE_RATING_TABLE_TOTALS', $wpdb->base_prefix . 'usp_rating_totals' );
+define( 'USERSPACE_RATING_TABLE_VOTES', $wpdb->base_prefix . 'usp_rating_votes' );
+define( 'USERSPACE_RATING_TABLE_USERS', $wpdb->base_prefix . 'usp_rating_users' );
 
 /**
  * Register class autoloader
@@ -39,6 +42,10 @@ spl_autoload_register( function ($class_name) {
    * 
    * refactoring
    */
+  if ( strpos( $class_name, "USP_Rating" ) === false ) {
+	return;
+  }
+
   $folders = [ 'admin', 'core', 'query', 'object-type', 'rating-type' ];
 
   $fileName = "class-" . mb_strtolower( str_replace( "_", "-", $class_name ) ) . ".php";

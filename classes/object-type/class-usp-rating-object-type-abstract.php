@@ -107,19 +107,13 @@ abstract class USP_Rating_Object_Type_Abstract {
 		},
 		'/(%VALUE%)/m' => function ($match) use ($vote) {
 
-		  $object_type = USP_Rating()->get_object_type( $vote->object_type );
-
-		  if ( !$object_type ) {
-			return $vote->rating_value;
-		  }
-
-		  $rating_type = USP_Rating()->get_rating_type( $object_type->get_option( 'rating_type' ) );
+		  $rating_type = USP_Rating()->get_rating_type( $this->get_option( 'rating_type' ) );
 
 		  if ( !$rating_type ) {
 			return $vote->rating_value;
 		  }
 
-		  return $rating_type->get_html_from_value( $vote->rating_value, $object_type );
+		  return $rating_type->get_html_from_value( $vote->rating_value, $this );
 		},
 		'/(%OBJECT%)/m' => function ($match) use ($vote) {
 

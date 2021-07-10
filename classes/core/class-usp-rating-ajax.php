@@ -70,7 +70,7 @@ class USP_Rating_Ajax {
 	  $this->error( __( 'No votes', 'userspace-rating' ) );
 	}
 
-	$html = usp_get_include_template( 'usp-rating-votes-list.php', USERSPACE_RATING_PATH . 'userspace-rating.php', [
+	$html = usp_get_include_template( 'usp-rating-votes-list.php', USERSPACE_RATING_BASE, [
 		'votes' => $votes
 	] );
 

@@ -16,7 +16,7 @@ final class USP_Rating_Activator {
 
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
-	$sql_votes_table = "CREATE TABLE IF NOT EXISTS " . USERSPACE_RATING_PREF . "rating_votes (
+	$sql_votes_table = "CREATE TABLE IF NOT EXISTS " . USERSPACE_RATING_TABLE_VOTES . " (
 						ID BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 						user_id BIGINT(20) UNSIGNED NOT NULL,
 						object_id BIGINT(20) UNSIGNED NOT NULL,
@@ -30,7 +30,7 @@ final class USP_Rating_Activator {
 						KEY object_type (object_type)
 					  ) {$charset_collate};";
 
-	$sql_totals_table = "CREATE TABLE IF NOT EXISTS " . USERSPACE_RATING_PREF . "rating_totals (
+	$sql_totals_table = "CREATE TABLE IF NOT EXISTS " . USERSPACE_RATING_TABLE_TOTALS . " (
 						ID BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 						object_id BIGINT(20) UNSIGNED NOT NULL,
 						object_author BIGINT(20) UNSIGNED NOT NULL,
@@ -43,7 +43,7 @@ final class USP_Rating_Activator {
 						KEY rating_total (rating_total)
 					  ) {$charset_collate};";
 
-	$sql_users_table = "CREATE TABLE IF NOT EXISTS " . USERSPACE_RATING_PREF . "rating_users (
+	$sql_users_table = "CREATE TABLE IF NOT EXISTS " . USERSPACE_RATING_TABLE_USERS . " (
 						user_id BIGINT(20) UNSIGNED NOT NULL,
 						rating_total VARCHAR(10) NOT NULL,
 						PRIMARY KEY  id (user_id),

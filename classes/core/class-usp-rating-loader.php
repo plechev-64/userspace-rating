@@ -173,13 +173,13 @@ class USP_Rating_Loader {
 	 */
 	foreach ( $wp_query->posts as $post ) {
 
-	  $post->rating = isset( $post_id_rating[ $post->ID ] ) ? $post_id_rating[ $post->ID ] : 0;
+	  $post->rating_total = isset( $post_id_rating[ $post->ID ] ) ? $post_id_rating[ $post->ID ] : 0;
 	  $post->rating_author = isset( $post_author_rating[ $post->post_author ] ) ? $post_author_rating[ $post->post_author ] : 0;
 	  $post->votes_count = isset( $post_id_votes_count[ $post->ID ] ) ? $post_id_votes_count[ $post->ID ] : 0;
 	  $post->user_vote = isset( $post_id_current_user_vote[ $post->ID ] ) ? $post_id_current_user_vote[ $post->ID ] : 0;
 
 	  USP_Rating()->set_preloaded_data( $post->ID, $post->post_type, [
-		  'rating' => $post->rating,
+		  'rating_total' => $post->rating_total,
 		  'rating_author' => $post->rating_author,
 		  'votes_count' => $post->votes_count,
 		  'user_vote' => $post->user_vote
@@ -313,13 +313,13 @@ class USP_Rating_Loader {
 	}
 
 	foreach ( $comments as $comment ) {
-	  $comment->rating = isset( $comment_id_rating[ $comment->comment_ID ] ) ? $comment_id_rating[ $comment->comment_ID ] : 0;
+	  $comment->rating_total = isset( $comment_id_rating[ $comment->comment_ID ] ) ? $comment_id_rating[ $comment->comment_ID ] : 0;
 	  $comment->rating_author = isset( $comment_author_rating[ $comment->user_id ] ) ? $comment_author_rating[ $comment->user_id ] : 0;
 	  $comment->votes_count = isset( $comment_id_votes_count[ $comment->comment_ID ] ) ? $comment_id_votes_count[ $comment->comment_ID ] : 0;
 	  $comment->user_vote = isset( $comment_id_current_user_vote[ $comment->comment_ID ] ) ? $comment_id_current_user_vote[ $comment->comment_ID ] : 0;
 
 	  USP_Rating()->set_preloaded_data( $comment->comment_ID, 'comment', [
-		  'rating' => $comment->rating,
+		  'rating_total' => $comment->rating_total,
 		  'rating_author' => $comment->rating_author,
 		  'votes_count' => $comment->votes_count,
 		  'user_vote' => $comment->user_vote
