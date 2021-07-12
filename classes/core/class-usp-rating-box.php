@@ -99,7 +99,7 @@ class USP_Rating_Box {
 	  return '';
 	}
 
-	$html = usp_get_include_template( 'usp-rating-box.php', USERSPACE_RATING_BASE, [
+	$html = usp_get_include_template( 'usp-rating-box.php', USP_RATING_BASE, [
 		'params' => $this->get_params()
 	] );
 
@@ -163,7 +163,7 @@ class USP_Rating_Box {
 	  if ( !$this->rating_total || !$this->votes_count ) {
 		$this->rating_average = 0;
 	  } else {
-		$this->rating_average = round( $this->rating_total / $this->votes_count, USERSPACE_RATING_PRECISION );
+		$this->rating_average = round( $this->rating_total / $this->votes_count, USP_RATING_PRECISION );
 	  }
 	}
 
@@ -182,8 +182,8 @@ class USP_Rating_Box {
 
 	$this->init_user_can_vote();
 
-	$this->user_can_vote = apply_filters( 'userspace_rating_user_can_vote', $this->user_can_vote, $this->user_id, $this->get_params() );
-	$this->user_can_view_votes = apply_filters( 'userspace_rating_user_can_view_votes', $this->user_can_view_votes, $this->user_id, $this->get_params() );
+	$this->user_can_vote = apply_filters( 'usp_rating_user_can_vote', $this->user_can_vote, $this->user_id, $this->get_params() );
+	$this->user_can_view_votes = apply_filters( 'usp_rating_user_can_view_votes', $this->user_can_view_votes, $this->user_id, $this->get_params() );
 
 	return true;
 

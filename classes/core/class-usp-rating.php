@@ -288,7 +288,7 @@ class USP_Rating {
    */
   public function set_preloaded_data($object_id, $object_type_id, $data) {
 
-	if ( !USERSPACE_RATING_PRELOAD_DATA ) {
+	if ( !USP_RATING_PRELOAD_DATA ) {
 	  return false;
 	}
 

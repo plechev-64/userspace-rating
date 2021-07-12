@@ -15,7 +15,7 @@ jQuery(document).ready(function () {
 
 	usp_ajax({
 	  data: {
-		action: 'userspace_rating_ajax',
+		action: 'usp_rating_ajax',
 		method: 'process_vote',
 		params: {
 		  object_type,
@@ -42,7 +42,7 @@ jQuery(document).ready(function () {
 
 	usp_ajax({
 	  data: {
-		action: 'userspace_rating_ajax',
+		action: 'usp_rating_ajax',
 		method: 'object_votes',
 		params: {
 		  object_type,

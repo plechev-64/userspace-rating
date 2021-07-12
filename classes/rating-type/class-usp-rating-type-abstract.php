@@ -44,4 +44,14 @@ abstract class USP_Rating_Type_Abstract {
 
   }
 
+  /**
+   * If the rating type is for public objects - return true
+   * 
+   * @return bool
+   */
+  public function is_public() {
+	return true;
+
+  }
+
 }

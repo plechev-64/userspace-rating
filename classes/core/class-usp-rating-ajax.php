@@ -29,7 +29,7 @@ class USP_Rating_Ajax {
 	$object_id = $params[ 'object_id' ];
 	$object_type = $params[ 'object_type' ];
 	$object_author = $params[ 'object_author' ];
-	$rating_value = round( $params[ 'rating_value' ], USERSPACE_RATING_PRECISION );
+	$rating_value = round( $params[ 'rating_value' ], USP_RATING_PRECISION );
 
 	$result = usp_process_vote( [
 		'user_id' => $user_id,
@@ -70,7 +70,7 @@ class USP_Rating_Ajax {
 	  $this->error( __( 'No votes', 'userspace-rating' ) );
 	}
 
-	$html = usp_get_include_template( 'usp-rating-votes-list.php', USERSPACE_RATING_BASE, [
+	$html = usp_get_include_template( 'usp-rating-votes-list.php', USP_RATING_BASE, [
 		'votes' => $votes
 	] );
 

@@ -14,23 +14,23 @@
 /**
  * Currently plugin version.
  */
-define( 'USERSPACE_RATING_VERSION', '1.0.0' );
+define( 'USP_RATING_VERSION', '1.0.0' );
 
-define( 'USERSPACE_RATING_PRECISION', 2 );
+define( 'USP_RATING_PRECISION', 2 );
 
-define( 'USERSPACE_RATING_PRELOAD_DATA', true );
+define( 'USP_RATING_PRELOAD_DATA', true );
 
-define( 'USERSPACE_RATING_BASE', __FILE__ );
+define( 'USP_RATING_BASE', __FILE__ );
 
-define( 'USERSPACE_RATING_PATH', trailingslashit( plugin_dir_path( __FILE__ ) ) );
+define( 'USP_RATING_PATH', trailingslashit( plugin_dir_path( __FILE__ ) ) );
 
-define( 'USERSPACE_RATING_URL', trailingslashit( plugin_dir_url( __FILE__ ) ) );
+define( 'USP_RATING_URL', trailingslashit( plugin_dir_url( __FILE__ ) ) );
 
 global $wpdb;
 
-define( 'USERSPACE_RATING_TABLE_TOTALS', $wpdb->base_prefix . 'usp_rating_totals' );
-define( 'USERSPACE_RATING_TABLE_VOTES', $wpdb->base_prefix . 'usp_rating_votes' );
-define( 'USERSPACE_RATING_TABLE_USERS', $wpdb->base_prefix . 'usp_rating_users' );
+define( 'USP_RATING_TABLE_TOTALS', $wpdb->base_prefix . 'usp_rating_totals' );
+define( 'USP_RATING_TABLE_VOTES', $wpdb->base_prefix . 'usp_rating_votes' );
+define( 'USP_RATING_TABLE_USERS', $wpdb->base_prefix . 'usp_rating_users' );
 
 /**
  * Register class autoloader
@@ -50,8 +50,8 @@ spl_autoload_register( function ($class_name) {
 
   $fileName = "class-" . mb_strtolower( str_replace( "_", "-", $class_name ) ) . ".php";
   foreach ( $folders as $folder ) {
-	if ( file_exists( USERSPACE_RATING_PATH . 'classes' . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $fileName ) ) {
-	  require_once USERSPACE_RATING_PATH . 'classes' . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $fileName;
+	if ( file_exists( USP_RATING_PATH . 'classes' . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $fileName ) ) {
+	  require_once USP_RATING_PATH . 'classes' . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $fileName;
 	  break;
 	}
   }
@@ -60,7 +60,7 @@ spl_autoload_register( function ($class_name) {
 /**
  * Fires once on activate plugin UserSpace Rating
  */
-function activate_userspace_rating() {
+function activate_usp_rating() {
 
   USP_Rating_Activator::activate();
 
@@ -69,7 +69,7 @@ function activate_userspace_rating() {
 /**
  * Fires once on uninstall plugin UserSpace Rating
  */
-function uninstall_userspace_rating() {
+function uninstall_usp_rating() {
 
   USP_Rating_Uninstaller::uninstall();
 
@@ -84,7 +84,7 @@ function USP_Rating(): USP_Rating {
 
 }
 
-function userspace_rating_ajax() {
+function usp_rating_ajax() {
 
   $ajax = new USP_Rating_Ajax();
 

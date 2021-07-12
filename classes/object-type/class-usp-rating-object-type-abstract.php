@@ -71,12 +71,15 @@ abstract class USP_Rating_Object_Type_Abstract {
    * Replace vars in vote template
    * 
    * @param object $vote
+   * @param string $template - default template from object type options
    * 
    * @return string
    */
-  public function convert_vote_to_template($vote) {
+  public function convert_vote_to_template($vote, $template = '') {
 
-	$template = $this->get_vote_template();
+	if ( !$template ) {
+	  $template = $this->get_vote_template();
+	}
 
 	return $this->convert_vote_template_vars( $vote, $template );
 
@@ -92,8 +95,7 @@ abstract class USP_Rating_Object_Type_Abstract {
    */
   public function convert_vote_template_vars($vote, $template) {
 
-	return preg_replace_callback_array(
-	[
+	$vars_callbacks = [
 		'/(%DATE%)/m' => function ($match) use ($vote) {
 
 		  return '<time>' . date( "Y-m-d", strtotime( $vote->rating_date ) ) . '</time>';
@@ -120,11 +122,17 @@ abstract class USP_Rating_Object_Type_Abstract {
 		  $object_name = $this->get_object_name( $vote->object_id );
 		  $object_url = $this->get_object_url( $vote->object_id );
 
-		  return "<a href='{$object_url}'>{$object_name}</a>";
+		  return $object_name && $object_url ? "<a href='{$object_url}'>{$object_name}</a>" : $object_name;
 		}
-	],
-	$template
-	);
+	];
+
+	$replace_callbacks = apply_filters( 'usp_rating_template_vars_callbacks', $vars_callbacks, $vote, $template );
+
+	if ( !$replace_callbacks ) {
+	  return $template;
+	}
+
+	return preg_replace_callback_array( $replace_callbacks, $template );
 
   }
 
@@ -156,13 +164,26 @@ abstract class USP_Rating_Object_Type_Abstract {
   }
 
   /**
-   * Must be return false if this object type not display and uses only for manipulate rating
-   * 
+   * If the object is public and users can vote for it - return true
+   * If the object only for manipulate with user rating - return false
    * 
    * @return bool
    */
-  public function is_hidden() {
-	return false;
+  public function is_public() {
+	return true;
+
+  }
+
+  /**
+   * Filter options array for object type
+   * 
+   * @param array $options
+   * 
+   * @return array
+   */
+  public function filter_options($options) {
+
+	return $options;
 
   }
 

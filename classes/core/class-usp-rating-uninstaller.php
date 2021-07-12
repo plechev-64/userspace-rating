@@ -15,9 +15,9 @@ final class USP_Rating_Uninstaller {
 	global $wpdb;
 
 	$tables = [
-		USERSPACE_RATING_TABLE_TOTALS,
-		USERSPACE_RATING_TABLE_VOTES,
-		USERSPACE_RATING_TABLE_USERS
+		USP_RATING_TABLE_TOTALS,
+		USP_RATING_TABLE_VOTES,
+		USP_RATING_TABLE_USERS
 	];
 
 	$wpdb->query( "DROP TABLE IF EXISTS `" . implode( '`, `', $tables ) . "`" );

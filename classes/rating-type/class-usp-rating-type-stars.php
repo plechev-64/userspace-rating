@@ -42,7 +42,7 @@ class USP_Rating_Type_Stars extends USP_Rating_Type_Abstract {
 	$stars_values = $this->get_stars_values( $object_type );
 	$stars_percent = $this->get_stars_percent( $stars_values, $params[ 'rating_average' ] );
 
-	$html = usp_get_include_template( 'usp-rating-' . $this->get_id() . '.php', USERSPACE_RATING_BASE, [
+	$html = usp_get_include_template( 'usp-rating-' . $this->get_id() . '.php', USP_RATING_BASE, [
 		'object_type' => $object_type,
 		'object_id' => $params[ 'object_id' ],
 		'object_author' => $params[ 'object_author' ],
@@ -116,8 +116,8 @@ class USP_Rating_Type_Stars extends USP_Rating_Type_Abstract {
 	$stars_count = $object_type->get_option( 'rating_stars_count' );
 	$max_rating = $object_type->get_option( 'rating_value' );
 
-	$single_star_rating = round( $max_rating / $stars_count, USERSPACE_RATING_PRECISION );
-	$last_star_rating = round( $max_rating, USERSPACE_RATING_PRECISION );
+	$single_star_rating = round( $max_rating / $stars_count, USP_RATING_PRECISION );
+	$last_star_rating = round( $max_rating, USP_RATING_PRECISION );
 
 	$stars = [];
 
@@ -127,7 +127,7 @@ class USP_Rating_Type_Stars extends USP_Rating_Type_Abstract {
 		$value = $last_star_rating;
 	  } else {
 
-		$value = round( $single_star_rating * $star_num, USERSPACE_RATING_PRECISION );
+		$value = round( $single_star_rating * $star_num, USP_RATING_PRECISION );
 	  }
 
 	  $stars[ $star_num ] = $value;
@@ -138,7 +138,7 @@ class USP_Rating_Type_Stars extends USP_Rating_Type_Abstract {
   }
 
   /**
-   * @param $object_type - rating object type
+   * @param object $object_type - rating object type
    * 
    * @return array - Array of custom options for rating type stars
    */
@@ -155,7 +155,7 @@ class USP_Rating_Type_Stars extends USP_Rating_Type_Abstract {
 		],
 		[
 			'type' => 'select',
-			'slug' => 'rating_stars_shema_' . $object_type->get_id(),
+			'slug' => 'rating_stars_schema_' . $object_type->get_id(),
 			'title' => __( 'Rating markup', 'userspace-rating' ),
 			'values' => array(
 				__( 'Disable', 'userspace-rating' ),

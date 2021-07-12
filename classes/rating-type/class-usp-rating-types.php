@@ -9,7 +9,7 @@ final class USP_Rating_Types {
 
   public function __construct() {
 
-	do_action( 'userspace_rating_types', $this );
+	do_action( 'usp_rating_types', $this );
 
   }
 

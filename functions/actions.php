@@ -1,10 +1,10 @@
 <?php
 
 if ( !is_admin() ) {
-  add_filter( 'the_content', 'userspace_rating_posts_display', 999 );
+  add_filter( 'the_content', 'usp_rating_posts_display', 999 );
 }
 
-function userspace_rating_posts_display($content) {
+function usp_rating_posts_display($content) {
 
   global $post;
 
@@ -17,10 +17,10 @@ function userspace_rating_posts_display($content) {
 }
 
 if ( !is_admin() ) {
-  add_filter( 'comment_text', 'userspace_rating_comment_display', 999 );
+  add_filter( 'comment_text', 'usp_rating_comment_display', 999 );
 }
 
-function userspace_rating_comment_display($content) {
+function usp_rating_comment_display($content) {
 
   global $comment;
 
@@ -35,143 +35,79 @@ function userspace_rating_comment_display($content) {
 /**
  * Update total object rating after vote removed
  */
-add_action( 'userspace_rating_vote_delete', 'userspace_rating_decrease_total_rating' );
+add_action( 'usp_rating_vote_delete', 'usp_rating_decrease_total_rating' );
 
-function userspace_rating_decrease_total_rating($vote_data) {
+function usp_rating_decrease_total_rating($vote_data) {
 
-  $pre_update = apply_filters( 'userspace_rating_pre_update_total_rating', null, $vote_data->object_type, $vote_data );
-
-  /*
-   * Stop update if filter return not null
-   */
-  if ( !is_null( $pre_update ) ) {
-	return;
-  }
-
-  $total_rating = USP_Rating()->get_object_rating( $vote_data->object_id, $vote_data->object_type );
-
-  $total_rating_new = $total_rating - $vote_data->rating_value;
-
-  USP_Rating_Totals_Query::update( [ 'object_id' => $vote_data->object_id, 'object_type' => $vote_data->object_type ], [ 'rating_total' => $total_rating_new ] );
+  usp_update_total_rating( [
+	  'object_id' => $vote_data->object_id,
+	  'object_type' => $vote_data->object_type,
+	  'object_author' => $vote_data->object_author,
+	  'rating_value' => $vote_data->rating_value * -1
+  ] );
 
 }
 
 /**
  * Update total object rating after vote added
  */
-add_action( 'userspace_rating_vote_insert', 'userspace_rating_increase_total_rating' );
+add_action( 'usp_rating_vote_insert', 'usp_rating_increase_total_rating' );
 
-function userspace_rating_increase_total_rating($vote_data) {
+function usp_rating_increase_total_rating($vote_data) {
 
-  $pre_update = apply_filters( 'userspace_rating_pre_update_total_rating', null, $vote_data->object_type, $vote_data );
-
-  /*
-   * Stop update if filter return not null
-   */
-  if ( !is_null( $pre_update ) ) {
-	return;
-  }
-
-  $total_rating = USP_Rating()->get_object_rating( $vote_data->object_id, $vote_data->object_type );
-
-  if ( is_null( $total_rating ) ) {
-
-	USP_Rating_Totals_Query::insert( [
-		'object_id' => $vote_data->object_id,
-		'object_type' => $vote_data->object_type,
-		'object_author' => $vote_data->object_author,
-		'rating_total' => $vote_data->rating_value
-	] );
-  } else {
-
-	USP_Rating_Totals_Query::update( [
-		'object_id' => $vote_data->object_id,
-		'object_type' => $vote_data->object_type
-	],
-	[
-		'rating_total' => $total_rating + $vote_data->rating_value
-	] );
-  }
+  usp_update_total_rating( [
+	  'object_id' => $vote_data->object_id,
+	  'object_type' => $vote_data->object_type,
+	  'object_author' => $vote_data->object_author,
+	  'rating_value' => $vote_data->rating_value
+  ] );
 
 }
 
 /**
- * Update user rating after vote removed
+ * Update user rating after object total rating updated
  */
-add_action( 'userspace_rating_vote_delete', 'userspace_rating_decrease_author_rating' );
+add_action( 'usp_rating_update_total_rating', 'usp_rating_update_object_author_rating' );
 
-function userspace_rating_decrease_author_rating($vote_data) {
+function usp_rating_update_object_author_rating($args) {
 
-  $object_type = USP_Rating()->get_object_type( $vote_data->object_type );
+  if ( !$args[ 'object_author' ] ) {
+	return;
+  }
+
+  $object_type = USP_Rating()->get_object_type( $args[ 'object_type' ] );
 
   if ( !$object_type ) {
 	return;
   }
 
-  $influence_on_author = $object_type->get_option( 'rating_influence' );
+  if ( $object_type->is_public() ) {
+	$influence_on_author = $object_type->get_option( 'rating_influence' );
 
-  if ( !$influence_on_author ) {
+	if ( !$influence_on_author ) {
+	  return;
+	}
+  }
+
+  $pre = apply_filters( 'usp_rating_pre_update_object_author_rating', null, $args );
+
+  if ( !is_null( $pre ) ) {
 	return;
   }
 
-  if ( !$vote_data->object_author ) {
-	return;
-  }
-
-  $user_rating = USP_Rating()->get_user_rating( $vote_data->object_author );
-
-  $user_rating_new = $user_rating - $vote_data->rating_value;
-
-  USP_Rating_Users_Query::update( [ 'user_id' => $vote_data->object_author ], [ 'rating_total' => $user_rating_new ] );
-
-}
-
-/**
- * Update user rating after vote added
- */
-add_action( 'userspace_rating_vote_insert', 'userspace_rating_increase_author_rating' );
-
-function userspace_rating_increase_author_rating($vote_data) {
-
-  $object_type = USP_Rating()->get_object_type( $vote_data->object_type );
-
-  if ( !$object_type ) {
-	return;
-  }
-
-  $influence_on_author = $object_type->get_option( 'rating_influence' );
-
-  if ( !$influence_on_author ) {
-	return;
-  }
-
-  if ( !$vote_data->object_author ) {
-	return;
-  }
-
-  $user_rating = USP_Rating()->get_user_rating( $vote_data->object_author );
-
-  if ( is_null( $user_rating ) ) {
-
-	USP_Rating_Users_Query::insert( [
-		'user_id' => $vote_data->object_author,
-		'rating_total' => $vote_data->rating_value
-	] );
-  } else {
-
-	$user_rating_new = $user_rating + $vote_data->rating_value;
-
-	USP_Rating_Users_Query::update( [ 'user_id' => $vote_data->object_author ], [ 'rating_total' => $user_rating_new ] );
-  }
+  usp_update_user_rating( [
+	  'user_id' => $args[ 'object_author' ],
+	  'rating_value' => $args[ 'rating_value' ]
+  ] );
 
 }
 
 /**
  * Register profile tabs
  */
-add_action( 'init', 'userspace_rating_profile_tabs', 10 );
+add_action( 'init', 'usp_rating_profile_tabs', 10 );
 
-function userspace_rating_profile_tabs() {
+function usp_rating_profile_tabs() {
 
   $tab_data = array(
 	  'id' => 'rating',
@@ -180,14 +116,14 @@ function userspace_rating_profile_tabs() {
 	  'public' => 1,
 	  'icon' => 'fa-comments',
 	  'output' => 'counters',
-	  'counter' => 123,
+	  'counter' => usp_get_user_rating( 88546 ),
 	  'content' => [
 		  [
 			  'id' => 'rating',
 			  'name' => __( 'Rating history', 'userspace-rating' ),
 			  'title' => __( 'Rating history', 'userspace-rating' ),
 			  'callback' => [
-				  'name' => 'userspace_rating_profile_tab_content'
+				  'name' => 'usp_rating_profile_tab_content'
 			  ]
 		  ]
 	  ]
@@ -197,7 +133,7 @@ function userspace_rating_profile_tabs() {
 
 }
 
-function userspace_rating_profile_tab_content($master_lk) {
+function usp_rating_profile_tab_content($master_lk) {
 
   global $usp_office;
 

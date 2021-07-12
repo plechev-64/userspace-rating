@@ -16,25 +16,78 @@ class USP_Rating_Loader {
 	  $this->init_admin_options();
 	}
 
-	add_action( 'usp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+	if ( USP_RATING_PRELOAD_DATA && !is_admin() ) {
+	  add_action( 'wp', [ $this, 'load_posts_rating_data' ] );
+	  add_filter( 'comments_array', [ $this, 'load_comments_rating_data' ] );
+	}
 
-	usp_ajax_action( 'userspace_rating_ajax' );
+	usp_ajax_action( 'usp_rating_ajax' );
 
-	add_action( 'wp', [ $this, 'load_posts_rating_data' ] );
-	add_filter( 'comments_array', [ $this, 'load_comments_rating_data' ] );
+	add_action( 'usp_enqueue_scripts', [ $this, 'enqueue_frontend_scripts' ] );
+	add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_scripts' ] );
+
+	add_filter( 'manage_users_columns', [ $this, 'add_userlist_rating_column' ] );
+	add_filter( 'manage_users_custom_column', [ $this, 'fill_userlist_rating_column' ], 10, 3 );
 
   }
 
   /**
-   * Register scripts & styles
+   * Register frontend scripts & styles
    */
-  public function enqueue_scripts() {
+  public function enqueue_frontend_scripts() {
 
 	if ( is_user_logged_in() ) {
-	  usp_enqueue_script( 'userspace-rating', USERSPACE_RATING_URL . 'assets/js/scripts.js' );
+	  usp_enqueue_script( 'userspace-rating', USP_RATING_URL . 'assets/js/scripts.js', [ 'jquery' ] );
 	}
 
-	usp_enqueue_style( 'userspace-rating', USERSPACE_RATING_URL . 'assets/css/style.css' );
+	usp_enqueue_style( 'userspace-rating', USP_RATING_URL . 'assets/css/style.css' );
+
+  }
+
+  /**
+   * Register admin scripts & styles
+   */
+  public function enqueue_admin_scripts($suffix) {
+
+	if ( $suffix != 'users.php' ) {
+	  return;
+	}
+
+	usp_enqueue_script( 'userspace-rating-admin', USP_RATING_URL . 'assets/js/admin.js', [ 'jquery' ] );
+
+	usp_enqueue_style( 'userspace-rating-admin', USP_RATING_URL . 'assets/css/admin.css' );
+
+  }
+
+  /**
+   * Add custom column user-rating in admin users.php
+   */
+  public function add_userlist_rating_column($columns) {
+
+	$columns[ 'user-rating' ] = __( 'Rating', 'userspace-rating' );
+
+	return $columns;
+
+  }
+
+  /**
+   * Fill custom column user-rating in admin users.php
+   */
+  public function fill_userlist_rating_column($val, $column_name, $user_id) {
+
+	if ( $column_name != 'user-rating' ) {
+
+	  return $val;
+	}
+
+	$user_rating = usp_get_user_rating( $user_id );
+
+	$html = '<div class="usp-rating__manage" data-user_id="' . $user_id . '">
+	  <div class="usp-rating__manage_val"><input type="text" value="' . $user_rating . '"></div>
+	  <div class="usp-rating__manage_button"><input type="button" class="button" value="' . __( 'Change', 'userspace-rating' ) . '"></div>
+	</div>';
+
+	return $html;
 
   }
 
@@ -45,7 +98,7 @@ class USP_Rating_Loader {
 
 	global $wp_query;
 
-	if ( !$wp_query->posts || !USERSPACE_RATING_PRELOAD_DATA ) {
+	if ( !$wp_query->posts ) {
 	  return;
 	}
 
@@ -195,10 +248,6 @@ class USP_Rating_Loader {
 
 	$object_type = USP_Rating()->get_object_type( 'comment' );
 
-	if ( !USERSPACE_RATING_PRELOAD_DATA ) {
-	  return $comments;
-	}
-
 	if ( !$comments || !$object_type || !$object_type->get_option( 'rating' ) ) {
 	  return $comments;
 	}
@@ -335,11 +384,12 @@ class USP_Rating_Loader {
    */
   private function init_rating_types() {
 
-	add_action( 'userspace_rating_types', function($USP_Rating_Types) {
+	add_action( 'usp_rating_types', function($rating_types) {
 
-	  $USP_Rating_Types->add( new USP_Rating_Type_Likes() );
-	  $USP_Rating_Types->add( new USP_Rating_Type_Stars() );
-	  $USP_Rating_Types->add( new USP_Rating_Type_Plus_Minus() );
+	  $rating_types->add( new USP_Rating_Type_Likes() );
+	  $rating_types->add( new USP_Rating_Type_Stars() );
+	  $rating_types->add( new USP_Rating_Type_Plus_Minus() );
+	  $rating_types->add( new USP_Rating_Type_Custom() );
 	} );
 
   }
@@ -351,7 +401,7 @@ class USP_Rating_Loader {
 
 	$this->init_object_type_posts();
 	$this->init_object_type_comment();
-	$this->init_object_type_user();
+	$this->init_object_type_custom();
 
   }
 
@@ -369,25 +419,21 @@ class USP_Rating_Loader {
    */
   private function init_object_type_comment() {
 
-	$object_type = new USP_Rating_Object_Type_Comment();
+	add_action( 'usp_rating_object_types', function($object_types) {
 
-	add_action( 'userspace_rating_object_types', function($USP_Rating_Object_Types) use ($object_type) {
-
-	  $USP_Rating_Object_Types->add( $object_type );
+	  $object_types->add( new USP_Rating_Object_Type_Comment() );
 	} );
 
   }
 
   /**
-   * Init rating object type for user
+   * Init rating object type
    */
-  private function init_object_type_user() {
+  private function init_object_type_custom() {
 
-	$object_type = new USP_Rating_Object_Type_User();
+	add_action( 'usp_rating_object_types', function($object_types) {
 
-	add_action( 'userspace_rating_object_types', function($USP_Rating_Object_Types) use ($object_type) {
-
-	  $USP_Rating_Object_Types->add( $object_type );
+	  $object_types->add( new USP_Rating_Object_Type_Custom() );
 	} );
 
   }
@@ -413,9 +459,9 @@ class USP_Rating_Loader {
 
 	  $object_type = new USP_Rating_Object_Type_Posts( $post_type->name, $post_type->label );
 
-	  add_action( 'userspace_rating_object_types', function($USP_Rating_Object_Types) use ($object_type) {
+	  add_action( 'usp_rating_object_types', function($object_types) use ($object_type) {
 
-		$USP_Rating_Object_Types->add( $object_type );
+		$object_types->add( $object_type );
 	  } );
 	}
 

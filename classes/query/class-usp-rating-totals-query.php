@@ -5,7 +5,7 @@ class USP_Rating_Totals_Query extends USP_Query {
   function __construct($as = false) {
 
 	$table = array(
-		'name' => USERSPACE_RATING_TABLE_TOTALS,
+		'name' => USP_RATING_TABLE_TOTALS,
 		'as' => $as ? $as : 'usp_rating_totals',
 		'cols' => array(
 			'ID',
@@ -24,7 +24,7 @@ class USP_Rating_Totals_Query extends USP_Query {
 
 	global $wpdb;
 
-	return $wpdb->insert( USERSPACE_RATING_TABLE_TOTALS, $data );
+	return $wpdb->insert( USP_RATING_TABLE_TOTALS, $data );
 
   }
 
@@ -32,7 +32,7 @@ class USP_Rating_Totals_Query extends USP_Query {
 
 	global $wpdb;
 
-	return $wpdb->update( USERSPACE_RATING_TABLE_TOTALS, $data, $where );
+	return $wpdb->update( USP_RATING_TABLE_TOTALS, $data, $where );
 
   }
 
@@ -40,7 +40,7 @@ class USP_Rating_Totals_Query extends USP_Query {
 
 	global $wpdb;
 
-	return $wpdb->delete( USERSPACE_RATING_TABLE_TOTALS, $where );
+	return $wpdb->delete( USP_RATING_TABLE_TOTALS, $where );
 
   }
 

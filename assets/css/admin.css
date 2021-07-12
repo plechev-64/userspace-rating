@@ -1,0 +1,12 @@
+.usp-rating__manage {
+  display: flex;
+  align-items: center;
+}
+
+.usp-rating__manage_val {
+  margin-right: 6px;
+}
+
+.usp-rating__manage_val input {
+  max-width: 70px;
+}

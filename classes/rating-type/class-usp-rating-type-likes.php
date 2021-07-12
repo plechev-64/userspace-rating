@@ -42,7 +42,7 @@ class USP_Rating_Type_Likes extends USP_Rating_Type_Abstract {
 	$counting_type = $object_type->get_option( 'rating_likes_overall' );
 	$rating_points = $object_type->get_option( 'rating_value' );
 
-	$html = usp_get_include_template( 'usp-rating-' . $this->get_id() . '.php', USERSPACE_RATING_BASE, [
+	$html = usp_get_include_template( 'usp-rating-' . $this->get_id() . '.php', USP_RATING_BASE, [
 		'object_type' => $object_type,
 		'object_id' => $params[ 'object_id' ],
 		'object_author' => $params[ 'object_author' ],

@@ -8,32 +8,40 @@ class USP_Rating_Admin_Options {
 
   }
 
-  public function init_options($options) {
+  public function init_options($options_manager) {
 
 	$object_types = USP_Rating()->get_object_types();
 
-	$options->add_box( 'rating', array(
+	$options_manager->add_box( 'rating', array(
 		'title' => __( 'Rating settings', 'userspace-rating' ),
 		'icon' => 'fa-thumbs-up'
 	) );
 
 	foreach ( $object_types->get_all() as $object_type ) {
 
-	  if ( $object_type->is_hidden() ) {
+	  if ( $object_type->is_public() ) {
+		$options = $this->build_object_type_options( $object_type );
+	  } else {
+		$options = [];
+	  }
+
+	  $filtered_options = $object_type->filter_options( $options );
+
+	  if ( !$filtered_options ) {
 		continue;
 	  }
 
-	  $options->box( 'rating' )->add_group( 'rating-' . $object_type->get_id(), array(
+	  $options_manager->box( 'rating' )->add_group( 'rating-' . $object_type->get_id(), array(
 		  'title' => __( 'Rating', 'userspace-rating' ) . ' ' . $object_type->get_name()
-	  ) )->add_options( $this->object_type_options( $object_type ) );
+	  ) )->add_options( $filtered_options );
 	}
 
-	$options->box( 'rating' )->add_group( 'general', array(
+	$options_manager->box( 'rating' )->add_group( 'general', array(
 		'title' => __( 'Extends options', 'userspace-rating' ),
 		'extend' => true
 	) )->add_options( $this->extend_options() );
 
-	return $options;
+	return $options_manager;
 
   }
 
@@ -43,7 +51,7 @@ class USP_Rating_Admin_Options {
    * 
    * @return array - options for object type
    */
-  private function object_type_options($object_type) {
+  private function build_object_type_options($object_type) {
 
 	$sub_options = [];
 
@@ -75,6 +83,10 @@ class USP_Rating_Admin_Options {
 	$rating_type_child_options = [];
 
 	foreach ( $rating_types->get_all() as $rating_type ) {
+
+	  if ( !$rating_type->is_public() ) {
+		continue;
+	  }
 
 	  $values[ $rating_type->get_id() ] = $rating_type->get_name();
 
@@ -119,7 +131,7 @@ class USP_Rating_Admin_Options {
 	return array(
 		'type' => 'select',
 		'slug' => 'rating_influence_' . $object_type->get_id(),
-		'title' => sprintf( __( 'The influence of rating %s on the overall rating', 'userspace-rating' ), $object_type->get_name() ),
+		'title' => sprintf( __( 'The influence of rating %s on the overall rating of users', 'userspace-rating' ), $object_type->get_name() ),
 		'values' => array( __( 'No', 'userspace-rating' ), __( 'Yes', 'userspace-rating' ) ),
 		'childrens' => array(
 			1 => array(

@@ -5,7 +5,7 @@ class USP_Rating_Votes_Query extends USP_Query {
   function __construct($as = false) {
 
 	$table = array(
-		'name' => USERSPACE_RATING_TABLE_VOTES,
+		'name' => USP_RATING_TABLE_VOTES,
 		'as' => $as ? $as : 'usp_rating_votes',
 		'cols' => array(
 			'ID',
@@ -26,7 +26,7 @@ class USP_Rating_Votes_Query extends USP_Query {
 
 	global $wpdb;
 
-	return $wpdb->insert( USERSPACE_RATING_TABLE_VOTES, $data );
+	return $wpdb->insert( USP_RATING_TABLE_VOTES, $data );
 
   }
 
@@ -34,7 +34,7 @@ class USP_Rating_Votes_Query extends USP_Query {
 
 	global $wpdb;
 
-	return $wpdb->update( USERSPACE_RATING_TABLE_VOTES, $data, $where );
+	return $wpdb->update( USP_RATING_TABLE_VOTES, $data, $where );
 
   }
 
@@ -42,7 +42,7 @@ class USP_Rating_Votes_Query extends USP_Query {
 
 	global $wpdb;
 
-	return $wpdb->delete( USERSPACE_RATING_TABLE_VOTES, $where );
+	return $wpdb->delete( USP_RATING_TABLE_VOTES, $where );
 
   }
 
