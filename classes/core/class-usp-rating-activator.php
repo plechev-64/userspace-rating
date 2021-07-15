@@ -22,7 +22,7 @@ final class USP_Rating_Activator {
 						object_id BIGINT(20) UNSIGNED NOT NULL,
 						object_author BIGINT(20) UNSIGNED NOT NULL,
 						object_type VARCHAR(20) NOT NULL,
-						rating_value VARCHAR(10) NOT NULL,
+						rating_value FLOAT(10,2) NOT NULL,
 						rating_date DATETIME NOT NULL,
 						PRIMARY KEY  ID (ID),
 						KEY user_id (user_id),
@@ -35,7 +35,7 @@ final class USP_Rating_Activator {
 						object_id BIGINT(20) UNSIGNED NOT NULL,
 						object_author BIGINT(20) UNSIGNED NOT NULL,
 						object_type VARCHAR(20) NOT NULL,
-						rating_total VARCHAR(10) NOT NULL,
+						rating_total FLOAT(10,2) NOT NULL,
 						PRIMARY KEY  ID (ID),
 						KEY object_id (object_id),
 						KEY object_author (object_author),
@@ -45,7 +45,7 @@ final class USP_Rating_Activator {
 
 	$sql_users_table = "CREATE TABLE IF NOT EXISTS " . USP_RATING_TABLE_USERS . " (
 						user_id BIGINT(20) UNSIGNED NOT NULL,
-						rating_total VARCHAR(10) NOT NULL,
+						rating_total FLOAT(10,2) NOT NULL,
 						PRIMARY KEY  id (user_id),
 						KEY rating_total (rating_total)
 					  ) {$charset_collate};";

@@ -55,8 +55,8 @@ class USP_Rating_Admin_Options {
 
 	$sub_options = [];
 
-	$sub_options[] = $this->rating_type_option( $object_type );
 	$sub_options[] = $this->rating_value_option( $object_type );
+	$sub_options[] = $this->rating_type_option( $object_type );
 	$sub_options[] = $this->rating_influence_option( $object_type );
 
 	$options = array(
@@ -98,7 +98,7 @@ class USP_Rating_Admin_Options {
 	}
 
 	return array(
-		'type' => 'select',
+		'type' => 'radio',
 		'slug' => 'rating_type_' . $object_type->get_id(),
 		'title' => __( 'Type of rating for', 'userspace-rating' ) . ' ' . $object_type->get_name(),
 		'values' => $values,

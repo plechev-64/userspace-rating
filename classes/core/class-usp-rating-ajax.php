@@ -80,6 +80,52 @@ class USP_Rating_Ajax {
 
   }
 
+  public function edit_user_rating($params) {
+
+	if ( !current_user_can( 'administrator' ) ) {
+	  $this->error( __( 'You cannot do this', 'userspace-rating' ) );
+	}
+
+	$user_id = $params[ 'user_id' ];
+	$new_rating = $params[ 'new_rating' ];
+
+	if ( !$user_id ) {
+	  $this->error( __( 'Incorrect user_id', 'userspace-rating' ) );
+	}
+
+	if ( !is_numeric( $new_rating ) ) {
+	  $this->error( __( 'Incorrect rating value', 'userspace-rating' ) );
+	}
+	
+	$current_rating = usp_get_user_rating($user_id);
+	
+	if(is_null($current_rating)) {
+	  $current_rating = 0;
+	}
+	
+	$rating_delta = $new_rating - $current_rating;
+	
+	if(!$rating_delta) {
+	  $this->error(__('Rating not changed', 'userspace-rating'));
+	}
+	
+	$result = usp_insert_vote([
+		'user_id' => get_current_user_id(),
+		'object_id' => $user_id,
+		'object_author' => $user_id,
+		'object_type' => 'custom',
+		'rating_value' => $rating_delta,
+		'rating_date' => current_time('mysql')
+	]);
+	
+	if(!$result) {
+	  $this->error(__('Rating not changed', 'userspace-rating'));
+	}
+	
+	$this->success(__('Rating changed', 'userspace-rating'));
+
+  }
+
   private function error($message = '') {
 
 	wp_send_json( [ 'error' => $message ] );

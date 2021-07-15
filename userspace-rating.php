@@ -75,8 +75,8 @@ function uninstall_usp_rating() {
 
 }
 
-register_activation_hook( __FILE__, 'activate_userspace_rating' );
-register_uninstall_hook( __FILE__, 'uninstall_userspace_rating' );
+register_activation_hook( __FILE__, 'activate_usp_rating' );
+register_uninstall_hook( __FILE__, 'uninstall_usp_rating' );
 
 function USP_Rating(): USP_Rating {
 

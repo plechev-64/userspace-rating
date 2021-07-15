@@ -18,8 +18,8 @@
 ?>
 
 
-<div class="usp-rating-box__value"><?php echo $counting_type == 1 ? $votes_count : $rating_total; ?></div>
+<div class="usp-rating-box__value"><?php echo $counting_type == 1 ? $votes_count : round($rating_total, USP_RATING_PRECISION); ?></div>
 
-<div class="usp-rating-box__vote usp-rating-likes usps__inline usps__ai-center <?php echo $user_vote ? 'usp-rating-box__vote_voted' : ''; ?>" data-rating_value="<?php echo $rating_points; ?>">
+<div class="usp-rating-box__vote usp-rating-likes usps__inline usps__ai-center <?php echo $user_vote ? 'usp-rating-box__vote_voted' : ''; ?>" data-rating_value="<?php echo round($rating_points, USP_RATING_PRECISION); ?>">
   <i class="uspi <?php echo $user_vote ? 'fa-heart-fill' : 'fa-heart'; ?>"></i>
 </div>

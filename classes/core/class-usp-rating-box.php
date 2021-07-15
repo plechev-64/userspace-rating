@@ -182,7 +182,6 @@ class USP_Rating_Box {
 
 	$this->init_user_can_vote();
 
-	$this->user_can_vote = apply_filters( 'usp_rating_user_can_vote', $this->user_can_vote, $this->user_id, $this->get_params() );
 	$this->user_can_view_votes = apply_filters( 'usp_rating_user_can_view_votes', $this->user_can_view_votes, $this->user_id, $this->get_params() );
 
 	return true;
@@ -214,12 +213,14 @@ class USP_Rating_Box {
 
 		$allow_delete_vote = usp_get_option( 'rating_delete_vote', 0 );
 
-		$this->user_can_vote = !$allow_delete_vote ? false : true;
+		$this->user_can_vote = $allow_delete_vote == 1 ? true : false;
 	  } else {
 
 		$this->user_can_vote = true;
 	  }
 	}
+
+	$this->user_can_vote = apply_filters( 'usp_rating_user_can_vote', $this->user_can_vote, $this->user_id, $this->get_params() );
 
   }
 

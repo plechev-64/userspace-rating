@@ -24,33 +24,33 @@ class USP_Rating_Object_Type_Custom extends USP_Rating_Object_Type_Abstract {
 
   public function get_object_author($object_id) {
 
-	return 0;
+	return null;
 
   }
 
   public function get_object_name($object_id) {
 
-	return '';
+	return null;
 
   }
 
   public function get_object_url($object_id) {
 
-	return '';
+	return null;
 
   }
 
   public function is_valid_object_id($object_id) {
 
-	return (get_userdata( $object_id )) ? true : false;
+	return true;
 
   }
 
-  public function convert_vote_to_template($vote, $template = '') {
+  public function get_vote_template() {
 
-	$result = sprintf( __( 'Rating change: %s', 'userspace-rating' ), $vote->rating_value );
+	//$result = sprintf( __( 'Rating change: %s', 'userspace-rating' ), $vote->rating_value );
 
-	return $result;
+	return '%DATE% %USER% Rating change: %VALUE%';
 
   }
 

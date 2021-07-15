@@ -8,9 +8,7 @@ function usp_rating_posts_display($content) {
 
   global $post;
 
-  $rating_data = isset( $post->rating_data ) ? $post->rating_data : [];
-
-  $content .= USP_Rating()->get_rating_box( $post->ID, $post->post_author, $post->post_type, $rating_data );
+  $content .= USP_Rating()->get_rating_box( $post->ID, $post->post_author, $post->post_type );
 
   return $content;
 
@@ -24,9 +22,7 @@ function usp_rating_comment_display($content) {
 
   global $comment;
 
-  $rating_data = isset( $comment->rating_data ) ? $comment->rating_data : [];
-
-  $content .= USP_Rating()->get_rating_box( $comment->comment_ID, $comment->user_id, 'comment', $rating_data );
+  $content .= USP_Rating()->get_rating_box( $comment->comment_ID, $comment->user_id, 'comment' );
 
   return $content;
 
@@ -105,10 +101,10 @@ function usp_rating_update_object_author_rating($args) {
 /**
  * Register profile tabs
  */
-add_action( 'init', 'usp_rating_profile_tabs', 10 );
+add_action( 'usp_init_tabs', 'usp_rating_profile_tabs', 10 );
 
 function usp_rating_profile_tabs() {
-
+  
   $tab_data = array(
 	  'id' => 'rating',
 	  'name' => __( 'Rating', 'userspace-rating' ),
@@ -116,7 +112,7 @@ function usp_rating_profile_tabs() {
 	  'public' => 1,
 	  'icon' => 'fa-comments',
 	  'output' => 'counters',
-	  'counter' => usp_get_user_rating( 88546 ),
+	  'counter' => usp_get_user_rating( USP()->office()->get_owner_id() ),
 	  'content' => [
 		  [
 			  'id' => 'rating',
@@ -135,12 +131,10 @@ function usp_rating_profile_tabs() {
 
 function usp_rating_profile_tab_content($master_lk) {
 
-  global $usp_office;
-
   USP()->use_module( 'content-manager' );
 
   $manager = new USP_Rating_Votes_List_Manager( [
-	  'object_author' => $usp_office
+	  'object_author' => USP()->office()->get_owner_id()
   ] );
 
   $content = $manager->get_manager();

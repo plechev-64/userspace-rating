@@ -23,12 +23,12 @@ if ( $counting_type == 1 ) {
 ?>
 
 
-<div class="usp-rating-box__vote usp-rating-minus usps__inline usps__ai-center <?php echo $user_vote && $user_vote == -$rating_points ? 'usp-rating-box__vote_voted' : ''; ?>" data-rating_value="<?php echo -$rating_points; ?>">
+<div class="usp-rating-box__vote usp-rating-minus usps__inline usps__ai-center <?php echo $user_vote && $user_vote == -$rating_points ? 'usp-rating-box__vote_voted' : ''; ?>" data-rating_value="<?php echo -1 * round( $rating_points, USP_RATING_PRECISION ); ?>">
   <i class="uspi fa-minus"></i>
 </div>
 
-<div class="usp-rating-box__value"><?php echo $display_rating; ?></div>
+<div class="usp-rating-box__value"><?php echo round( $display_rating, USP_RATING_PRECISION ); ?></div>
 
-<div class="usp-rating-box__vote usp-rating-plus usps__inline usps__ai-center <?php echo $user_vote && $user_vote == $rating_points ? 'usp-rating-box__vote_voted' : ''; ?>" data-rating_value="<?php echo $rating_points; ?>">
+<div class="usp-rating-box__vote usp-rating-plus usps__inline usps__ai-center <?php echo $user_vote && $user_vote == $rating_points ? 'usp-rating-box__vote_voted' : ''; ?>" data-rating_value="<?php echo round( $rating_points, USP_RATING_PRECISION ); ?>">
   <i class="uspi fa-plus"></i>
 </div>

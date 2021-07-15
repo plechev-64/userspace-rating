@@ -21,7 +21,7 @@ final class USP_Rating_Uninstaller {
 	];
 
 	$wpdb->query( "DROP TABLE IF EXISTS `" . implode( '`, `', $tables ) . "`" );
-
+	
   }
 
 }

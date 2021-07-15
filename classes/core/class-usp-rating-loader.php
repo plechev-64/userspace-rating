@@ -53,6 +53,12 @@ class USP_Rating_Loader {
 	  return;
 	}
 
+	/*
+	 * TODO
+	 */
+	usp_core_resources();
+	wp_localize_script( 'usp-core-scripts', 'USP', usp_get_localize_data() );
+
 	usp_enqueue_script( 'userspace-rating-admin', USP_RATING_URL . 'assets/js/admin.js', [ 'jquery' ] );
 
 	usp_enqueue_style( 'userspace-rating-admin', USP_RATING_URL . 'assets/css/admin.css' );
@@ -443,17 +449,9 @@ class USP_Rating_Loader {
    */
   private function init_object_type_posts() {
 
-	$custom_post_types = get_post_types( array(
-		'public' => true,
-		'_builtin' => false
-	), 'objects' );
-
-	$default_post_types = get_post_types( array(
-		'public' => true,
-		'_builtin' => true
-	), 'objects' );
-
-	$post_types = array_merge( $custom_post_types, $default_post_types );
+	$post_types = get_post_types( [ 'publicly_queryable' => 1 ], 'objects' );
+	
+	unset( $post_types[ 'attachment' ] );
 
 	foreach ( $post_types as $post_type ) {
 
