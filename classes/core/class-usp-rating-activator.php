@@ -2,21 +2,21 @@
 
 final class USP_Rating_Activator {
 
-  public function __construct() {
-	
-  }
+	public function __construct() {
 
-  public static function activate() {
-
-	if ( !current_user_can( 'activate_plugins' ) ) {
-	  return;
 	}
 
-	$charset_collate = self::char_set_collate();
+	public static function activate() {
 
-	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		if ( ! current_user_can( 'activate_plugins' ) ) {
+			return;
+		}
 
-	$sql_votes_table = "CREATE TABLE IF NOT EXISTS " . USP_RATING_TABLE_VOTES . " (
+		$charset_collate = self::char_set_collate();
+
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+
+		$sql_votes_table = "CREATE TABLE IF NOT EXISTS " . USP_RATING_TABLE_VOTES . " (
 						ID BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 						user_id BIGINT(20) UNSIGNED NOT NULL,
 						object_id BIGINT(20) UNSIGNED NOT NULL,
@@ -30,7 +30,7 @@ final class USP_Rating_Activator {
 						KEY object_type (object_type)
 					  ) {$charset_collate};";
 
-	$sql_totals_table = "CREATE TABLE IF NOT EXISTS " . USP_RATING_TABLE_TOTALS . " (
+		$sql_totals_table = "CREATE TABLE IF NOT EXISTS " . USP_RATING_TABLE_TOTALS . " (
 						ID BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 						object_id BIGINT(20) UNSIGNED NOT NULL,
 						object_author BIGINT(20) UNSIGNED NOT NULL,
@@ -43,41 +43,41 @@ final class USP_Rating_Activator {
 						KEY rating_total (rating_total)
 					  ) {$charset_collate};";
 
-	$sql_users_table = "CREATE TABLE IF NOT EXISTS " . USP_RATING_TABLE_USERS . " (
+		$sql_users_table = "CREATE TABLE IF NOT EXISTS " . USP_RATING_TABLE_USERS . " (
 						user_id BIGINT(20) UNSIGNED NOT NULL,
 						rating_total FLOAT(10,2) NOT NULL,
 						PRIMARY KEY  id (user_id),
 						KEY rating_total (rating_total)
 					  ) {$charset_collate};";
 
-	dbDelta( $sql_votes_table );
-	dbDelta( $sql_totals_table );
-	dbDelta( $sql_users_table );
+		dbDelta( $sql_votes_table );
+		dbDelta( $sql_totals_table );
+		dbDelta( $sql_users_table );
 
-  }
-
-  /**
-   * Set sql query Charset and Collate
-   * 
-   * @return void
-   */
-  private function char_set_collate() {
-
-	global $wpdb;
-
-	$charset_collate = '';
-
-	if ( $wpdb->has_cap( 'collation' ) ) {
-	  if ( !empty( $wpdb->charset ) ) {
-		$charset_collate .= "DEFAULT CHARACTER SET {$wpdb->charset}";
-	  }
-	  if ( !empty( $wpdb->collate ) ) {
-		$charset_collate .= " COLLATE {$wpdb->collate}";
-	  }
 	}
 
-	return $charset_collate;
+	/**
+	 * Get sql query Charset and Collate
+	 *
+	 * @return string
+	 */
+	private static function char_set_collate() {
 
-  }
+		global $wpdb;
+
+		$charset_collate = '';
+
+		if ( $wpdb->has_cap( 'collation' ) ) {
+			if ( ! empty( $wpdb->charset ) ) {
+				$charset_collate .= "DEFAULT CHARACTER SET {$wpdb->charset}";
+			}
+			if ( ! empty( $wpdb->collate ) ) {
+				$charset_collate .= " COLLATE {$wpdb->collate}";
+			}
+		}
+
+		return $charset_collate;
+
+	}
 
 }

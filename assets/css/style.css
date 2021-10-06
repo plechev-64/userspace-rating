@@ -2,56 +2,56 @@
 * Core
 */
 .usp-rating-box {
-  position: relative;
+    position: relative;
 }
 
 .usp-rating-box__inner > *:not(:last-child) {
-  margin-right: 6px;
+    margin-right: 6px;
 }
 
 .usp-rating-box_history_can .usp-rating-box__value:hover {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 /**
 * Stars
 */
 .usp-rating-stars {
-  color: orange;
-  font-size: 24px;
-  vertical-align: bottom;
+    color: orange;
+    font-size: 24px;
+    vertical-align: bottom;
 }
 
 .usp-rating-stars__icon {
-  position: relative;
-  z-index: 1;
+    position: relative;
+    z-index: 1;
 }
 
 .usp-rating-stars__icon_in {
-  bottom: 0;
-  display: block;
-  font-size: inherit;
-  left: 0;
-  overflow: hidden;
-  position: absolute;
-  top: 0;
-  z-index: 2;
+    bottom: 0;
+    display: block;
+    font-size: inherit;
+    left: 0;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    z-index: 2;
 }
 
 .usp-rating-stars_size_small {
-  font-size: 18px;
+    font-size: 18px;
 }
 
 .usp-rating-box_type_stars.usp-rating-box_vote_can .usp-rating-box__vote {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .usp-rating-box_type_stars.usp-rating-box_vote_can .usp-rating-stars:hover .usp-rating-stars__icon_in {
-  width: 100%!important;
+    width: 100% !important;
 }
 
 .usp-rating-box_type_stars.usp-rating-box_vote_can .usp-rating-box__vote:hover ~ .usp-rating-box__vote .usp-rating-stars__icon_in {
-  width: 0!important;
+    width: 0 !important;
 }
 
 /**
@@ -60,44 +60,44 @@
 
 .usp-rating-plus,
 .usp-rating-minus {
-  font-size: 20px;
-  vertical-align: bottom;
+    font-size: 20px;
+    vertical-align: bottom;
 }
 
 .usp-rating-plus.usp-rating-plus_size_small,
 .usp-rating-minus_size_small {
-  font-size: 16px;
+    font-size: 16px;
 }
 
 .usp-rating-minus {
-  color: var(--uspRed-500);
+    color: var(--uspRed-500);
 }
 
 .usp-rating-plus {
-  color: var(--uspGreen-500);
+    color: var(--uspGreen-500);
 }
 
 .usp-rating-box_type_plus-minus.usp-rating-box_vote_can .usp-rating-box__vote:hover {
-  cursor: pointer;
-  opacity: .7;
+    cursor: pointer;
+    opacity: .7;
 }
 
 /**
 * Likes
 */
 .usp-rating-likes {
-  font-size: 20px;
-  color: var(--uspRed-400);
-  vertical-align: bottom;
+    font-size: 20px;
+    color: var(--uspRed-400);
+    vertical-align: bottom;
 }
 
 .usp-rating-likes.usp-rating-likes_size_small {
-  font-size: 16px;
+    font-size: 16px;
 }
 
 .usp-rating-box_type_likes.usp-rating-box_vote_can .usp-rating-box__vote:hover {
-  cursor: pointer;
-  opacity: .7;
+    cursor: pointer;
+    opacity: .7;
 }
 
 /**
@@ -105,35 +105,37 @@
 */
 
 .usp-rating-votes {
-  padding: 6px;
-  opacity: 0;
-  position: absolute;
-  background-color: var(--uspWhite);
-  box-shadow: var(--uspBox400);
-  transition: opacity var(--uspLoad);
-  min-width: 150px; 
-  z-index: 9;
+    padding: 6px;
+    opacity: 0;
+    position: absolute;
+    background-color: var(--uspWhite);
+    box-shadow: var(--uspBox400);
+    transition: opacity var(--uspLoad);
+    min-width: 150px;
+    z-index: 9;
 }
 
 .usp-rating-votes .usp-rating-votes__list {
-  max-height: 150px;
-  max-width: 300px;
-  overflow: auto;
+    max-height: 150px;
+    max-width: 300px;
+    overflow: auto;
 }
 
 .usp-rating-votes__list::-webkit-scrollbar {
-  width: 5px;
+    width: 5px;
 }
+
 .usp-rating-votes__list::-webkit-scrollbar-thumb {
-  background-color: var(--uspGray-400);
-  border-radius: 5px;
+    background-color: var(--uspGray-400);
+    border-radius: 5px;
 }
+
 .usp-rating-votes__list::-webkit-scrollbar-track {
-  background-color: var(--uspGray-100);
+    background-color: var(--uspGray-100);
 }
 
 .usp-rating-votes__vote {
-  margin: 3px 6px 3px 3px;
+    margin: 3px 6px 3px 3px;
 }
 
 /**
@@ -141,5 +143,5 @@
 */
 
 .usp-rating-history__vote {
-  margin: 12px 0;
+    margin: 12px 0;
 }

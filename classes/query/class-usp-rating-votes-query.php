@@ -2,48 +2,48 @@
 
 class USP_Rating_Votes_Query extends USP_Query {
 
-  function __construct($as = false) {
+	function __construct( $as = false ) {
 
-	$table = array(
-		'name' => USP_RATING_TABLE_VOTES,
-		'as' => $as ? $as : 'usp_rating_votes',
-		'cols' => array(
-			'ID',
-			'user_id',
-			'object_id',
-			'object_author',
-			'object_type',
-			'rating_value',
-			'rating_date'
-		)
-	);
+		$table = array(
+			'name' => USP_RATING_TABLE_VOTES,
+			'as'   => $as ? $as : 'usp_rating_votes',
+			'cols' => array(
+				'ID',
+				'user_id',
+				'object_id',
+				'object_author',
+				'object_type',
+				'rating_value',
+				'rating_date'
+			)
+		);
 
-	parent::__construct( $table );
+		parent::__construct( $table );
 
-  }
+	}
 
-  static function insert($data) {
+	static function insert( $data, $unused_param = '' ) {
 
-	global $wpdb;
+		global $wpdb;
 
-	return $wpdb->insert( USP_RATING_TABLE_VOTES, $data );
+		return $wpdb->insert( USP_RATING_TABLE_VOTES, $data );
 
-  }
+	}
 
-  static function update($where, $data) {
+	static function update( $where, $data ) {
 
-	global $wpdb;
+		global $wpdb;
 
-	return $wpdb->update( USP_RATING_TABLE_VOTES, $data, $where );
+		return $wpdb->update( USP_RATING_TABLE_VOTES, $data, $where );
 
-  }
+	}
 
-  static function delete($where) {
+	static function delete( $where ) {
 
-	global $wpdb;
+		global $wpdb;
 
-	return $wpdb->delete( USP_RATING_TABLE_VOTES, $where );
+		return $wpdb->delete( USP_RATING_TABLE_VOTES, $where );
 
-  }
+	}
 
 }

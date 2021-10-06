@@ -2,101 +2,101 @@
 
 final class USP_Rating_Object_Types {
 
-  /**
-   * Array of instances with all registered object types
-   */
-  protected $types = [];
+	/**
+	 * Array of instances with all registered object types
+	 */
+	protected $types = [];
 
-  public function __construct() {
+	public function __construct() {
 
-	do_action( 'usp_rating_object_types', $this );
+		do_action( 'usp_rating_object_types', $this );
 
-  }
-
-  /**
-   * Register new object type
-   * 
-   * @param object $object_type must extends \USP_Rating_Object_Type_Abstract
-   * 
-   * @return bool
-   */
-  public function add($object_type) {
-
-	if ( $object_type && $object_type instanceof USP_Rating_Object_Type_Abstract ) {
-
-	  if ( $this->get( $object_type->get_id() ) === false ) {
-
-		$this->types[] = $object_type;
-	  }
-
-	  return true;
 	}
 
-	return false;
+	/**
+	 * Register new object type
+	 *
+	 * @param object $object_type must extends \USP_Rating_Object_Type_Abstract
+	 *
+	 * @return bool
+	 */
+	public function add( $object_type ) {
 
-  }
+		if ( $object_type && $object_type instanceof USP_Rating_Object_Type_Abstract ) {
 
-  /**
-   * Get object type instance by id
-   * 
-   * @param string $id
-   * 
-   * return object|false - instance of object type or false
-   */
-  public function get($id = '') {
+			if ( $this->get( $object_type->get_id() ) === false ) {
 
-	if ( !$id ) {
-	  return false;
+				$this->types[] = $object_type;
+			}
+
+			return true;
+		}
+
+		return false;
+
 	}
 
-	foreach ( $this->types as $object_type ) {
+	/**
+	 * Get object type instance by id
+	 *
+	 * @param string $id
+	 *
+	 * return object|false - instance of object type or false
+	 */
+	public function get( $id = '' ) {
 
-	  if ( $object_type->get_id() == $id ) {
+		if ( ! $id ) {
+			return false;
+		}
 
-		return $object_type;
-	  }
+		foreach ( $this->types as $object_type ) {
+
+			if ( $object_type->get_id() == $id ) {
+
+				return $object_type;
+			}
+		}
+
+		return false;
+
 	}
 
-	return false;
+	/**
+	 * Get all object types
+	 *
+	 * @return array - all object types
+	 */
+	public function get_all() {
 
-  }
+		return $this->types;
 
-  /**
-   * Get all object types
-   * 
-   * @return array - all object types
-   */
-  public function get_all() {
-
-	return $this->types;
-
-  }
-
-  /**
-   * Remove registered object type by id
-   * 
-   * @param string $id
-   * 
-   * @return bool
-   */
-  public function remove($id) {
-
-	if ( !$id ) {
-	  return false;
 	}
 
-	foreach ( $this->types as $key => $object_type ) {
+	/**
+	 * Remove registered object type by id
+	 *
+	 * @param string $id
+	 *
+	 * @return bool
+	 */
+	public function remove( $id ) {
 
-	  if ( $object_type->get_id() == $id ) {
+		if ( ! $id ) {
+			return false;
+		}
 
-		unset( $this->types[ $key ] );
+		foreach ( $this->types as $key => $object_type ) {
 
-		return true;
-	  }
+			if ( $object_type->get_id() == $id ) {
+
+				unset( $this->types[ $key ] );
+
+				return true;
+			}
+		}
+
+		return false;
+
 	}
-
-	return false;
-
-  }
 
 }
