@@ -54,7 +54,7 @@ class USP_Rating_Votes_List_Manager extends USP_Content_Manager {
 
 	function get_data_content() {
 
-		$content .= '<div class="manager-content">';
+		$content = '<div class="manager-content">';
 
 		if ( ! $this->data ) {
 			$content .= $this->get_no_result_notice();
