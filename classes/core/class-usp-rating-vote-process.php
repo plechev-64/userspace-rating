@@ -15,12 +15,12 @@ final class USP_Rating_Vote_Process {
 			$vote_args = (array) $vote_args;
 		}
 
-		$this->user_id       = isset( $vote_args['user_id'] ) ? $vote_args['user_id'] : null;
-		$this->object_id     = isset( $vote_args['object_id'] ) ? $vote_args['object_id'] : null;
-		$this->object_author = isset( $vote_args['object_author'] ) ? $vote_args['object_author'] : null;
-		$this->object_type   = isset( $vote_args['object_type'] ) ? $vote_args['object_type'] : null;
-		$this->rating_value  = isset( $vote_args['rating_value'] ) ? $vote_args['rating_value'] : null;
-		$this->rating_date   = isset( $vote_args['rating_date'] ) ? $vote_args['rating_date'] : current_time( 'mysql' );
+		$this->user_id       = $vote_args['user_id'] ?? null;
+		$this->object_id     = $vote_args['object_id'] ?? null;
+		$this->object_author = $vote_args['object_author'] ?? null;
+		$this->object_type   = $vote_args['object_type'] ?? null;
+		$this->rating_value  = $vote_args['rating_value'] ?? null;
+		$this->rating_date   = $vote_args['rating_date'] ?? current_time( 'mysql' );
 
 	}
 

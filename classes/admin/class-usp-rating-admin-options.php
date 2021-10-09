@@ -12,10 +12,10 @@ class USP_Rating_Admin_Options {
 
 		$object_types = USP_Rating()->get_object_types();
 
-		$options_manager->add_box( 'rating', array(
+		$options_manager->add_box( 'rating', [
 			'title' => __( 'Rating settings', 'userspace-rating' ),
 			'icon'  => 'fa-thumbs-up'
-		) );
+		] );
 
 		foreach ( $object_types->get_all() as $object_type ) {
 
@@ -31,15 +31,15 @@ class USP_Rating_Admin_Options {
 				continue;
 			}
 
-			$options_manager->box( 'rating' )->add_group( 'rating-' . $object_type->get_id(), array(
+			$options_manager->box( 'rating' )->add_group( 'rating-' . $object_type->get_id(), [
 				'title' => __( 'Rating', 'userspace-rating' ) . ' ' . $object_type->get_name()
-			) )->add_options( $filtered_options );
+			] )->add_options( $filtered_options );
 		}
 
-		$options_manager->box( 'rating' )->add_group( 'general', array(
+		$options_manager->box( 'rating' )->add_group( 'general', [
 			'title'  => __( 'Extends options', 'userspace-rating' ),
 			'extend' => true
-		) )->add_options( $this->extend_options() );
+		] )->add_options( $this->extend_options() );
 
 		return $options_manager;
 
@@ -59,18 +59,20 @@ class USP_Rating_Admin_Options {
 		$sub_options[] = $this->rating_type_option( $object_type );
 		$sub_options[] = $this->rating_influence_option( $object_type );
 
-		$options = array(
-			array(
+		return [
+			[
 				'type'      => 'select',
 				'slug'      => 'rating_' . $object_type->get_id(),
-				'values'    => array( __( 'Disabled', 'userspace-rating' ), __( 'Enabled', 'userspace-rating' ) ),
-				'childrens' => array(
+				'values'    => [
+					0 => __( 'Disabled', 'userspace-rating' ),
+					1 => __( 'Enabled', 'userspace-rating' )
+				],
+				'default'   => 0,
+				'childrens' => [
 					1 => $sub_options
-				)
-			)
-		);
-
-		return $options;
+				]
+			]
+		];
 
 	}
 
@@ -97,24 +99,25 @@ class USP_Rating_Admin_Options {
 			}
 		}
 
-		return array(
-			'type'      => 'radio',
-			'slug'      => 'rating_type_' . $object_type->get_id(),
-			'title'     => __( 'Type of rating for', 'userspace-rating' ) . ' ' . $object_type->get_name(),
-			'values'    => $values,
-			'childrens' => $rating_type_child_options
-		);
+		return [
+			'type'        => 'select',
+			'slug'        => 'rating_type_' . $object_type->get_id(),
+			'empty-first' => __( 'Not selected', 'userspace-rating' ),
+			'title'       => __( 'Type of rating for', 'userspace-rating' ) . ' ' . $object_type->get_name(),
+			'values'      => $values,
+			'childrens'   => $rating_type_child_options
+		];
 
 	}
 
 	private function rating_value_option( $object_type ) {
 
-		return array(
+		return [
 			'type'    => 'text',
 			'slug'    => 'rating_value_' . $object_type->get_id(),
 			'title'   => __( 'Rating value', 'userspace-rating' ),
 			'default' => 1
-		);
+		];
 
 	}
 
@@ -128,46 +131,49 @@ class USP_Rating_Admin_Options {
 			$notice .= "<p>{$var} - {$var_descr}</p>";
 		}
 
-		return array(
+		return [
 			'type'      => 'select',
 			'slug'      => 'rating_influence_' . $object_type->get_id(),
 			'title'     => sprintf( __( 'The influence of rating %s on the overall rating of users', 'userspace-rating' ), $object_type->get_name() ),
-			'values'    => array( __( 'No', 'userspace-rating' ), __( 'Yes', 'userspace-rating' ) ),
-			'childrens' => array(
-				1 => array(
-					array(
+			'values'    => [
+				0 => __( 'No', 'userspace-rating' ),
+				1 => __( 'Yes', 'userspace-rating' )
+			],
+			'childrens' => [
+				1 => [
+					[
 						'type'    => 'text',
 						'slug'    => 'rating_vote_template_' . $object_type->get_id(),
 						'title'   => __( 'Template of votes list output', 'userspace-rating' ),
 						'default' => $object_type->get_vote_template(),
 						'notice'  => $notice
-					)
-				)
-			)
-		);
+					]
+				]
+			]
+		];
 
 	}
 
 	private function extend_options() {
 
-		return array(
-			array(
+		return [
+			[
 				'type'   => 'select',
 				'slug'   => 'rating_delete_vote',
 				'title'  => __( 'Delete your vote', 'userspace-rating' ),
-				'values' => array( __( 'No', 'userspace-rating' ), __( 'Yes', 'userspace-rating' ) )
-			),
-			array(
+				'values' => [ __( 'No', 'userspace-rating' ), __( 'Yes', 'userspace-rating' ) ]
+			],
+			[
 				'type'   => 'select',
 				'slug'   => 'rating_tab_other',
 				'title'  => __( 'Tab "Other"', 'userspace-rating' ),
-				'values' => array(
-					__( 'Disable', 'userspace-rating' ),
-					__( 'Enable', 'userspace-rating' )
-				),
+				'values' => [
+					0 => __( 'Disable', 'userspace-rating' ),
+					1 => __( 'Enable', 'userspace-rating' )
+				],
 				'notice' => __( 'If enabled, an additional "Other" tab will be created in the rating history, where all changes will be displayed via unregistered rating types', 'userspace-rating' )
-			)
-		);
+			]
+		];
 
 	}
 

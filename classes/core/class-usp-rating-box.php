@@ -110,7 +110,7 @@ class USP_Rating_Box {
 	/**
 	 * Init rating box params
 	 *
-	 * @return void
+	 * @return bool
 	 */
 	public function init() {
 
@@ -195,7 +195,7 @@ class USP_Rating_Box {
 
 	public function get_param( $key ) {
 
-		return isset( $this->$key ) ? $this->$key : null;
+		return $this->$key ?? null;
 
 	}
 
@@ -213,7 +213,7 @@ class USP_Rating_Box {
 
 				$allow_delete_vote = usp_get_option( 'rating_delete_vote', 0 );
 
-				$this->user_can_vote = $allow_delete_vote == 1 ? true : false;
+				$this->user_can_vote = (bool) $allow_delete_vote;
 			} else {
 
 				$this->user_can_vote = true;

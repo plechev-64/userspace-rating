@@ -11,8 +11,8 @@ class USP_Rating_Ajax {
 	 */
 	public function process() {
 
-		$method = isset( $_POST['method'] ) ? $_POST['method'] : '';
-		$params = isset( $_POST['params'] ) ? $_POST['params'] : [];
+		$method = $_POST['method'] ?? '';
+		$params = $_POST['params'] ?? [];
 
 		if ( ! method_exists( $this, $method ) ) {
 
@@ -23,16 +23,10 @@ class USP_Rating_Ajax {
 
 	}
 
-	private function error( $message = '' ) {
-
-		wp_send_json( [ 'error' => $message ] );
-
-	}
-
 	public function object_votes( $params ) {
 
-		$object_id      = $params['object_id'];
-		$object_type_id = $params['object_type'];
+		$object_id      = absint( $params['object_id'] );
+		$object_type_id = sanitize_key( $params['object_type'] );
 
 		$object_type = USP_Rating()->get_object_type( $object_type_id );
 
@@ -56,20 +50,14 @@ class USP_Rating_Ajax {
 
 	}
 
-	private function success( $message = '', $data = [] ) {
-
-		wp_send_json( array_merge( [ 'success' => $message ], $data ) );
-
-	}
-
 	public function edit_user_rating( $params ) {
 
 		if ( ! current_user_can( 'administrator' ) ) {
 			$this->error( __( 'You cannot do this', 'userspace-rating' ) );
 		}
 
-		$user_id    = $params['user_id'];
-		$new_rating = $params['new_rating'];
+		$user_id    = absint( $params['user_id'] );
+		$new_rating = floatval( $params['new_rating'] );
 
 		if ( ! $user_id ) {
 			$this->error( __( 'Incorrect user_id', 'userspace-rating' ) );
@@ -111,10 +99,10 @@ class USP_Rating_Ajax {
 	private function process_vote( $params ) {
 
 		$user_id       = get_current_user_id();
-		$object_id     = $params['object_id'];
-		$object_type   = $params['object_type'];
-		$object_author = $params['object_author'];
-		$rating_value  = round( $params['rating_value'], USP_RATING_PRECISION );
+		$object_id     = absint( $params['object_id'] );
+		$object_type   = sanitize_key( $params['object_type'] );
+		$object_author = absint( $params['object_author'] );
+		$rating_value  = round( floatval( $params['rating_value'] ), USP_RATING_PRECISION );
 
 		$result = usp_process_vote( [
 			'user_id'       => $user_id,
@@ -135,6 +123,18 @@ class USP_Rating_Ajax {
 		$this->success( '', [
 			'html' => USP_Rating()->get_rating_box( $object_id, $object_author, $object_type )
 		] );
+
+	}
+
+	private function error( $message = '' ) {
+
+		wp_send_json( [ 'error' => $message ] );
+
+	}
+
+	private function success( $message = '', $data = [] ) {
+
+		wp_send_json( array_merge( [ 'success' => $message ], $data ) );
 
 	}
 
