@@ -108,7 +108,7 @@ function usp_rating_profile_tabs() {
 	$office_owner_rating = 0;
 
 	if ( $office_owner_id = USP()->office()->get_owner_id() ) {
-		$office_owner_rating = usp_get_user_rating( $office_owner_id ) ?: 0;
+		$office_owner_rating = round( usp_get_user_rating( $office_owner_id ), USP_RATING_PRECISION ) ?: 0;
 	}
 
 	$tab_data = array(
