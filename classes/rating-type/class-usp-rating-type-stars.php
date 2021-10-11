@@ -100,7 +100,9 @@ class USP_Rating_Type_Stars extends USP_Rating_Type_Abstract {
 				continue;
 			}
 
-			$star_percent = round( ( ( $total_rating - $stars_values[ $star_num - 1 ] ) / $stars_values[1] ) * 100 );
+			$val = $star_num - 1;
+
+			$star_percent = ( $val > 0 ) ? round( ( ( $total_rating - $stars_values[ $val ] ) / $stars_values[1] ) * 100 ) : '0';
 
 			$stars[ $star_num ] = $star_percent;
 
@@ -157,10 +159,10 @@ class USP_Rating_Type_Stars extends USP_Rating_Type_Abstract {
 				'type'   => 'select',
 				'slug'   => 'rating_stars_schema_' . $object_type->get_id(),
 				'title'  => __( 'Rating markup', 'userspace-rating' ),
-				'values' => array(
+				'values' => [
 					__( 'Disable', 'userspace-rating' ),
 					__( 'Enable', 'userspace-rating' )
-				),
+				],
 				'notice' => __( 'If enabled, the standard markup on single pages along with the rating is displayed as <a href="http://schema.org" target="_blank">http://schema.org</a>', 'userspace-rating' )
 			]
 		];
