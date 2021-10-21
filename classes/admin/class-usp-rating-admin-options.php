@@ -128,7 +128,7 @@ class USP_Rating_Admin_Options {
 		$template_vars = $object_type->get_vote_template_vars();
 
 		foreach ( $template_vars as $var => $var_descr ) {
-			$notice .= "<p>{$var} - {$var_descr}</p>";
+			$notice .= "<p>" . esc_html( $var ) . " - " . esc_html( $var_descr ) . "</p>";
 		}
 
 		return [
@@ -160,18 +160,8 @@ class USP_Rating_Admin_Options {
 			[
 				'type'   => 'select',
 				'slug'   => 'rating_delete_vote',
-				'title'  => __( 'Delete your vote', 'userspace-rating' ),
+				'title'  => __( 'Allow delete or change vote', 'userspace-rating' ),
 				'values' => [ __( 'No', 'userspace-rating' ), __( 'Yes', 'userspace-rating' ) ]
-			],
-			[
-				'type'   => 'select',
-				'slug'   => 'rating_tab_other',
-				'title'  => __( 'Tab "Other"', 'userspace-rating' ),
-				'values' => [
-					0 => __( 'Disable', 'userspace-rating' ),
-					1 => __( 'Enable', 'userspace-rating' )
-				],
-				'notice' => __( 'If enabled, an additional "Other" tab will be created in the rating history, where all changes will be displayed via unregistered rating types', 'userspace-rating' )
 			]
 		];
 

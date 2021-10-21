@@ -1,5 +1,7 @@
 <?php
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * @var object $object_type
  * @var int $object_id
@@ -22,13 +24,13 @@
 	<?php foreach ( $stars_values as $star_num => $rating_value ) { ?>
 
         <div class="usp-rating-box__vote usps__inline usps__ai-center <?php echo $user_vote == $rating_value ? 'usp-rating-box__vote_voted' : ''; ?>"
-             data-rating_value="<?php echo $rating_value; ?>">
+             data-rating_value="<?php echo esc_attr( $rating_value ); ?>">
 
             <i class="uspi fa-star usp-rating-stars__icon"><i class="uspi fa-star-fill usp-rating-stars__icon_in"
-                                                              style="width: <?php echo $stars_percent[ $star_num ]; ?>%;"></i></i>
+                                                              style="width: <?php echo intval( $stars_percent[ $star_num ] ); ?>%;"></i></i>
         </div>
 
 	<?php } ?>
 </div>
 
-<div class="usp-rating-box__value"><?php echo $rating_average; ?></div>
+<div class="usp-rating-box__value"><?php echo esc_html( $rating_average ); ?></div>

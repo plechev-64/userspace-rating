@@ -41,7 +41,7 @@ class USP_Rating_Type_Custom extends USP_Rating_Type_Abstract {
 
 	public function get_html_from_value( $rating_value, $object_type ) {
 
-		$html = '<div class="usp-rating-custom usps__inline">' . $rating_value . '</div>';
+		$html = '<div class="usp-rating-custom usps__inline">' . esc_html( $rating_value ) . '</div>';
 
 		return $html;
 

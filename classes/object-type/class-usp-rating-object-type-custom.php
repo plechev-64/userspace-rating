@@ -48,8 +48,6 @@ class USP_Rating_Object_Type_Custom extends USP_Rating_Object_Type_Abstract {
 
 	public function get_vote_template() {
 
-		//$result = sprintf( __( 'Rating change: %s', 'userspace-rating' ), $vote->rating_value );
-
 		return '%DATE% %USER% Rating change: %VALUE%';
 
 	}

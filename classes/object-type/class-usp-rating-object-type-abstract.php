@@ -3,6 +3,10 @@
 abstract class USP_Rating_Object_Type_Abstract {
 
 	/**
+	 * Unique id
+	 *
+	 * Lowercase alphanumeric characters, dashes, and underscores are allowed.
+	 *
 	 * @return string - unique id of object type
 	 */
 	abstract public function get_id();
@@ -122,7 +126,7 @@ abstract class USP_Rating_Object_Type_Abstract {
 				$object_name = $this->get_object_name( $vote->object_id );
 				$object_url  = $this->get_object_url( $vote->object_id );
 
-				return $object_name && $object_url ? "<a href='{$object_url}'>{$object_name}</a>" : $object_name;
+				return $object_url ? "<a href='{$object_url}'>{$object_name}</a>" : $object_name;
 			}
 		];
 

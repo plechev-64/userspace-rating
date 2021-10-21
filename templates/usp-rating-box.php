@@ -1,8 +1,10 @@
 <?php
 
-/*
- * $params array - rating box params
- * 
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * @var array $params - rating box params
+ *
  */
 
 $object_type = $params['object_type'];
@@ -15,8 +17,10 @@ $params['user_can_view_votes'] && $params['votes_count'] && $classes[] = 'usp-ra
 
 ?>
 
-<div class="<?php echo implode( " ", $classes ); ?>" data-object_type="<?php echo $object_type->get_id(); ?>"
-     data-object_id="<?php echo $params['object_id']; ?>" data-object_author="<?php echo $params['object_author']; ?>">
+<div class="<?php echo esc_attr( implode( " ", $classes ) ); ?>"
+     data-object_type="<?php echo esc_attr( $object_type->get_id() ); ?>"
+     data-object_id="<?php echo esc_attr( $params['object_id'] ); ?>"
+     data-object_author="<?php echo esc_attr( $params['object_author'] ); ?>">
 
     <div class="usp-rating-box__inner usps__inline usps__ai-center">
 

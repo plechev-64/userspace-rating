@@ -70,17 +70,8 @@ class USP_Rating_Type_Stars extends USP_Rating_Type_Abstract {
 		$stars_html = '<div class="usp-rating-stars usps__inline usp-rating-stars_size_small">';
 
 		foreach ( $stars_values as $star_num => $rating_value ) {
-
-			if ( $stars_percent[ $star_num ] == 100 ) {
-
-				$stars_html .= '<i class="uspi fa-star-fill"></i>';
-			} else if ( $stars_percent[ $star_num ] > 0 ) {
-
-				$stars_html .= '<i class="uspi fa-star-half-o"></i>';
-			} else {
-
-				$stars_html .= '<i class="uspi fa-star"></i>';
-			}
+			$stars_html .= '<i class="uspi fa-star usp-rating-stars__icon"><i class="uspi fa-star-fill usp-rating-stars__icon_in"
+                                                              style="width: ' . intval( $stars_percent[ $star_num ] ) . '%;"></i></i>';
 		}
 
 		$stars_html .= '</div>';
@@ -163,7 +154,7 @@ class USP_Rating_Type_Stars extends USP_Rating_Type_Abstract {
 					__( 'Disable', 'userspace-rating' ),
 					__( 'Enable', 'userspace-rating' )
 				],
-				'notice' => __( 'If enabled, the standard markup on single pages along with the rating is displayed as <a href="http://schema.org" target="_blank">http://schema.org</a>', 'userspace-rating' )
+				'notice' => __( 'If enabled, the standard markup on single pages along with the rating is displayed as https://schema.org', 'userspace-rating' )
 			]
 		];
 

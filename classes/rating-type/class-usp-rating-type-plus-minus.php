@@ -84,10 +84,10 @@ class USP_Rating_Type_Plus_Minus extends USP_Rating_Type_Abstract {
 				'type'   => 'select',
 				'slug'   => 'rating_plus-minus_overall_' . $object_type->get_id(),
 				'title'  => __( 'Overall rating', 'userspace-rating' ) . ' ' . $object_type->get_name(),
-				'values' => array(
+				'values' => [
 					__( 'Sum of ratings', 'userspace-rating' ),
 					__( 'Sum of positive and negative votes', 'userspace-rating' )
-				)
+				]
 			]
 		];
 

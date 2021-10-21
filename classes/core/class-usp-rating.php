@@ -25,7 +25,7 @@ class USP_Rating {
 	}
 
 	/**
-	 * @return \USP_Rating_Types
+	 * @return USP_Rating_Types
 	 */
 	public function get_rating_types() {
 
@@ -51,7 +51,7 @@ class USP_Rating {
 	}
 
 	/**
-	 * @return \USP_Rating_Object_Types
+	 * @return USP_Rating_Object_Types
 	 */
 	public function get_object_types() {
 
@@ -79,8 +79,8 @@ class USP_Rating {
 	/**
 	 * Receives html code of rating box
 	 *
-	 * @param int object_id - post_id_ comment_id, etc...
-	 * @param int object_author - user_id
+	 * @param int $object_id - post_id_ comment_id, etc...
+	 * @param int $object_author - user_id
 	 * @param object|string $object_type - object type instance or object type id
 	 *
 	 * @return string - html code of rating box
@@ -132,7 +132,7 @@ class USP_Rating {
 
 	/**
 	 *
-	 * @return \USP_Rating_Totals_Query
+	 * @return USP_Rating_Totals_Query
 	 */
 	public function totals_query() {
 		return new USP_Rating_Totals_Query();
@@ -141,7 +141,7 @@ class USP_Rating {
 
 	/**
 	 *
-	 * @return \USP_Rating_Votes_Query
+	 * @return USP_Rating_Votes_Query
 	 */
 	public function votes_query() {
 		return new USP_Rating_Votes_Query();
@@ -150,7 +150,7 @@ class USP_Rating {
 
 	/**
 	 *
-	 * @return \USP_Rating_Users_Query
+	 * @return USP_Rating_Users_Query
 	 */
 	public function users_query() {
 		return new USP_Rating_Users_Query();

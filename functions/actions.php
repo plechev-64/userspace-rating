@@ -111,10 +111,10 @@ function usp_rating_profile_tabs() {
 		$office_owner_rating = round( usp_get_user_rating( $office_owner_id ), USP_RATING_PRECISION ) ?: 0;
 	}
 
-	$tab_data = array(
+	$tab_data = [
 		'id'       => 'rating',
 		'name'     => __( 'Rating', 'userspace-rating' ),
-		'supports' => array( 'ajax' ),
+		'supports' => [ 'ajax' ],
 		'public'   => 1,
 		'icon'     => 'fa-comments',
 		'output'   => 'counters',
@@ -129,7 +129,7 @@ function usp_rating_profile_tabs() {
 				]
 			]
 		]
-	);
+	];
 
 	usp_tab( $tab_data );
 

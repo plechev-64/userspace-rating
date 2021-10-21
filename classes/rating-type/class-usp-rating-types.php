@@ -22,7 +22,7 @@ final class USP_Rating_Types {
 	 */
 	public function add( $rating_type ) {
 
-		if ( $rating_type && $rating_type instanceof USP_Rating_Type_Abstract ) {
+		if ( $rating_type instanceof USP_Rating_Type_Abstract ) {
 
 			if ( ! $this->get( $rating_type->get_id() ) ) {
 

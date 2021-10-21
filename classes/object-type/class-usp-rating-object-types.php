@@ -22,7 +22,7 @@ final class USP_Rating_Object_Types {
 	 */
 	public function add( $object_type ) {
 
-		if ( $object_type && $object_type instanceof USP_Rating_Object_Type_Abstract ) {
+		if ( $object_type instanceof USP_Rating_Object_Type_Abstract ) {
 
 			if ( $this->get( $object_type->get_id() ) === false ) {
 

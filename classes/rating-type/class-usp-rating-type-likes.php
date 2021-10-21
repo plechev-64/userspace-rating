@@ -80,10 +80,10 @@ class USP_Rating_Type_Likes extends USP_Rating_Type_Abstract {
 				'type'   => 'select',
 				'slug'   => 'rating_likes_overall_' . $object_type->get_id(),
 				'title'  => __( 'Overall rating', 'userspace-rating' ) . ' ' . $object_type->get_name(),
-				'values' => array(
+				'values' => [
 					__( 'Sum of ratings', 'userspace-rating' ),
 					__( 'Number of votes', 'userspace-rating' )
-				)
+				]
 			]
 		];
 

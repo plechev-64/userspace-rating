@@ -87,8 +87,8 @@ class USP_Rating_Loader {
 
 		$user_rating = usp_get_user_rating( $user_id );
 
-		$html = '<div class="usp-rating__manage" data-user_id="' . $user_id . '">
-	  <div class="usp-rating__manage_val"><input type="text" value="' . $user_rating . '"></div>
+		$html = '<div class="usp-rating__manage" data-user_id="' . esc_attr( $user_id ) . '">
+	  <div class="usp-rating__manage_val"><input type="text" value="' . esc_attr( $user_rating ) . '"></div>
 	  <div class="usp-rating__manage_button"><input type="button" class="button" value="' . __( 'Change', 'userspace-rating' ) . '"></div>
 	</div>';
 
