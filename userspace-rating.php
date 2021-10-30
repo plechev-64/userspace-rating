@@ -98,6 +98,7 @@ function usp_rating_ajax() {
 if ( in_array( 'userspace/userspace.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
 
 	require_once 'functions/actions.php';
+	require_once 'functions/filters.php';
 	require_once 'functions/functions.php';
 
 	/**

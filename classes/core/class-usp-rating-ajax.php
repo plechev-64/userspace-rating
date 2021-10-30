@@ -14,7 +14,7 @@ class USP_Rating_Ajax {
 		$method = $_POST['method'] ?? '';
 		$params = $_POST['params'] ?? [];
 
-		if ( ! method_exists( $this, $method ) ) {
+		if ( ! $method || ! method_exists( $this, $method ) ) {
 
 			$this->error( __( 'Incorrect method', 'userspace-rating' ) );
 		}
