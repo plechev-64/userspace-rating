@@ -1,6 +1,6 @@
 <?php
 
-class USP_Rating_Votes_Query extends USP_Query {
+class USP_Rating_Votes_Query extends QueryBuilder {
 
 	function __construct( $as = false ) {
 

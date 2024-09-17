@@ -21,7 +21,7 @@ function usp_user_stats_rating( USP_User $user, $custom_data = [] ) {
  * Filter users manager query
  */
 add_filter( 'usp_users_query', 'usp_rating_add_users_query_data', 10, 2 );
-function usp_rating_add_users_query_data( USP_Query $query, USP_Users_Manager $manager ) {
+function usp_rating_add_users_query_data( QueryBuilder $query, USP_Users_Manager $manager ) {
 
 	$is_rating = in_array( 'rating', $manager->get_param( 'custom_data' ) );
 
