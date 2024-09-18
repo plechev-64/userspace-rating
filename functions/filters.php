@@ -3,7 +3,7 @@
  * Display user rating
  */
 add_action( 'usp_user_stats', 'usp_user_stats_rating', 22, 2 );
-function usp_user_stats_rating( USP_User $user, $custom_data = [] ) {
+function usp_user_stats_rating( User $user, $custom_data = [] ) {
 
 	if ( ! in_array( 'rating', $custom_data ) || ! is_numeric( $user->rating ) ) {
 		return;
