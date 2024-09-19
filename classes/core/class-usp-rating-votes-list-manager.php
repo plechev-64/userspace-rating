@@ -1,6 +1,6 @@
 <?php
 
-class USP_Rating_Votes_List_Manager extends USP_Content_Manager {
+class USP_Rating_Votes_List_Manager extends ContentManager {
 
 	private $_required_params = [
 		'orderby'  => 'rating_date',

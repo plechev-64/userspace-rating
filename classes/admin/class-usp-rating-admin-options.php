@@ -102,7 +102,7 @@ class USP_Rating_Admin_Options {
 		return [
 			'type'        => 'select',
 			'slug'        => 'rating_type_' . $object_type->get_id(),
-			'empty-first' => __( 'Not selected', 'userspace-rating' ),
+			'empty_first' => __( 'Not selected', 'userspace-rating' ),
 			'title'       => __( 'Type of rating for', 'userspace-rating' ) . ' ' . $object_type->get_name(),
 			'values'      => $values,
 			'childrens'   => $rating_type_child_options

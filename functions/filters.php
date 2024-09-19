@@ -21,7 +21,7 @@ function usp_user_stats_rating( User $user, $custom_data = [] ) {
  * Filter users manager query
  */
 add_filter( 'usp_users_query', 'usp_rating_add_users_query_data', 10, 2 );
-function usp_rating_add_users_query_data( QueryBuilder $query, USP_Users_Manager $manager ) {
+function usp_rating_add_users_query_data( QueryBuilder $query, UsersManager $manager ) {
 
 	$is_rating = in_array( 'rating', $manager->get_param( 'custom_data' ) );
 
@@ -45,7 +45,7 @@ function usp_rating_add_users_query_data( QueryBuilder $query, USP_Users_Manager
  * Filter users manager search fields
  */
 add_filter( 'usp_users_search_fields', 'usp_rating_add_users_search_field', 10, 2 );
-function usp_rating_add_users_search_field( array $search_fields, USP_Users_Manager $manager ) {
+function usp_rating_add_users_search_field( array $search_fields, UsersManager $manager ) {
 
 	$is_rating = in_array( 'rating', $manager->get_param( 'custom_data' ) );
 
