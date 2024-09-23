@@ -137,8 +137,6 @@ function usp_rating_profile_tabs() {
 
 function usp_rating_profile_tab_content( $master_lk ) {
 
-	USP()->use_module( 'content-manager' );
-
 	$manager = new USP_Rating_Votes_List_Manager( [
 		'object_author' => USP()->office()->get_owner_id()
 	] );
