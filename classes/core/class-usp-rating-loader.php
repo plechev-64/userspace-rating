@@ -37,10 +37,10 @@ class USP_Rating_Loader {
 	public function enqueue_frontend_scripts() {
 
 		if ( is_user_logged_in() ) {
-			usp_enqueue_script( 'userspace-rating', USP_RATING_URL . 'assets/js/scripts.js', [ 'jquery' ] );
+			wp_enqueue_script( 'userspace-rating', USP_RATING_URL . 'assets/js/scripts.js', [ 'jquery' ] );
 		}
 
-		usp_enqueue_style( 'userspace-rating', USP_RATING_URL . 'assets/css/style.css' );
+		wp_enqueue_style( 'userspace-rating', USP_RATING_URL . 'assets/css/style.css' );
 
 	}
 
@@ -58,9 +58,9 @@ class USP_Rating_Loader {
 		 */
 		usp_admin_resources();
 
-		usp_enqueue_script( 'userspace-rating-admin', USP_RATING_URL . 'assets/js/admin.js', [ 'jquery' ] );
+		wp_enqueue_script( 'userspace-rating-admin', USP_RATING_URL . 'assets/js/admin.js', [ 'jquery' ] );
 
-		usp_enqueue_style( 'userspace-rating-admin', USP_RATING_URL . 'assets/css/admin.css' );
+		wp_enqueue_style( 'userspace-rating-admin', USP_RATING_URL . 'assets/css/admin.css' );
 
 	}
 
